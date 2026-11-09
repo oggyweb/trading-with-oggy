@@ -55,7 +55,6 @@
 
         .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 14px auto; display: block; }
         
-        /* PROFESSIONAL ANIMATED TRADING WITH OGGY TITLE */
         .brand-title { 
             text-align: center; font-size: 25px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; 
             font-family: 'Cinzel', serif; letter-spacing: 2px; 
@@ -114,7 +113,6 @@
             text-shadow: 0 0 8px rgba(253, 230, 138, 0.7);
         }
 
-        /* RED NEON GLOW FOR AUTO-TRADER BOT */
         .red-neon-bot {
             color: #FF4D4D;
             font-weight: 800;
@@ -126,13 +124,11 @@
             100% { text-shadow: 0 0 12px rgba(255, 77, 77, 1), 0 0 22px rgba(255, 0, 0, 0.8); }
         }
 
-        /* CONTACT INFO WITH CLEAN BLUE (NO NEON GLOW) */
         .contact-info {
             margin-top: 18px; background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(56, 189, 248, 0.4);
             border-radius: 12px; padding: 14px; font-size: 12px; color: #E2E8F0; text-align: center; line-height: 1.6;
         }
         
-        /* CLEAN BLUE WITHOUT NEON GLOW */
         .contact-info .clean-blue { 
             color: #38BDF8; 
             font-weight: 700; 
@@ -165,10 +161,10 @@
         .tick-badge { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #F8FAFC; }
     </style>
 
-    <!-- Firebase SDK Setup -->
+    <!-- Firebase SDK Setup & Single-Device Binding Security Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDEH3yUzF4lALEeN3uWiaFCMYi5Ueq1tBw",
@@ -183,7 +179,33 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.addEventListener('load', () => {
+        // Function to generate a unique Device ID and save it in browser localStorage
+        function getDeviceUID() {
+            let uid = localStorage.getItem('oggy_device_uid');
+            if (!uid) {
+                uid = 'DEV-' + Math.random().toString(36).substring(2) + '-' + Date.now();
+                localStorage.setItem('oggy_device_uid', uid);
+            }
+            return uid;
+        }
+
+        window.addEventListener('load', async () => {
+            try {
+                const lifetimeRef = doc(db, "vip_keys", "OGGY-LIFETIME-VIP");
+                const lifetimeSnap = await getDoc(lifetimeRef);
+                if (!lifetimeSnap.exists()) {
+                    await setDoc(lifetimeRef, {
+                        expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
+                        tier: "tier2", 
+                        active: true,
+                        deviceId: "", // Initially unbound
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            } catch(e) {
+                console.log("Auto-setup note:", e);
+            }
+
             setTimeout(() => {
                 const loader = document.getElementById('loader-screen');
                 loader.style.opacity = '0';
@@ -195,7 +217,7 @@
             const keyInput = document.getElementById('login-key').value.trim();
             const errorSpan = document.getElementById('login-error');
             errorSpan.style.color = "#94A3B8";
-            errorSpan.innerText = "Encrypting & validating with Firebase Cloud...";
+            errorSpan.innerText = "Checking secure cloud device binding...";
 
             if(!keyInput) {
                 errorSpan.style.color = "#EF4444";
@@ -209,16 +231,17 @@
 
                 if (!docSnap.exists()) {
                     errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "Invalid Access Key! Contact admin for active key.";
+                    errorSpan.innerText = "Invalid Access Key! Contact admin.";
                     return;
                 }
 
                 const keyData = docSnap.data();
                 const currentTime = new Date().getTime();
+                const currentDeviceID = getDeviceUID();
 
                 if(currentTime > keyData.expiry) {
                     errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "This VIP Key has expired (30-day limit reached)!";
+                    errorSpan.innerText = "This VIP Key has expired!";
                     return;
                 }
 
@@ -228,6 +251,18 @@
                     return;
                 }
 
+                // --- SINGLE DEVICE BINDING LOGIC ---
+                if (keyData.deviceId && keyData.deviceId !== currentDeviceID) {
+                    errorSpan.style.color = "#EF4444";
+                    errorSpan.innerText = "Access Denied! This Key is already bound to another device.";
+                    return;
+                }
+
+                // If deviceId is empty, bind it permanently to this current device
+                if (!keyData.deviceId) {
+                    await updateDoc(docRef, { deviceId: currentDeviceID });
+                }
+
                 localStorage.setItem('oggy_cloud_key', keyInput);
                 loadDashboard(keyData);
             } catch(e) {
@@ -235,21 +270,6 @@
                 errorSpan.style.color = "#EF4444";
                 errorSpan.innerText = "Server Connection Error! Check internet connection.";
             }
-        };
-
-        window.adminGenerateKey = async function(customKeyName, planType = "tier2") {
-            const keyName = customKeyName || "OGGY-" + Math.random().toString(36).substring(2, 7).toUpperCase();
-            const expiryTime = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-
-            await setDoc(doc(db, "vip_keys", keyName), {
-                expiry: expiryTime,
-                tier: planType,
-                active: true,
-                createdAt: new Date().toISOString()
-            });
-
-            console.log(`✅ SUCCESS! New 30-Day Key Generated in Firebase Database: ${keyName}`);
-            alert(`New Key Created:\nKey: ${keyName}\nPlan: ${planType}\nValid for 30 Days.`);
         };
 
         function loadDashboard(keyData) {
@@ -268,7 +288,7 @@
                     </div>
                 `;
             } else {
-                planBadge.innerText = "Gold VIP (Auto-Trader)";
+                planBadge.innerText = "Gold VIP (Single-Device Bound)";
                 autoContent.innerHTML = `
                     <div style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">Link your Deriv account to run automated trades.</div>
                     <div style="margin-bottom: 10px;">
@@ -327,7 +347,7 @@
     <div class="brand-sub">Elite Cloud Verified Terminal</div>
 
     <div class="form-group">
-        <label>Enter 30-Day VIP Access Key</label>
+        <label>Enter VIP Access Key (1 Device Limit)</label>
         <input type="text" id="login-key" placeholder="Enter your VIP key here...">
     </div>
 
@@ -360,7 +380,7 @@
 
     <!-- Contact & Admin Support with Clean Blue (No Neon) -->
     <div class="contact-info">
-        <strong>📥 Get Your 30-Day VIP Key:</strong><br>
+        <strong>📥 Get Your VIP Access Key:</strong><br>
         Send payment slip & get key via:<br>
         • <strong>WhatsApp:</strong> <a href="https://wa.me/94753578716" target="_blank" class="clean-blue">+94 75 3578 716</a><br>
         • <strong>Telegram:</strong> <a href="https://t.me/trading_with_oggy" target="_blank" class="clean-blue">@trading_with_oggy</a>
@@ -523,6 +543,7 @@
         const signalEl = document.getElementById('live-signal-status');
         if (!signalEl) return;
         
+        |
         if (lastDigit >= 7) {
             signalEl.style.color = "#34D399";
             signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
@@ -536,7 +557,7 @@
     }
 
     function connectDeriv() {
-        const token = document.getElementById('deriv-token').value;
+        const token = document.getElementById('deriv-token'].value;
         if(!token) { alert("Please enter your Deriv API Token!"); return; }
         document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
     }
