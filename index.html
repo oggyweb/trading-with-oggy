@@ -278,15 +278,17 @@
             const autoContent = document.getElementById('autotrade-content');
 
             if(keyData.tier === 'tier1') {
-                planBadge.innerText = "Silver VIP (Signal Only)";
+                planBadge.innerText = "Silver VIP (Single-Device Bound)";
+                planBadge.style.color = "#E2E8F0";
                 autoContent.innerHTML = `
                     <div class="locked-box">
                         <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-bottom: 6px;">🔒 Auto-Trading Locked</div>
-                        <p style="font-size: 11px; color: #94A3B8; line-height: 1.4;">You are subscribed to <strong>Silver Package</strong>. Upgrade to <strong>Gold Package</strong> for automated bot execution.</p>
+                        <p style="font-size: 11px; color: #94A3B8; line-height: 1.4;">You are subscribed to <strong>Silver Package</strong> (Signals & LDP Stream Active). Upgrade to <strong>Gold Package</strong> for automated bot execution.</p>
                     </div>
                 `;
             } else {
                 planBadge.innerText = "Gold VIP (Single-Device Bound)";
+                planBadge.style.color = "#F59E0B";
                 autoContent.innerHTML = `
                     <div style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">Link your Deriv account to run automated trades.</div>
                     <div style="margin-bottom: 10px;">
@@ -402,7 +404,7 @@
     </div>
 
     <div class="dashboard-grid">
-        <!-- Left: Live Deriv Market Stream & Signal Engine -->
+        <!-- Left: Live Deriv Market Stream & Signal Engine (Visible for both Silver & Gold) -->
         <div>
             <div class="card">
                 <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
@@ -419,7 +421,7 @@
             </div>
         </div>
 
-        <!-- Right: Auto-Trader Bot Panel -->
+        <!-- Right: Auto-Trader Bot Panel (Locked for Silver, Active for Gold) -->
         <div>
             <div class="card">
                 <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">Deriv Auto-Trader Bot</div>
