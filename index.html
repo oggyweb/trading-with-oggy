@@ -9,7 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* NEXT-LEVEL TRADING WAVE & CANDLESTICK CANVAS */
+        /* NEXT-LEVEL TRADING WAVE & CANDLESTICK CANVAS BACKGROUND */
         #trading-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
         }
@@ -55,6 +55,7 @@
 
         .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 14px auto; display: block; }
         
+        /* PROFESSIONAL ANIMATED TRADING WITH OGGY TITLE */
         .brand-title { 
             text-align: center; font-size: 25px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; 
             font-family: 'Cinzel', serif; letter-spacing: 2px; 
@@ -198,7 +199,7 @@
                         expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
                         tier: "tier2", 
                         active: true,
-                        deviceId: "", // Initially unbound
+                        deviceId: "", 
                         createdAt: new Date().toISOString()
                     });
                 }
@@ -258,7 +259,6 @@
                     return;
                 }
 
-                // If deviceId is empty, bind it permanently to this current device
                 if (!keyData.deviceId) {
                     await updateDoc(docRef, { deviceId: currentDeviceID });
                 }
@@ -348,7 +348,7 @@
 
     <div class="form-group">
         <label>Enter VIP Access Key (1 Device Limit)</label>
-        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
+        <input type="text" id="login-key" placeholder="Enter your VIP key here (e.g. OGGY-LIFETIME-VIP)...">
     </div>
 
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
@@ -543,7 +543,6 @@
         const signalEl = document.getElementById('live-signal-status');
         if (!signalEl) return;
         
-        |
         if (lastDigit >= 7) {
             signalEl.style.color = "#34D399";
             signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
@@ -557,7 +556,7 @@
     }
 
     function connectDeriv() {
-        const token = document.getElementById('deriv-token'].value;
+        const token = document.getElementById('deriv-token').value;
         if(!token) { alert("Please enter your Deriv API Token!"); return; }
         document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
     }
