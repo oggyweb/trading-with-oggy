@@ -9,26 +9,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #020617; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
+        /* REAL ANIMATED TRADING CANVAS BACKGROUND */
+        #trading-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
+        }
+
         /* Background Cyber Glows */
         .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
-            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.2) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.2) 0%, transparent 40%);
-        }
-
-        /* LIVE MOVING TRADING CHART & GLITCH BACKGROUND ANIMATION */
-        .trading-chart-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background-image: 
-                linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: chartScroll 15s linear infinite;
-        }
-
-        @keyframes chartScroll {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
+            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.22) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.22) 0%, transparent 45%);
         }
 
         /* Cyber Glitch Overlay Effect */
@@ -104,7 +94,7 @@
         }
         .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
 
-        /* --- ENLARGED WHITE NEON PACKAGES SECTION --- */
+        /* --- PACKAGES STYLING WITH SILVER & GOLD NEON DETAILS --- */
         .packages-box {
             display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px;
         }
@@ -118,26 +108,34 @@
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.4); 
         }
         .pkg-title { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .pkg-silver { color: #FFFFFF; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+        .pkg-silver { color: #E2E8F0; text-shadow: 0 0 10px rgba(226, 232, 240, 0.6); }
         .pkg-gold { color: #FDE68A; text-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
         .pkg-price { font-size: 22px; font-weight: 900; color: #38BDF8; margin-bottom: 10px; text-shadow: 0 0 15px rgba(56, 189, 248, 0.8); }
         
-        /* BIGGER WHITE NEON TEXT */
-        .pkg-desc { 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: #FFFFFF; 
-            line-height: 1.6; 
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.5);
+        .pkg-desc-silver { 
+            font-size: 13px; font-weight: 700; color: #CBD5E1; line-height: 1.6; 
+            text-shadow: 0 0 8px rgba(203, 213, 225, 0.6), 0 0 15px rgba(203, 213, 225, 0.3);
+        }
+
+        .pkg-desc-gold { 
+            font-size: 13px; font-weight: 700; color: #FDE68A; line-height: 1.6; 
+            text-shadow: 0 0 8px rgba(253, 230, 138, 0.7), 0 0 15px rgba(245, 158, 11, 0.4);
         }
 
         .contact-info {
-            margin-top: 18px; background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(16, 185, 129, 0.5);
-            border-radius: 12px; padding: 14px; font-size: 12px; color: #FFFFFF; text-align: center; line-height: 1.6;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+            margin-top: 18px; background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 12px; padding: 14px; font-size: 12px; color: #E2E8F0; text-align: center; line-height: 1.6;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
-        .contact-info a { color: #34D399; text-decoration: none; font-weight: 800; text-shadow: 0 0 10px rgba(52, 211, 153, 0.8); }
+        
+        .contact-info .neon-blue { 
+            color: #38BDF8; 
+            font-weight: 800; 
+            text-decoration: none; 
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.8), 0 0 15px rgba(56, 189, 248, 0.5); 
+        }
+
         .error-msg { color: #EF4444; font-size: 11px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
 
         /* --- DASHBOARD STYLES --- */
@@ -302,8 +300,9 @@
 </head>
 <body>
 
+<!-- ANIMATED TRADING CANDLESTICK BACKGROUND CANVAS -->
+<canvas id="trading-canvas"></canvas>
 <div class="bg-glow"></div>
-<div class="trading-chart-bg"></div>
 <div class="glitch-overlay"></div>
 
 <!-- EPIC LOADING ANIMATION SCREEN -->
@@ -326,27 +325,29 @@
 
     <div class="form-group">
         <label>Enter 30-Day VIP Access Key</label>
-        <input type="text" id="login-key" placeholder="e.g. OGGY-VIP-2026">
+        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
     </div>
 
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
     <span id="login-error" class="error-msg"></span>
 
-    <!-- Packages Section with White Neon Glow & Larger Font -->
+    <!-- Packages Section -->
     <div class="packages-box">
+        <!-- Silver Package -->
         <div class="pkg-card">
             <div class="pkg-title pkg-silver">Silver Package</div>
-            <div class="pkg-price">$10 <span style="font-size:12px; font-weight:700; color:#FFFFFF; text-shadow:0 0 5px #fff;">/mo</span></div>
-            <div class="pkg-desc">
+            <div class="pkg-price">$10 <span style="font-size:12px; font-weight:700; color:#38BDF8; text-shadow:0 0 5px #38BDF8;">/mo</span></div>
+            <div class="pkg-desc-silver">
                 1 Month Access<br>
                 • Real-time Signals<br>
                 • Live LDP Stream
             </div>
         </div>
+        <!-- Gold Package -->
         <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.5);">
             <div class="pkg-title pkg-gold">Gold Package</div>
-            <div class="pkg-price">$20 <span style="font-size:12px; font-weight:700; color:#FFFFFF; text-shadow:0 0 5px #fff;">/mo</span></div>
-            <div class="pkg-desc">
+            <div class="pkg-price">$20 <span style="font-size:12px; font-weight:700; color:#38BDF8; text-shadow:0 0 5px #38BDF8;">/mo</span></div>
+            <div class="pkg-desc-gold">
                 1 Month Access<br>
                 • Auto-Trader Bot<br>
                 • Advanced Signals
@@ -354,12 +355,12 @@
         </div>
     </div>
 
-    <!-- Contact & Admin Support -->
+    <!-- Contact & Admin Support with Blue Neon Numbers/Usernames -->
     <div class="contact-info">
         <strong>📥 Get Your 30-Day VIP Key:</strong><br>
         Send payment slip & get key via:<br>
-        • <strong>WhatsApp:</strong> <a href="https://wa.me/94753578716" target="_blank">+94 75 3578 716</a><br>
-        • <strong>Telegram:</strong> <a href="https://t.me/trading_with_oggy" target="_blank">@trading_with_oggy</a>
+        • <strong>WhatsApp:</strong> <a href="https://wa.me/94753578716" target="_blank" class="neon-blue">+94 75 3578 716</a><br>
+        • <strong>Telegram:</strong> <a href="https://t.me/trading_with_oggy" target="_blank" class="neon-blue">@trading_with_oggy</a>
     </div>
 </div>
 
@@ -408,6 +409,79 @@
 </div>
 
 <script>
+    /* --- REAL-TIME TRADING CHART BACKGROUND ANIMATION SCRIPT --- */
+    const canvas = document.getElementById('trading-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let candles = [];
+    let numCandles = Math.floor(window.innerWidth / 40);
+    let lastY = canvas.height / 2;
+
+    for (let i = 0; i < numCandles; i++) {
+        let h = (Math.random() - 0.5) * 60;
+        let y = lastY + h;
+        candles.push({
+            x: i * 40 + 20,
+            y: y,
+            open: y + (Math.random() - 0.5) * 20,
+            close: y + (Math.random() - 0.5) * 20,
+            high: y - 20 - Math.random() * 20,
+            low: y + 20 + Math.random() * 20,
+            isGreen: Math.random() > 0.4
+        });
+        lastY = y;
+    }
+
+    function animateChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < canvas.width; x += 50) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += 50) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+        }
+
+        // Draw moving candles & chart line
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.lineWidth = 2;
+
+        candles.forEach((c, index) => {
+            c.x -= 0.5; // Move left slowly
+            if (c.x < -30) {
+                c.x = canvas.width + 30;
+                let lastCandle = candles[(index - 1 + candles.length) % candles.length];
+                c.y = Math.min(Math.max(lastCandle.y + (Math.random() - 0.5) * 80, 100), canvas.height - 100);
+                c.isGreen = Math.random() > 0.4;
+            }
+
+            // Wick
+            ctx.strokeStyle = c.isGreen ? 'rgba(52, 211, 153, 0.4)' : 'rgba(248, 113, 113, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(c.x, c.high);
+            ctx.lineTo(c.x, c.low);
+            ctx.stroke();
+
+            // Body
+            ctx.fillStyle = c.isGreen ? 'rgba(52, 211, 153, 0.3)' : 'rgba(248, 113, 113, 0.3)';
+            ctx.fillRect(c.x - 6, Math.min(c.open, c.close), 12, Math.max(Math.abs(c.open - c.close), 4));
+        });
+
+        requestAnimationFrame(animateChart);
+    }
+    animateChart();
+
     let derivWS = null;
     let recentDigits = [];
 
@@ -448,24 +522,9 @@
         };
     }
 
-_signal.analyzeSignal = function(price, lastDigit) { // safely handled
-    const signalEl = document.getElementById('live-signal-status');
-    if (!signalEl) return;
-    
-    if (lastDigit >= 7) {
-        signalEl.style.color = "#34D399";
-        signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
-    } else if (lastDigit <= 2) {
-        signalEl.style.color = "#F87171";
-        signalEl.innerText = "🔻 FALL SIGNAL DETECTED (Low LDP)";
-    } else {
-        signalEl.style.color = "#FBBF24";
-        signalEl.innerText = "⏳ SCANNING TICK PATTERNS...";
-    }
-};
-
     function analyzeSignal(price, lastDigit) {
         const signalEl = document.getElementById('live-signal-status');
+        if (!signalEl) return;
         
         if (lastDigit >= 7) {
             signalEl.style.color = "#34D399";
