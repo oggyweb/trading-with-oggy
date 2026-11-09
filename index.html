@@ -9,7 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* NEXT-LEVEL TRADING WAVE & CANDLESTICK CANVAS BACKGROUND */
+        /* NEXT-LEVEL PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION */
         #trading-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
         }
@@ -346,7 +346,7 @@
 
     <div class="form-group">
         <label>Enter VIP Access Key (1 Device Limit)</label>
-        <input type="text" id="login-key" placeholder="Enter your VIP key here (e.g. OGGY-LIFETIME-VIP)...">
+        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
     </div>
 
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
@@ -448,7 +448,6 @@
         
         let centerY = canvas.height / 2;
 
-        // Draw flowing glowing neon waves matching the reference image style
         for (let j = 0; j < 3; j++) {
             ctx.beginPath();
             ctx.lineWidth = j === 0 ? 3 : 1.5;
@@ -471,7 +470,6 @@
             ctx.shadowBlur = 0;
         }
 
-        // Draw animated professional candlesticks along the waves
         let candleSpacing = 80;
         let startX = (step * 1.5) % candleSpacing;
 
@@ -480,7 +478,6 @@
             let candleHeight = 50 + Math.sin(x * 0.5) * 30;
             let isGreen = Math.sin(x) > 0;
 
-            // Wick
             ctx.strokeStyle = isGreen ? 'rgba(52, 211, 153, 0.7)' : 'rgba(248, 113, 113, 0.7)';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -488,7 +485,6 @@
             ctx.lineTo(x, waveY + candleHeight + 20);
             ctx.stroke();
 
-            // Candle Body
             ctx.fillStyle = isGreen ? 'rgba(52, 211, 153, 0.5)' : 'rgba(248, 113, 113, 0.5)';
             ctx.shadowBlur = 12;
             ctx.shadowColor = isGreen ? '#34D399' : '#F87171';
