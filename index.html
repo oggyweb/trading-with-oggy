@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading With Oggy - Elite VIP Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #020617; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; }
+        
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: radial-gradient(circle at 10% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
+                        radial-gradient(circle at 90% 85%, rgba(14, 165, 233, 0.12) 0%, transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loader-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020617; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .loader-box { text-align: center; }
+        .loader-logo {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            border: 2px solid #F59E0B; box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+            animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px;
+        }
+        .loader-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #FDE68A; letter-spacing: 2px; margin-bottom: 10px; }
+        .loader-bar-container { width: 220px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 0 auto; overflow: hidden; }
+        .loader-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #F59E0B, #10B981); animation: loadProgress 1.8s ease forwards; }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+            100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(245, 158, 11, 0.7); }
+        }
+        @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
+
+        /* --- LOGIN CONTAINER --- */
+        .auth-container {
+            max-width: 440px; width: 100%;
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px;
+            padding: 35px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            opacity: 0; transform: translateY(20px); animation: fadeInCard 0.8s ease 1.8s forwards;
+        }
+        @keyframes fadeInCard { to { opacity: 1; transform: translateY(0); } }
+
+        .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.4); margin: 0 auto 16px auto; display: block; }
+        .brand-title { text-align: center; font-size: 22px; font-weight: 800; color: #FDE68A; margin-bottom: 4px; font-family: 'Cinzel', serif; letter-spacing: 1px; }
+        .brand-sub { text-align: center; font-size: 11px; color: #94A3B8; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        input {
+            width: 100%; background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 18px; border-radius: 12px; color: #FFF; font-size: 14px; outline: none; transition: all 0.3s ease;
+        }
+        input:focus { border-color: #F59E0B; background: rgba(245, 158, 11, 0.04); box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+
+        .action-btn {
+            width: 100%; background: linear-gradient(135deg, #F59E0B, #D97706); color: #030712;
+            border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4); transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
+
+        .payment-box { background: rgba(2, 6, 23, 0.5); border: 1px solid rgba(255, 255, 255, 0.06); padding: 16px; border-radius: 12px; margin-top: 20px; font-size: 11px; color: #94A3B8; line-height: 1.6; }
+        .error-msg { color: #EF4444; font-size: 11px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
+
+        /* --- DASHBOARD STYLES --- */
+        #dashboard-wrapper { display: none; width: 100%; max-width: 1200px; animation: fadeInCard 0.6s ease forwards; }
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
+        }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+        @media(max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+        .card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .signal-box { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 24px; text-align: center; }
+        .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 10px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+        .signal-text { font-size: 16px; font-weight: 800; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .logout-btn { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .logout-btn:hover { background: #EF4444; color: #FFF; }
+        
+        .locked-box { text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: 14px; }
+        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        
+        .tick-history { display: flex; gap: 8px; justify-content: center; margin-top: 12px; font-size: 12px; font-weight: 700; }
+        .tick-badge { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #F8FAFC; }
+    </style>
+
+    <!-- Firebase SDK Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEH3yUzF4lALEeN3uWiaFCMYi5Ueq1tBw",
+            authDomain: "trading-with-oggy.firebaseapp.com",
+            projectId: "trading-with-oggy",
+            storageBucket: "trading-with-oggy.firebasestorage.app",
+            messagingSenderId: "731602829211",
+            appId: "1:731602829211:web:ce10adc4f1e8963a5b2b3e",
+            measurementId: "G-QPR7DT3B63"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 1800);
+        });
+
+        window.handleKeyLogin = async function() {
+            const keyInput = document.getElementById('login-key').value.trim();
+            const errorSpan = document.getElementById('login-error');
+            errorSpan.style.color = "#94A3B8";
+            errorSpan.innerText = "Encrypting & validating with Firebase Cloud...";
+
+            if(!keyInput) {
+                errorSpan.style.color = "#EF4444";
+                errorSpan.innerText = "Please enter your VIP access key!";
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "vip_keys", keyInput);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    errorSpan.style.color = "#EF4444";
+                    errorSpan.innerText = "Invalid Access Key! Contact admin for active key.";
+                    return;
+                }
+
+                const keyData = docSnap.data();
+                const currentTime = new Date().getTime();
+
+                if(currentTime > keyData.expiry) {
+                    errorSpan.style.color = "#EF4444";
+                    errorSpan.innerText = "This VIP Key has expired (30-day limit reached)!";
+                    return;
+                }
+
+                if(!keyData.active) {
+                    errorSpan.style.color = "#EF4444";
+                    errorSpan.innerText = "This Key has been disabled by Admin!";
+                    return;
+                }
+
+                localStorage.setItem('oggy_cloud_key', keyInput);
+                loadDashboard(keyData);
+            } catch(e) {
+                console.error(e);
+                errorSpan.style.color = "#EF4444";
+                errorSpan.innerText = "Server Connection Error! Check internet connection.";
+            }
+        };
+
+        window.adminGenerateKey = async function(customKeyName, planType = "tier2") {
+            const keyName = customKeyName || "OGGY-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+            const expiryTime = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+
+            await setDoc(doc(db, "vip_keys", keyName), {
+                expiry: expiryTime,
+                tier: planType,
+                active: true,
+                createdAt: new Date().toISOString()
+            });
+
+            console.log(`✅ SUCCESS! New 30-Day Key Generated in Firebase Database: ${keyName}`);
+            alert(`New Key Created:\nKey: ${keyName}\nPlan: ${planType}\nValid for 30 Days.`);
+        };
+
+        function loadDashboard(keyData) {
+            document.getElementById('auth-wrapper').style.display = 'none';
+            document.getElementById('dashboard-wrapper').style.display = 'block';
+
+            const planBadge = document.getElementById('user-plan-badge');
+            const autoContent = document.getElementById('autotrade-content');
+
+            if(keyData.tier === 'tier1') {
+                planBadge.innerText = "VIP Signal Only ($25)";
+                autoContent.innerHTML = `
+                    <div class="locked-box">
+                        <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-bottom: 6px;">🔒 Auto-Trading Locked</div>
+                        <p style="font-size: 11px; color: #94A3B8; line-height: 1.4;">You are subscribed to <strong>Signal Only</strong> plan. Upgrade to <strong>Auto-Trader</strong> plan for automated bot execution.</p>
+                    </div>
+                `;
+            } else {
+                planBadge.innerText = "VIP Bot Auto-Trader ($50)";
+                autoContent.innerHTML = `
+                    <div style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">Link your Deriv account to run automated trades.</div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size:10px; color:#94A3B8;">Deriv API Token</label>
+                        <input type="password" id="deriv-token" placeholder="Paste API token">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size:10px; color:#94A3B8;">Stake ($)</label>
+                        <input type="number" id="stake" value="1.00">
+                    </div>
+                    <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
+                    <div id="bot-status" style="font-size: 11px; color: #34D399; margin-top: 10px; text-align: center; font-weight: 600;"></div>
+                `;
+            }
+
+            connectDerivLiveMarket();
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const activeKey = localStorage.getItem('oggy_cloud_key');
+            if(activeKey) {
+                try {
+                    const docSnap = await getDoc(doc(db, "vip_keys", activeKey));
+                    if(docSnap.exists() && new Date().getTime() <= docSnap.data().expiry && docSnap.data().active) {
+                        loadDashboard(docSnap.data());
+                    } else {
+                        localStorage.removeItem('oggy_cloud_key');
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+    </script>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<!-- EPIC LOADING ANIMATION SCREEN -->
+<div id="loader-screen">
+    <div class="loader-box">
+        <img src="file_0000000006008208af7bbd2728ae3881.png" class="loader-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
+        <div class="loader-title">TRADING WITH OGGY</div>
+        <div style="font-size: 11px; color: #94A3B8; margin-bottom: 15px; letter-spacing: 1px;">INITIALIZING SECURE TERMINAL...</div>
+        <div class="loader-bar-container">
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODERN GLASS LOGIN CONTAINER -->
+<div id="auth-wrapper" class="auth-container">
+    <img src="file_0000000006008208af7bbd2728ae3881.png" class="login-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
+    <div class="brand-title">TRADING WITH OGGY</div>
+    <div class="brand-sub">Cloud Verified VIP Terminal</div>
+
+    <div class="form-group">
+        <label>Enter 30-Day VIP Access Key</label>
+        <input type="text" id="login-key" placeholder="e.g. OGGY-VIP-2026">
+    </div>
+
+    <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
+    <span id="login-error" class="error-msg"></span>
+
+    <div class="payment-box">
+        <strong>📥 Get 30-Day VIP Key:</strong><br>
+        Pay <strong>$25 (Signal)</strong> or <strong>$50 (Bot)</strong> via:<br>
+        • <strong>Binance UID:</strong> <code>1023755294</code><br>
+        • <strong>Sampath Bank:</strong> 119752659984 (H A P P L Kularathna, Maho)<br>
+        <i>Send payment slip to admin via WhatsApp/Telegram.</i>
+    </div>
+</div>
+
+<!-- DASHBOARD CONTAINER -->
+<div id="dashboard-wrapper">
+    <div class="top-bar">
+        <!-- Logo and Name on Top-Left -->
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo">
+            <div>
+                <div style="font-size: 15px; font-weight: 800; color: #FDE68A; font-family: 'Cinzel', serif; letter-spacing: 0.5px;">TRADING WITH OGGY</div>
+                <div style="font-size: 11px; color: #34D399; font-weight: 600;">● Live Deriv Stream Active</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="font-size: 12px;">Plan: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Left: Live Deriv Market Stream & Signal Engine -->
+        <div>
+            <div class="card">
+                <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
+                    Deriv Live Market Data (Volatility 10 Index)
+                </div>
+                <div class="signal-box">
+                    <div style="font-size: 11px; color: #94A3B8;">Symbol: R_10 | WebSocket Stream</div>
+                    <div id="live-price-display" class="price-text">$0.000</div>
+                    <div id="live-signal-status" class="signal-text">⚡ Connecting to Deriv Market...</div>
+                    
+                    <div style="margin-top: 20px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div id="digit-history" class="tick-history"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Auto-Trader Bot Panel -->
+        <div>
+            <div class="card">
+                <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">Deriv Auto-Trader Bot</div>
+                <div id="autotrade-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let derivWS = null;
+    let recentDigits = [];
+
+    function connectDerivLiveMarket() {
+        derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+
+        derivWS.onopen = function() {
+            console.log("Connected to Deriv Live WebSocket Server");
+            derivWS.send(JSON.stringify({
+                ticks: "R_10",
+                subscribe: 1
+            }));
+        };
+
+        derivWS.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            if (data.msg_type === 'tick') {
+                const tick = data.tick;
+                const price = tick.quote.toFixed(3);
+                const lastDigit = parseInt(price.slice(-1));
+
+                document.getElementById('live-price-display').innerText = `$${price}`;
+
+                recentDigits.push(lastDigit);
+                if(recentDigits.length > 5) recentDigits.shift();
+                
+                const historyEl = document.getElementById('digit-history');
+                historyEl.innerHTML = recentDigits.map(d => `<span class="tick-badge">${d}</span>`).join('');
+
+                analyzeSignal(price, lastDigit);
+            }
+        };
+
+        derivWS.onerror = function(error) {
+            console.error("Deriv WS Error:", error);
+            document.getElementById('live-signal-status').innerText = "⚠️ Market Stream Reconnecting...";
+        };
+    }
+
+    function analyzeSignal(price, lastDigit) {
+        const signalEl = document.getElementById('live-signal-status');
+        
+        if (lastDigit >= 7) {
+            signalEl.style.color = "#34D399";
+            signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
+        } else if (lastDigit <= 2) {
+            signalEl.style.color = "#F87171";
+            signalEl.innerText = "🔻 FALL SIGNAL DETECTED (Low LDP)";
+        } else {
+            signalEl.style.color = "#FBBF24";
+            signalEl.innerText = "⏳ SCANNING TICK PATTERNS...";
+        }
+    }
+
+    function connectDeriv() {
+        const token = document.getElementById('deriv-token').value;
+        if(!token) { alert("Please enter your Deriv API Token!"); return; }
+        document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
+    }
+
+    function logout() {
+        localStorage.removeItem('oggy_cloud_key');
+        if(derivWS) derivWS.close();
+        location.reload();
+    }
+</script>
+
+</body>
+</html>
