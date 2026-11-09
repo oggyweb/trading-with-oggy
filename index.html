@@ -9,27 +9,34 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #020617; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* Background Trading Glitch & Cyber Glows */
+        /* Background Cyber Glows */
         .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
+            background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.18) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.18) 0%, transparent 40%);
         }
 
-        /* Trading Chart Line Glitch Effect Background */
-        .trading-grid-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
-            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.6;
-            animation: gridGlitch 4s infinite alternate;
+        /* LIVE MOVING TRADING CHART & GLITCH BACKGROUND ANIMATION */
+        .trading-chart-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
+            background-image: 
+                linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: chartScroll 20s linear infinite;
         }
-        @keyframes gridGlitch {
-            0% { transform: translateY(0); opacity: 0.5; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10px); opacity: 0.6; }
+
+        @keyframes chartScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
+        }
+
+        /* Cyber Glitch Overlay Effect */
+        .glitch-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 6px 100%;
+            opacity: 0.7;
         }
 
         /* --- LOADING SCREEN --- */
@@ -56,22 +63,36 @@
 
         /* --- MODERN GLASS LOGIN CONTAINER --- */
         .auth-container {
-            max-width: 480px; width: 100%;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 24px;
-            padding: 35px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.1);
+            max-width: 500px; width: 100%;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 24px;
+            padding: 35px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(245, 158, 11, 0.15);
             opacity: 0; transform: translateY(20px); animation: fadeInCard 0.8s ease 1.8s forwards;
         }
         @keyframes fadeInCard { to { opacity: 1; transform: translateY(0); } }
 
         .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 14px auto; display: block; }
-        .brand-title { text-align: center; font-size: 24px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; font-family: 'Cinzel', serif; letter-spacing: 1.5px; text-shadow: 0 0 10px rgba(245,158,11,0.4); }
+        
+        .brand-title { 
+            text-align: center; font-size: 24px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; 
+            font-family: 'Cinzel', serif; letter-spacing: 1.5px; 
+            text-shadow: 0 0 10px rgba(245,158,11,0.6), 0 0 20px rgba(245,158,11,0.3);
+            animation: textGlitch 3s infinite;
+        }
+        @keyframes textGlitch {
+            0%, 100% { transform: translate(0); }
+            92% { transform: translate(0); }
+            93% { transform: translate(-2px, 1px); color: #38BDF8; }
+            94% { transform: translate(2px, -1px); color: #F59E0B; }
+            95% { transform: translate(0); }
+        }
+
         .brand-sub { text-align: center; font-size: 11px; color: #94A3B8; margin-bottom: 22px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
         
         .form-group { margin-bottom: 18px; }
         label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         input {
-            width: 100%; background: rgba(2, 6, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.12);
+            width: 100%; background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 14px 18px; border-radius: 12px; color: #FFF; font-size: 14px; outline: none; transition: all 0.3s ease;
         }
         input:focus { border-color: #F59E0B; background: rgba(245, 158, 11, 0.05); box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
@@ -83,39 +104,52 @@
         }
         .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
 
-        /* Packages Pricing Section */
+        /* --- UPDATED WHITE NEON PACKAGES SECTION --- */
         .packages-box {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px;
         }
         .pkg-card {
-            background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px; padding: 14px; text-align: center; transition: 0.3s;
+            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px; padding: 16px; text-align: center; transition: 0.3s;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
         }
-        .pkg-card:hover { border-color: #F59E0B; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(245,158,11,0.2); }
-        .pkg-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .pkg-silver { color: #CBD5E1; }
-        .pkg-gold { color: #FDE68A; }
-        .pkg-price { font-size: 18px; font-weight: 900; color: #38BDF8; margin-bottom: 8px; }
-        .pkg-desc { font-size: 10px; color: #94A3B8; line-height: 1.4; }
+        .pkg-card:hover { 
+            border-color: #38BDF8; transform: translateY(-3px); 
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); 
+        }
+        .pkg-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .pkg-silver { color: #E2E8F0; text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+        .pkg-gold { color: #FDE68A; text-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
+        .pkg-price { font-size: 20px; font-weight: 900; color: #38BDF8; margin-bottom: 10px; text-shadow: 0 0 12px rgba(56, 189, 248, 0.6); }
+        
+        /* WHITE NEON ENLARGED DETAILS */
+        .pkg-desc { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #FFFFFF; 
+            line-height: 1.6; 
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.4);
+        }
 
         .contact-info {
-            margin-top: 16px; background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 12px; padding: 12px; font-size: 11px; color: #CBD5E1; text-align: center; line-height: 1.6;
+            margin-top: 18px; background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 12px; padding: 14px; font-size: 12px; color: #E2E8F0; text-align: center; line-height: 1.6;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
         }
-        .contact-info a { color: #34D399; text-decoration: none; font-weight: 700; }
+        .contact-info a { color: #34D399; text-decoration: none; font-weight: 800; text-shadow: 0 0 8px rgba(52, 211, 153, 0.6); }
         .error-msg { color: #EF4444; font-size: 11px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
 
         /* --- DASHBOARD STYLES --- */
         #dashboard-wrapper { display: none; width: 100%; max-width: 1200px; animation: fadeInCard 0.6s ease forwards; }
         .top-bar {
             display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
         }
         .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
         @media(max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        .card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .signal-box { background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 24px; text-align: center; }
+        .card { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 24px; text-align: center; }
         .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 10px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
         .signal-text { font-size: 16px; font-weight: 800; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .logout-btn { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
@@ -268,7 +302,8 @@
 <body>
 
 <div class="bg-glow"></div>
-<div class="trading-grid-bg"></div>
+<div class="trading-chart-bg"></div>
+<div class="glitch-overlay"></div>
 
 <!-- EPIC LOADING ANIMATION SCREEN -->
 <div id="loader-screen">
@@ -296,17 +331,25 @@
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
     <span id="login-error" class="error-msg"></span>
 
-    <!-- Packages Section -->
+    <!-- Packages Section with White Neon Glow & Larger Font -->
     <div class="packages-box">
         <div class="pkg-card">
             <div class="pkg-title pkg-silver">Silver Package</div>
-            <div class="pkg-price">$10 <span style="font-size:10px; font-weight:normal; color:#94A3B8;">/mo</span></div>
-            <div class="pkg-desc">1 Month Access<br>• Real-time Signals<br>• Live LDP Stream</div>
+            <div class="pkg-price">$10 <span style="font-size:11px; font-weight:600; color:#94A3B8;">/mo</span></div>
+            <div class="pkg-desc">
+                1 Month Access<br>
+                • Real-time Signals<br>
+                • Live LDP Stream
+            </div>
         </div>
         <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.4);">
             <div class="pkg-title pkg-gold">Gold Package</div>
-            <div class="pkg-price">$20 <span style="font-size:10px; font-weight:normal; color:#94A3B8;">/mo</span></div>
-            <div class="pkg-desc">1 Month Access<br>• Auto-Trader Bot<br>• Advanced Signals</div>
+            <div class="pkg-price">$20 <span style="font-size:11px; font-weight:600; color:#94A3B8;">/mo</span></div>
+            <div class="pkg-desc">
+                1 Month Access<br>
+                • Auto-Trader Bot<br>
+                • Advanced Signals
+            </div>
         </div>
     </div>
 
