@@ -42,133 +42,7 @@
         .top-badges { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
         .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
 
-        .main-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; }
-        @media(max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
-
-        .left-sidebar, .right-sidebar { display: flex; flex-direction: column; gap: 20px; }
-        .center-content { display: flex; flex-direction: column; gap: 20px; }
-
-        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; backdrop-filter: blur(10px); }
-        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
-
-        .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 480px; overflow-y: auto; }
-        .market-item {
-            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
-        .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
-
-        .timeframe-bar { display: flex; gap: 6px; background: rgba(2,6,23,0.6); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); margin-top: 14px; justify-content: center; width: 100%; }
-        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
-
-        /* Extended Height to Match Volatility Markets Panel */
-        .signal-box-prominent {
-            background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.95));
-            border: 2px solid #10B981; border-radius: 14px; padding: 36px 24px; text-align: center;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
-            width: 100%; min-height: 290px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .price-text { font-size: 44px; font-weight: 900; color: #38BDF8; margin: 12px 0; font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .radar-panel-box {
-            background: rgba(10, 14, 26, 0.95);
-            border: 2px solid rgba(56, 189, 248, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);
-            transition: 0.3s ease;
-        }
-        .radar-circle-container {
-            width: 130px; height: 130px; margin: 15px auto; border-radius: 50%;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(2, 6, 23, 0.8) 70%);
-            border: 1px dashed rgba(56, 189, 248, 0.4);
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
-        .radar-inner-icon {
-            width: 55px; height: 55px; background: #38BDF8; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #010409; font-size: 22px; font-weight: bold;
-            box-shadow: 0 0 15px #38BDF8;
-        }
-        .radar-status-badge {
-            background: #38BDF8; color: #010409; font-size: 10px; font-weight: 900; padding: 5px 14px;
-            border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-        }
-        .radar-action-btn {
-            width: 100%; background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 12px; border-radius: 10px;
-            font-weight: 800; font-size: 12px; cursor: pointer; margin-top: 15px; text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); transition: 0.2s;
-        }
-
-        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
-        .tick-badge { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
-        .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
-
-        .ldp-candles-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
-        .ldp-candle-col { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; }
-        .ldp-candle-track { width: 14px; height: 90px; background: rgba(255,255,255,0.05); border-radius: 4px; display: flex; align-items: flex-end; position: relative; overflow: hidden; margin: 6px 0; border: 1px solid rgba(255,255,255,0.08); }
-        .ldp-candle-fill { width: 100%; background: linear-gradient(180deg, #38BDF8, #0284C7); border-radius: 2px; transition: height 0.4s ease; }
-
-        .Here is the fully fixed and updated **TRADING WITH OGGY** terminal code. 
-
-### Recent Updates Included:
-1. **Perfect Width Alignment (Volatility Market Panel Width):** The live market stream container and its timeframe bar have been precisely matched in width to align horizontally with the Volatility Markets sidebar panel on the left.
-2. **Extended Vertical Height & Spacing:** The live chart/stream container has been expanded vertically downward with enhanced padding and clearer spacing, making it much more prominent and balanced.
-3. **Live Market & Timeframe Display:** The active market symbol and selected timeframe (e.g., `5m`) are dynamically updated and shown right inside the stream box.
-4. **All Core Features Retained:** Fully responsive dark-themed CSS layout, Signal Radar with color-coded triggers (Green for Rise, Red for Fall), LDP percentage fill candles, and the locked Gold VIP auto-trader panel.
-
-Save the code below as your `index.html` file and open it in your browser or push it to GitHub Pages:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Elite Pro Terminal</title>
-    <link href="[https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap](https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap)" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; padding: 20px; overflow-x: hidden; position: relative; }
-        
-        #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 20%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
-                        radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
-        }
-
-        #dashboard-wrapper { width: 100%; max-width: 1450px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px; }
-        #dashboard-wrapper::-webkit-scrollbar { width: 6px; }
-        #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
-
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 18px 24px;
-            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
-            flex-wrap: wrap; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .brand-container { display: flex; align-items: center; gap: 18px; }
-        .brand-logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.7); }
-        .brand-title {
-            font-size: 22px; font-weight: 900; font-family: 'Cinzel', serif; letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #FDE68A, #F59E0B, #38BDF8, #FDE68A);
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineText 5s linear infinite;
-            text-shadow: 0 0 20px rgba(245,158,11,0.4);
-        }
-        @keyframes shineText { to { background-position: 200% center; } }
-
-        .top-badges { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
-        .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
-
-        .main-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; }
+        .main-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; align-items: start; }
         @media(max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
 
         .left-sidebar, .right-sidebar { display: flex; flex-direction: column; gap: 20px; }
@@ -187,15 +61,21 @@ Save the code below as your `index.html` file and open it in your browser or pus
         .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
 
-        /* Expanded Vertical Height & Full Width Matching Left Sidebar */
         .signal-box-prominent {
             background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.95));
-            border: 2px solid #10B981; border-radius: 14px; padding: 42px 24px; text-align: center;
+            border: 2px solid #10B981; border-radius: 14px; padding: 24px; text-align: center;
             box-shadow: 0 0 35px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
-            width: 100%; min-height: 260px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .price-text { font-size: 46px; font-weight: 900; color: #38BDF8; margin: 12px 0; font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 8px 0; font-family: 'Cinzel', serif; }
+        .signal-text { font-size: 13px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Live Chart Frame Styling */
+        .live-chart-container {
+            width: 100%; height: 350px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(56, 189, 248, 0.3);
+            background: #020617; margin-top: 14px;
+        }
+        .live-chart-container iframe { width: 100%; height: 100%; border: none; }
 
         .radar-panel-box {
             background: rgba(10, 14, 26, 0.95);
@@ -229,8 +109,8 @@ Save the code below as your `index.html` file and open it in your browser or pus
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); transition: 0.2s;
         }
 
-        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
-        .tick-badge { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .tick-badge { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
         .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
 
@@ -278,7 +158,7 @@ Save the code below as your `index.html` file and open it in your browser or pus
     <!-- Top Header Bar with Enlarged Brand Title -->
     <div class="top-bar">
         <div class="brand-container">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='[https://i.imgur.com/8Km9tLL.png](https://i.imgur.com/8Km9tLL.png)'">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
                 <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Live Deriv WebSocket Terminal Pro</div>
@@ -301,16 +181,16 @@ Save the code below as your `index.html` file and open it in your browser or pus
             <div class="card">
                 <div class="card-title">Volatility Markets</div>
                 <div class="market-list" id="market-list-container">
-                    <div class="market-item active" onclick="selectMarket('R_10', this)"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
-                    <div class="market-item" onclick="selectMarket('R_25', this)"><span>Volatility 25 Index</span><span style="font-size:9px; color:#38BDF8">R_25</span></div>
-                    <div class="market-item" onclick="selectMarket('R_50', this)"><span>Volatility 50 Index</span><span style="font-size:9px; color:#38BDF8">R_50</span></div>
-                    <div class="market-item" onclick="selectMarket('R_75', this)"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
-                    <div class="market-item" onclick="selectMarket('R_100', this)"><span>Volatility 100 Index</span><span style="font-size:9px; color:#38BDF8">R_100</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ10V', this)"><span>Volatility 10 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ25V', this)"><span>Volatility 25 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ50V', this)"><span>Volatility 50 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ75V', this)"><span>Volatility 75 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item active" onclick="selectMarket('R_10', this, 'R_10')"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
+                    <div class="market-item" onclick="selectMarket('R_25', this, 'R_25')"><span>Volatility 25 Index</span><span style="font-size:9px; color:#38BDF8">R_25</span></div>
+                    <div class="market-item" onclick="selectMarket('R_50', this, 'R_50')"><span>Volatility 50 Index</span><span style="font-size:9px; color:#38BDF8">R_50</span></div>
+                    <div class="market-item" onclick="selectMarket('R_75', this, 'R_75')"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
+                    <div class="market-item" onclick="selectMarket('R_100', this, 'R_100')"><span>Volatility 100 Index</span><span style="font-size:9px; color:#38BDF8">R_100</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ10V', this, '1HZ10V')"><span>Volatility 10 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ25V', this, '1HZ25V')"><span>Volatility 25 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ50V', this, '1HZ50V')"><span>Volatility 50 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ75V', this, '1HZ75V')"><span>Volatility 75 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ100V', this, '1HZ100V')"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
                 </div>
             </div>
 
@@ -328,7 +208,7 @@ Save the code below as your `index.html` file and open it in your browser or pus
         <div class="center-content">
             <div class="card">
                 <div class="card-title">
-                    <span id="active-market-title">Deriv Live Market Stream (Volatility 10 Index)</span>
+                    <span id="active-market-title">Deriv Live Market Stream & Chart (Volatility 10 Index)</span>
                 </div>
 
                 <div class="signal-box-prominent" id="signal-main-box">
@@ -336,18 +216,23 @@ Save the code below as your `index.html` file and open it in your browser or pus
                     <div id="live-price-display" class="price-text">$0.000</div>
                     <div id="live-signal-status" class="signal-text">🔊 VOICE ALERT ACTIVE: SCANNING MARKET...</div>
                     
-                    <div style="margin-top: 18px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div style="margin-top: 14px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
                     <div id="digit-history" class="tick-history"></div>
                 </div>
 
-                <!-- Timeframe Bar placed directly below the chart/signal stream area -->
+                <!-- EMBEDDED LIVE DERIV CHART WIDGET -->
+                <div class="live-chart-container">
+                    <iframe id="deriv-chart-iframe" src="https://charts.deriv.com/deriv?symbol=R_10&interval=300&theme=dark" allowfullscreen></iframe>
+                </div>
+
+                <!-- Timeframe Bar placed directly below the chart -->
                 <div class="timeframe-bar">
-                    <button class="tf-btn" onclick="setTimeframe('1m', this)">1m</button>
-                    <button class="tf-btn" onclick="setTimeframe('3m', this)">3m</button>
-                    <button class="tf-btn active" onclick="setTimeframe('5m', this)">5m</button>
-                    <button class="tf-btn" onclick="setTimeframe('15m', this)">15m</button>
-                    <button class="tf-btn" onclick="setTimeframe('30m', this)">30m</button>
-                    <button class="tf-btn" onclick="setTimeframe('1hr', this)">1hr</button>
+                    <button class="tf-btn" onclick="setTimeframe('1m', 60, this)">1m</button>
+                    <button class="tf-btn" onclick="setTimeframe('3m', 180, this)">3m</button>
+                    <button class="tf-btn active" onclick="setTimeframe('5m', 300, this)">5m</button>
+                    <button class="tf-btn" onclick="setTimeframe('15m', 900, this)">15m</button>
+                    <button class="tf-btn" onclick="setTimeframe('30m', 1800, this)">30m</button>
+                    <button class="tf-btn" onclick="setTimeframe('1hr', 3600, this)">1hr</button>
                 </div>
             </div>
 
@@ -477,6 +362,8 @@ Save the code below as your `index.html` file and open it in your browser or pus
 
 <script>
     const userTier = 'GOLD'; 
+    let currentSymbol = 'R_10';
+    let currentInterval = 300; // default 5m (300s)
 
     window.addEventListener('DOMContentLoaded', () => {
         if(userTier !== 'GOLD') {
@@ -495,10 +382,17 @@ Save the code below as your `index.html` file and open it in your browser or pus
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-    function setTimeframe(tf, el) {
+    function setTimeframe(tfText, intervalSeconds, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
-        document.getElementById('display-tf').innerText = tf;
+        document.getElementById('display-tf').innerText = tfText;
+        currentInterval = intervalSeconds;
+        updateChartIframe();
+    }
+
+    function updateChartIframe() {
+        const iframe = document.getElementById('deriv-chart-iframe');
+        iframe.src = `https://charts.deriv.com/deriv?symbol=${currentSymbol}&interval=${currentInterval}&theme=dark`;
     }
 
     function selectStrategy(index, el) {
@@ -610,7 +504,6 @@ Save the code below as your `index.html` file and open it in your browser or pus
 
     /* --- DERIV WEBSOCKET & 0-9 LDP CANDLES ANALYZER --- */
     let derivWS = null;
-    let currentMarket = "R_10";
     let recentDigits = [];
     let digitCounts = new Array(10).fill(0);
     let totalTicksCount = 0;
@@ -674,10 +567,10 @@ Save the code below as your `index.html` file and open it in your browser or pus
 
     function initDerivStream() {
         if(derivWS) derivWS.close();
-        derivWS = new WebSocket('wss://[ws.derivws.com/websockets/v3?app_id=1089](https://ws.derivws.com/websockets/v3?app_id=1089)');
+        derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
-            derivWS.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
+            derivWS.send(JSON.stringify({ ticks: currentSymbol, subscribe: 1 }));
         };
 
         derivWS.onmessage = function(event) {
@@ -702,19 +595,20 @@ Save the code below as your `index.html` file and open it in your browser or pus
         };
     }
 
-    function selectMarket(symbol, el) {
+    function selectMarket(symbol, el, symbolCode) {
         document.querySelectorAll('.market-item').forEach(item => item.classList.remove('active'));
         el.classList.add('active');
-        currentMarket = symbol;
+        currentSymbol = symbolCode;
         marketNameGlobal = el.querySelector('span').innerText;
-        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketNameGlobal})`;
-        document.getElementById('active-market-label').innerHTML = `Symbol: ${symbol} | Stream & Selected Timeframe: <span id="display-tf" style="color:#38BDF8;">5m</span>`;
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream & Chart (${marketNameGlobal})`;
+        document.getElementById('active-market-label').innerHTML = `Symbol: ${symbolCode} | Stream & Selected Timeframe: <span id="display-tf" style="color:#38BDF8;">5m</span>`;
         document.getElementById('top-market-badge').innerText = marketNameGlobal;
         
         recentDigits = [];
         digitCounts.fill(0);
         totalTicksCount = 0;
         initDerivStream();
+        updateChartIframe();
     }
 
     function renderDigitHistory() {
@@ -860,7 +754,13 @@ Save the code below as your `index.html` file and open it in your browser or pus
         btn.innerText = statusText;
         topBtn.innerText = statusText;
         btn.style.borderColor = voiceEnabled ? "#10B981" : "#EF4444";
-        btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
+        btn.style.color = voiceEnabled ? "$34D399" : "#F87171";
+    }
+
+    function connectDeriv`schein`() {
+        const token = document.getElementById('deriv-token').value;
+        if(!token) { alert("Please enter your Deriv API Token!"); return; }
+        document.getElementById('bot-status').innerText = "✅ Bot Active & Linked Successfully";
     }
 
     function connectDeriv() {
