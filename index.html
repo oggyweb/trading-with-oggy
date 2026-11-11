@@ -57,16 +57,17 @@
         }
         .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        .timeframe-bar { display: flex; gap: 4px; background: rgba(2,6,23,0.6); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-top: 12px; justify-content: center; }
-        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .timeframe-bar { display: flex; gap: 6px; background: rgba(2,6,23,0.6); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); margin-top: 14px; justify-content: center; width: 100%; }
+        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
 
         .signal-box-prominent {
             background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.95));
             border: 2px solid #10B981; border-radius: 14px; padding: 24px; text-align: center;
             box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
+            width: 100%;
         }
-        .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 8px 0; font-family: 'Cinzel', serif; }
+        .price-text { font-size: 40px; font-weight: 900; color: #38BDF8; margin: 10px 0; font-family: 'Cinzel', serif; }
         .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
         .radar-panel-box {
@@ -204,7 +205,7 @@
                 </div>
 
                 <div class="signal-box-prominent" id="signal-main-box">
-                    <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
+                    <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_10 | Stream & Selected Timeframe: <span id="display-tf" style="color:#38BDF8;">5m</span></div>
                     <div id="live-price-display" class="price-text">$0.000</div>
                     <div id="live-signal-status" class="signal-text">🔊 VOICE ALERT ACTIVE: SCANNING MARKET...</div>
                     
@@ -370,6 +371,7 @@
     function setTimeframe(tf, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
+        document.getElementById('display-tf').innerText = tf;
     }
 
     function selectStrategy(index, el) {
@@ -579,7 +581,7 @@
         currentMarket = symbol;
         marketNameGlobal = el.querySelector('span').innerText;
         document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketNameGlobal})`;
-        document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
+        document.getElementById('active-market-label').innerHTML = `Symbol: ${symbol} | Stream & Selected Timeframe: <span id="display-tf" style="color:#38BDF8;">5m</span>`;
         document.getElementById('top-market-badge').innerText = marketNameGlobal;
         
         recentDigits = [];
