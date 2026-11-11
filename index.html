@@ -3,107 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading With Oggy - Elite Pro Signal Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <title>Cyber Pro Trading Terminal - TRADING WITH OGGY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Share Tech Mono', monospace; }
+        body { background-color: #030712; color: #38BDF8; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; position: relative; }
         
-        /* ORIGINAL NEXT-LEVEL PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION */
-        #trading-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
-        }
-
-        /* Deep Tech Blue Glows */
-        .bg-glow {
+        #tech-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
+        .cyber-grid-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.3) 0%, rgba(1, 4, 9, 0.95) 70%),
-                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.25) 0%, transparent 60%);
+            background-image: linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .ambient-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15) 0%, rgba(3, 7, 18, 0.95) 80%);
         }
 
-        /* --- MODERN GLASS LOGIN CONTAINER --- */
+        /* LOGIN CONTAINER */
         .auth-container {
-            max-width: 520px; width: 100%;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 24px;
-            padding: 35px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(56, 189, 248, 0.15);
+            max-width: 480px; width: 100%;
+            background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 30px;
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.2);
         }
-
-        .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 14px auto; display: block; }
+        .login-logo { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 15px auto; display: block; }
+        .brand-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #FDE68A; margin-bottom: 5px; letter-spacing: 2px; }
+        .brand-sub { text-align: center; font-size: 10px; color: #94A3B8; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .brand-title { 
-            text-align: center; font-size: 25px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; 
-            font-family: 'Cinzel', serif; letter-spacing: 2px; 
-            background: linear-gradient(90deg, #FDE68A, #38BDF8, #FDE68A);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineText 4s linear infinite;
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 10px; color: #94A3B8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select {
+            width: 100%; background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 12px; border-radius: 8px; color: #38BDF8; font-size: 13px; outline: none; transition: 0.3s;
         }
-        @keyframes shineText { to { background-position: 200% center; } }
-
-        .brand-sub { text-align: center; font-size: 11px; color: #94A3B8; margin-bottom: 22px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        input {
-            width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 14px 18px; border-radius: 12px; color: #FFF; font-size: 14px; outline: none; transition: all 0.3s ease;
-        }
-        input:focus { border-color: #38BDF8; background: rgba(56, 189, 248, 0.05); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+        input:focus { border-color: #38BDF8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
 
         .action-btn {
-            width: 100%; background: linear-gradient(135deg, #38BDF8, #0284C7); color: #010409;
-            border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 10px;
-            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.4); transition: transform 0.2s ease, opacity 0.2s ease;
+            width: 100%; background: linear-gradient(135deg, #38BDF8, #0284C7); color: #030712;
+            border: none; padding: 14px; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer;
+            font-family: 'Orbitron', sans-serif; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(56, 189, 248, 0.4); transition: 0.2s;
         }
-        .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .error-msg { color: #EF4444; font-size: 10px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
 
-        .packages-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
-        .pkg-card {
-            background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px; padding: 16px; text-align: center; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+        .packages-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .pkg-card { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; text-align: center; }
+        .pkg-title { font-size: 12px; font-weight: 900; margin-bottom: 4px; text-transform: uppercase; }
+        .pkg-price { font-size: 16px; font-weight: 900; color: #38BDF8; margin-bottom: 4px; }
+        .pkg-desc { font-size: 9px; color: #94A3B8; line-height: 1.3; }
+
+        /* DASHBOARD STYLES */
+        #dashboard-wrapper { display: none; width: 100%; max-width: 1350px; height: 96vh; overflow-y: auto; padding-right: 8px; }
+        #dashboard-wrapper::-webkit-scrollbar { width: 5px; }
+        #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
+
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
+            background: rgba(3, 7, 18, 0.92); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; margin-bottom: 16px; backdrop-filter: blur(10px);
         }
-        .pkg-card:hover { border-color: #38BDF8; transform: translateY(-3px); box-shadow: 0 0 25px rgba(56, 189, 248, 0.4); }
-        .pkg-title { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .pkg-silver { color: #E2E8F0; text-shadow: 0 0 10px rgba(226, 232, 240, 0.6); }
-        .pkg-gold { color: #FDE68A; text-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
-        .pkg-price { font-size: 22px; font-weight: 900; color: #38BDF8; margin-bottom: 10px; text-shadow: 0 0 15px rgba(56, 189, 248, 0.8); }
-        .pkg-desc-silver, .pkg-desc-gold { font-size: 12px; font-weight: 700; color: #CBD5E1; line-height: 1.5; }
-        .red-neon-bot { color: #FF4D4D; font-weight: 800; text-shadow: 0 0 8px rgba(255, 77, 77, 0.9); }
+        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr 350px; gap: 16px; }
+        @media(max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        .contact-info {
-            margin-top: 18px; background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 12px; padding: 14px; font-size: 12px; color: #E2E8F0; text-align: center; line-height: 1.6;
+        .card { background: rgba(3, 7, 18, 0.88); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+        .market-item {
+            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
         }
-        .clean-blue { color: #38BDF8; font-weight: 700; text-decoration: none; }
-        .error-msg { color: #EF4444; font-size: 11px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
+        .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.1); }
 
-        /* --- DASHBOARD STYLES --- */
-        #dashboard-wrapper { display: none; width: 100%; max-width: 1200px; }
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
-        }
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
-        @media(max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 16px; text-align: center; }
+        .price-display { font-size: 28px; font-weight: 900; color: #38BDF8; font-family: 'Orbitron', sans-serif; margin: 6px 0; text-shadow: 0 0 12px rgba(56,189,248,0.4); }
+        .signal-status { font-size: 12px; font-weight: 800; color: #34D399; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .card { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 24px; text-align: center; }
-        .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 10px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
-        .signal-text { font-size: 16px; font-weight: 800; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .logout-btn { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .tick-history { display: flex; gap: 5px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+        .tick-badge { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 5px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
+        .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
+
+        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 12px; text-align: center; }
+        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 5px 2px; }
+        .histo-fill { height: 35px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
+        .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
+
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 10px; }
         .logout-btn:hover { background: #EF4444; color: #FFF; }
-        
-        .locked-box { text-align: center; padding: 25px 20px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 14px; }
-        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-        
-        .tick-history { display: flex; gap: 8px; justify-content: center; margin-top: 12px; font-size: 12px; font-weight: 700; }
-        .tick-badge { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #F8FAFC; }
+        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 8px; font-family: 'Orbitron', sans-serif; font-size: 11px; }
+        .locked-box { text-align: center; padding: 15px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 8px; }
     </style>
 
-    <!-- Firebase SDK Setup & Single-Device Binding Security Logic -->
+    <!-- Firebase SDK & Core Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -133,27 +124,22 @@
         window.addEventListener('load', async () => {
             try {
                 const lifetimeRef = doc(db, "vip_keys", "OGGY-LIFETIME-VIP");
-                const lifetimeSnap = await getDoc(lifetimeRef);
-                if (!lifetimeSnap.exists()) {
-                    await setDoc(lifetimeRef, {
-                        expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
-                        tier: "tier2", 
-                        active: true,
-                        deviceId: "", 
-                        createdAt: new Date().toISOString()
-                    });
-                }
+                await setDoc(lifetimeRef, {
+                    expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000),
+                    tier: "tier2",
+                    active: true,
+                    deviceId: "",
+                    createdAt: new Date().toISOString()
+                }, { merge: true });
             } catch(e) { console.log(e); }
         });
 
         window.handleKeyLogin = async function() {
             const keyInput = document.getElementById('login-key').value.trim();
             const errorSpan = document.getElementById('login-error');
-            errorSpan.style.color = "#94A3B8";
-            errorSpan.innerText = "Checking secure cloud device binding...";
+            errorSpan.innerText = "Authenticating secure cloud key...";
 
             if(!keyInput) {
-                errorSpan.style.color = "#EF4444";
                 errorSpan.innerText = "Please enter your VIP access key!";
                 return;
             }
@@ -163,7 +149,6 @@
                 const docSnap = await getDoc(docRef);
 
                 if (!docSnap.exists()) {
-                    errorSpan.style.color = "#EF4444";
                     errorSpan.innerText = "Invalid Access Key! Contact admin.";
                     return;
                 }
@@ -173,19 +158,16 @@
                 const currentDeviceID = getDeviceUID();
 
                 if(currentTime > keyData.expiry) {
-                    errorSpan.style.color = "#EF4444";
                     errorSpan.innerText = "This VIP Key has expired!";
                     return;
                 }
 
                 if(!keyData.active) {
-                    errorSpan.style.color = "#EF4444";
                     errorSpan.innerText = "This Key has been disabled by Admin!";
                     return;
                 }
 
                 if (keyData.deviceId && keyData.deviceId !== currentDeviceID) {
-                    errorSpan.style.color = "#EF4444";
                     errorSpan.innerText = "Access Denied! Key already bound to another device.";
                     return;
                 }
@@ -198,8 +180,7 @@
                 loadDashboard(keyData);
             } catch(e) {
                 console.error(e);
-                errorSpan.style.color = "#EF4444";
-                errorSpan.innerText = "Server Connection Error! Check network.";
+                errorSpan.innerText = "Cloud Connection Error! Check network.";
             }
         };
 
@@ -211,47 +192,43 @@
             const autoContent = document.getElementById('autotrade-content');
 
             if(keyData.tier === 'tier1') {
-                planBadge.innerText = "Silver VIP (Single-Device Bound)";
+                planBadge.innerText = "Silver VIP (Signals & LDP)";
                 planBadge.style.color = "#E2E8F0";
                 autoContent.innerHTML = `
                     <div class="locked-box">
-                        <div style="font-size: 13px; color: #EF4444; font-weight: 800; margin-bottom: 8px;">🔒 Auto-Trading Locked</div>
-                        <p style="font-size: 11px; color: #94A3B8; line-height: 1.5;">You are currently using a <strong>Silver Package</strong> key (Signals & LDP Stream active). Auto-trading is locked for this key. Upgrade to a <strong>Gold Package</strong> key to enable automated execution.</p>
+                        <div style="font-size: 11px; color: #EF4444; font-weight: 800; margin-bottom: 5px;">🔒 AUTO-TRADING LOCKED</div>
+                        <p style="font-size: 9px; color: #94A3B8; line-height: 1.3;">Upgrade to Gold Package to unlock automated API trading execution.</p>
                     </div>
                 `;
             } else {
-                planBadge.innerText = "Gold VIP (Single-Device Bound)";
+                planBadge.innerText = "Gold VIP (Lifetime / Unlocked)";
                 planBadge.style.color = "#F59E0B";
                 autoContent.innerHTML = `
-                    <div style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">Link your Deriv account to run automated trades.</div>
-                    <div style="margin-bottom: 10px;">
-                        <label style="font-size:10px; color:#94A3B8;">Deriv API Token</label>
-                        <input type="password" id="deriv-token" placeholder="Paste API token">
+                    <div style="font-size: 9px; color: #94A3B8; margin-bottom: 6px;">Link Deriv account for auto execution.</div>
+                    <div style="margin-bottom: 6px;">
+                        <label style="font-size:8px;">API Token</label>
+                        <input type="password" id="deriv-token" placeholder="Paste token">
                     </div>
-                    <div style="margin-bottom: 12px;">
-                        <label style="font-size:10px; color:#94A3B8;">Stake ($)</label>
+                    <div style="margin-bottom: 8px;">
+                        <label style="font-size:8px;">Stake ($)</label>
                         <input type="number" id="stake" value="1.00">
                     </div>
                     <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
-                    <div id="bot-status" style="font-size: 11px; color: #34D399; margin-top: 10px; text-align: center; font-weight: 600;"></div>
+                    <div id="bot-status" style="font-size: 9px; color: #34D399; margin-top: 6px; text-align: center; font-weight: bold;"></div>
                 `;
             }
 
-            connectDerivLiveMarket();
+            initDerivStream();
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            localStorage.removeItem('oggy_cloud_key');
-        });
     </script>
 </head>
 <body>
 
-<!-- ORIGINAL HIGH-TECH WAVES & GLOWING CANDLESTICKS CANVAS ANIMATION -->
-<canvas id="trading-canvas"></canvas>
-<div class="bg-glow"></div>
+<canvas id="tech-canvas"></canvas>
+<div class="cyber-grid-overlay"></div>
+<div class="ambient-glow"></div>
 
-<!-- MODERN GLASS LOGIN CONTAINER -->
+<!-- LOGIN CONTAINER -->
 <div id="auth-wrapper" class="auth-container">
     <img src="file_0000000006008208af7bbd2728ae3881.png" class="login-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
     <div class="brand-title">TRADING WITH OGGY</div>
@@ -259,7 +236,7 @@
 
     <div class="form-group">
         <label>Enter VIP Access Key (1 Device Limit)</label>
-        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
+        <input type="text" id="login-key" placeholder="Enter VIP Key (e.g. OGGY-LIFETIME-VIP)">
     </div>
 
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
@@ -267,60 +244,97 @@
 
     <div class="packages-box">
         <div class="pkg-card">
-            <div class="pkg-title pkg-silver">Silver Package</div>
-            <div class="pkg-price">$10 <span style="font-size:12px; color:#38BDF8;">/mo</span></div>
-            <div class="pkg-desc-silver">1 Month Access<br>• Real-time Signals<br>• Live LDP Stream</div>
+            <div class="pkg-title" style="color:#E2E8F0;">Silver VIP</div>
+            <div class="pkg-price">$10<span style="font-size:9px;color:#38BDF8;">/mo</span></div>
+            <div class="pkg-desc">• Live Signals<br>• LDP Stream</div>
         </div>
-        <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.5);">
-            <div class="pkg-title pkg-gold">Gold Package</div>
-            <div class="pkg-price">$20 <span style="font-size:12px; color:#38BDF8;">/mo</span></div>
-            <div class="pkg-desc-gold">1 Month Access<br>• <span class="red-neon-bot">Auto-Trader Bot</span><br>• Advanced Signals</div>
+        <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.4);">
+            <div class="pkg-title" style="color:#FDE68A;">Gold VIP</div>
+            <div class="pkg-price">$20<span style="font-size:9px;color:#38BDF8;">/mo</span></div>
+            <div class="pkg-desc">• <span style="color:#EF4444; font-weight:bold;">Auto-Trader</span><br>• Advanced AI</div>
         </div>
-    </div>
-
-    <div class="contact-info">
-        <strong>📥 Get Your VIP Access Key:</strong><br>
-        • <strong>WhatsApp:</strong> <a href="https://wa.me/94753578716" target="_blank" class="clean-blue">+94 75 3578 716</a><br>
-        • <strong>Telegram:</strong> <a href="https://t.me/trading_with_oggy" target="_blank" class="clean-blue">@trading_with_oggy</a>
     </div>
 </div>
 
 <!-- DASHBOARD CONTAINER -->
 <div id="dashboard-wrapper">
-    <div class="top-bar">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B;" alt="Logo">
+    <div class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B;" alt="Logo">
             <div>
-                <div style="font-size: 15px; font-weight: 800; color: #FDE68A; font-family: 'Cinzel', serif;">TRADING WITH OGGY</div>
-                <div style="font-size: 11px; color: #34D399; font-weight: 600;">● Live Deriv Stream Active</div>
+                <div style="font-size: 12px; font-weight: 900; color: #FDE68A; font-family: 'Orbitron', sans-serif;">TRADING WITH OGGY</div>
+                <div style="font-size: 9px; color: #34D399; font-weight: bold;">● Live Deriv Stream Active</div>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <div style="font-size: 12px;">Package: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 10px;">Tier: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
 
     <div class="dashboard-grid">
+        <!-- LEFT COLUMN: ALL DERIV MARKETS -->
         <div>
             <div class="card">
-                <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase;">
-                    Deriv Live Market Data (Volatility 10 Index)
-                </div>
-                <div class="signal-box">
-                    <div style="font-size: 11px; color: #94A3B8;">Symbol: R_10 | WebSocket Stream</div>
-                    <div id="live-price-display" class="price-text">$0.000</div>
-                    <div id="live-signal-status" class="signal-text">⚡ Connecting to Deriv Market...</div>
-                    
-                    <div style="margin-top: 20px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
-                    <div id="digit-history" class="tick-history"></div>
+                <div class="card-title">Volatility Markets</div>
+                <div class="market-list" id="market-list-container">
+                    <div class="market-item active" onclick="selectMarket('R_10', this)"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
+                    <div class="market-item" onclick="selectMarket('R_25', this)"><span>Volatility 25 Index</span><span style="font-size:9px; color:#38BDF8">R_25</span></div>
+                    <div class="market-item" onclick="selectMarket('R_50', this)"><span>Volatility 50 Index</span><span style="font-size:9px; color:#38BDF8">R_50</span></div>
+                    <div class="market-item" onclick="selectMarket('R_75', this)"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
+                    <div class="market-item" onclick="selectMarket('R_100', this)"><span>Volatility 100 Index</span><span style="font-size:9px; color:#38BDF8">R_100</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ10V', this)"><span>Volatility 10 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ25V', this)"><span>Volatility 25 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ50V', this)"><span>Volatility 50 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ75V', this)"><span>Volatility 75 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
                 </div>
             </div>
         </div>
 
+        <!-- CENTER COLUMN: LIVE TICK & LDP ANALYZER -->
         <div>
             <div class="card">
-                <div style="font-size: 12px; font-weight: 700; color: #94A3B8; margin-bottom: 14px; text-transform: uppercase;">Deriv Auto-Trader Bot</div>
+                <div class="card-title">
+                    <span id="active-market-title">Deriv Live Market Data (Volatility 10 Index)</span>
+                </div>
+                <div class="signal-box">
+                    <div style="font-size: 9px; color: #94A3B8;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
+                    <div id="live-price" class="price-text price-display">$0.000</div>
+                    <div id="market-status" class="signal-status">⚡ Connecting to Deriv...</div>
+                    
+                    <div style="margin-top: 12px; font-size: 9px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div id="digit-history" class="tick-history"></div>
+                </div>
+            </div>
+
+            <!-- REAL-TIME LAST DIGIT ANALYZER (LDP) -->
+            <div class="card">
+                <div class="card-title">
+                    <span>Real-Time Last Digit Analyzer (LDP)</span>
+                    <span style="font-size: 9px; color: #34D399;" id="ldp-ratio-text">Even: 50% | Odd: 50%</span>
+                </div>
+                <div style="font-size: 9px; color: #94A3B8; margin-bottom: 6px;">Digit Frequency Distribution (0 - 9)</div>
+                <div class="histogram-grid" id="histogram-container"></div>
+            </div>
+
+            <!-- SIGNAL RADAR & VOICE ALERT -->
+            <div class="card">
+                <div class="card-title">
+                    <span>Signal Radar & Voice Alert</span>
+                    <button onclick="toggleVoice()" id="voice-toggle-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; padding: 3px 8px; border-radius: 5px; font-size: 9px; cursor: pointer; font-weight: bold;">Voice ON</button>
+                </div>
+                <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
+                    <div id="signal-radar-status" style="font-size: 12px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET PATTERNS...</div>
+                    <div style="font-size: 9px; color: #94A3B8;" id="radar-subtext">Watching live ticks for strategy triggers. Audio alerts enabled.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: AUTO TRADER BOT -->
+        <div>
+            <div class="card">
+                <div class="card-title">Deriv Auto-Trader Bot</div>
                 <div id="autotrade-content"></div>
             </div>
         </div>
@@ -328,79 +342,45 @@
 </div>
 
 <script>
-    /* FULL PRO TRADING WAVE & GLOWING CANDLESTICK CANVAS ANIMATION SCRIPT */
-    const canvas = document.getElementById('trading-canvas');
+    /* CANVAS BACKGROUND ANIMATION */
+    const canvas = document.getElementById('tech-canvas');
     const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
     let step = 0;
-
-    function animateWaves() {
+    function animateTech() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let centerY = canvas.height / 2;
-
-        for (let j = 0; j < 3; j++) {
-            ctx.beginPath();
-            ctx.lineWidth = j === 0 ? 3 : 1.5;
-            let alpha = j === 0 ? 0.8 : 0.4;
-            ctx.strokeStyle = j === 0 ? `rgba(56, 189, 248, ${alpha})` : `rgba(129, 140, 248, ${alpha})`;
-            ctx.shadowBlur = j === 0 ? 20 : 8;
-            ctx.shadowColor = "#38BDF8";
-
-            let frequency = 0.0025 + (j * 0.0008);
-            let amplitude = 100 + (j * 25);
-            let speed = step * (0.015 + (j * 0.004));
-
-            for (let x = 0; x < canvas.width; x += 10) {
-                let y = centerY + Math.sin(x * frequency + speed) * amplitude + Math.cos(x * 0.0015 - speed) * 50;
-                if (x === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.15)";
+        for (let x = 0; x < canvas.width; x += 15) {
+            let y = centerY + Math.sin(x * 0.003 + step * 0.02) * 80 + Math.cos(x * 0.001 - step * 0.01) * 40;
+            if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-
-        let candleSpacing = 80;
-        let startX = (step * 1.5) % candleSpacing;
-
-        for (let x = startX; x < canvas.width; x += candleSpacing) {
-            let waveY = centerY + Math.sin(x * 0.0025 + step * 0.015) * 100;
-            let candleHeight = 50 + Math.sin(x * 0.5) * 30;
-            let isGreen = Math.sin(x) > 0;
-
-            ctx.strokeStyle = isGreen ? 'rgba(52, 211, 153, 0.7)' : 'rgba(248, 113, 113, 0.7)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x, waveY - candleHeight - 20);
-            ctx.lineTo(x, waveY + candleHeight + 20);
-            ctx.stroke();
-
-            ctx.fillStyle = isGreen ? 'rgba(52, 211, 153, 0.5)' : 'rgba(248, 113, 113, 0.5)';
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = isGreen ? '#34D399' : '#F87171';
-            ctx.fillRect(x - 8, waveY - candleHeight / 2, 16, candleHeight);
-            ctx.shadowBlur = 0;
-        }
-
-        step += 0.8;
-        requestAnimationFrame(animateWaves);
+        ctx.stroke();
+        step += 0.5;
+        requestAnimationFrame(animateTech);
     }
-    animateWaves();
+    animateTech();
 
+    /* WEBSOCKET MARKET & LDP STREAM */
     let derivWS = null;
+    let currentMarket = "R_10";
     let recentDigits = [];
+    let digitCounts = new Array(10).fill(0);
+    let totalTicksCount = 0;
+    let voiceEnabled = true;
 
-    function connectDerivLiveMarket() {
+    function initDerivStream() {
+        if(derivWS) derivWS.close();
         derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
-            derivWS.send(JSON.stringify({ ticks: "R_10", subscribe: 1 }));
+            derivWS.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
+            document.getElementById('market-status').innerText = "● LIVE STREAM CONNECTED";
         };
 
         derivWS.onmessage = function(event) {
@@ -410,37 +390,120 @@
                 const price = tick.quote.toFixed(3);
                 const lastDigit = parseInt(price.slice(-1));
 
-                document.getElementById('live-price-display').innerText = `$${price}`;
+                document.getElementById('live-price').innerText = `$${price}`;
 
                 recentDigits.push(lastDigit);
-                if(recentDigits.length > 5) recentDigits.shift();
+                if(recentDigits.length > 15) recentDigits.shift();
                 
-                const historyEl = document.getElementById('digit-history');
-                historyEl.innerHTML = recentDigits.map(d => `<span class="tick-badge">${d}</span>`).join('');
+                digitCounts[lastDigit]++;
+                totalTicksCount++;
 
-                analyzeSignal(price, lastDigit);
+                renderDigitHistory();
+                renderHistogram();
+                evaluateSignalAndSpeak(lastDigit);
             }
         };
 
-        derivWS.onerror = function(error) {
-            document.getElementById('live-signal-status').innerText = "⚠️ Market Stream Reconnecting...";
+        derivWS.onerror = function() {
+            document.getElementById('market-status').innerText = "⚠️ RECONNECTING STREAM...";
         };
     }
 
-    function analyzeSignal(price, lastDigit) {
-        const signalEl = document.getElementById('live-signal-status');
-        if (!signalEl) return;
+    function selectMarket(symbol, el) {
+        document.querySelectorAll('.market-item').forEach(item => item.classList.remove('active'));
+        el.classList.add('active');
         
-        if (lastDigit >= 7) {
-            signalEl.style.color = "#34D399";
-            signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
-        } else if (lastDigit <= 2) {
-            signalEl.style.color = "#F87171";
-            signalEl.innerText = "🔻 FALL SIGNAL DETECTED (Low LDP)";
-        } else {
-            signalEl.style.color = "#FBBF24";
-            signalEl.innerText = "⏳ SCANNING TICK PATTERNS...";
+        currentMarket = symbol;
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Data (${el.querySelector('span').innerText})`;
+        document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
+        
+        recentDigits = [];
+        digitCounts.fill(0);
+        totalTicksCount = 0;
+        initDerivStream();
+    }
+
+    function renderDigitHistory() {
+        const historyEl = document.getElementById('digit-history');
+        historyEl.innerHTML = recentDigits.map(d => {
+            let cls = d >= 5 ? 'tick-green' : 'tick-red';
+            return `<div class="tick-badge ${cls}">${d}</div>`;
+        }).join('');
+    }
+
+    function renderHistogram() {
+        const container = document.getElementById('histogram-container');
+        let html = '';
+        let maxCount = Math.max(...digitCounts, 1);
+
+        for(let i=0; i<10; i++) {
+            let count = digitCounts[i];
+            let pct = totalTicksCount > 0 ? Math.round((count / totalTicksCount) * 100) : 0;
+            let heightPct = Math.max(10, Math.round((count / maxCount) * 100));
+            html += `
+                <div class="histo-bar-wrap">
+                    <div style="font-size:8px; color:#94A3B8; margin-bottom:2px;">${i}</div>
+                    <div class="histo-fill">
+                        <div class="histo-inner" style="height: ${heightPct}%; background: ${i >= 5 ? '#34D399' : '#F87171'};"></div>
+                    </div>
+                    <div style="font-size:7px; color:#38BDF8; margin-top:2px;">${pct}%</div>
+                </div>
+            `;
         }
+        container.innerHTML = html;
+
+        let evenCount = 0, oddCount = 0;
+        for(let i=0; i<10; i++) {
+            if(i % 2 === 0) evenCount += digitCounts[i];
+            else oddCount += digitCounts[i];
+        }
+        let totalEO = evenCount + oddCount || 1;
+        let evenPct = Math.round((evenCount / totalEO) * 100);
+        let oddPct = 100 - evenPct;
+        document.getElementById('ldp-ratio-text').innerText = `Even: ${evenPct}% | Odd: ${oddPct}%`;
+    }
+
+    let lastSpokenSignal = "";
+    function evaluateSignalAndSpeak(lastDigit) {
+        const radarEl = document.getElementById('signal-radar-status');
+        let signalText = "";
+
+        if (lastDigit >= 8) {
+            signalText = `RISE SIGNAL DETECTED. Last digit is ${lastDigit}.`;
+            radarEl.style.color = "#34D399";
+            radarEl.innerText = `🚀 RISE SIGNAL DETECTED (Digit: ${lastDigit})`;
+        } else if (lastDigit <= 1) {
+            signalText = `FALL SIGNAL DETECTED. Last digit is ${lastDigit}.`;
+            radarEl.style.color = "#F87171";
+            radarEl.innerText = `🔻 FALL SIGNAL DETECTED (Digit: ${lastDigit})`;
+        } else {
+            radarEl.style.color = "#38BDF8";
+            radarEl.innerText = `⏳ SCANNING TICK PATTERNS (Digit: ${lastDigit})`;
+            return;
+        }
+
+        if (voiceEnabled && signalText !== lastSpokenSignal) {
+            lastSpokenSignal = signalText;
+            speakMessage(signalText);
+        }
+    }
+
+    function speakMessage(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function toggleVoice() {
+        voiceEnabled = !voiceEnabled;
+        const btn = document.getElementById('voice-toggle-btn');
+        btn.innerText = voiceEnabled ? "Voice ON" : "Voice OFF";
+        btn.style.borderColor = voiceEnabled ? "#10B981" : "#EF4444";
+        btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
     }
 
     function connectDeriv() {
