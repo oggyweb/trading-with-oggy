@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Pro Trading Terminal - TRADING WITH OGGY</title>
+    <title>TRADING WITH OGGY - Cyber Pro Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Share Tech Mono', monospace; }
-        body { background-color: #030712; color: #38BDF8; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; position: relative; }
+        body { background-color: #030712; color: #38BDF8; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
         #tech-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
         .cyber-grid-overlay {
@@ -17,81 +17,83 @@
         }
         .ambient-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
-            background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15) 0%, rgba(3, 7, 18, 0.95) 80%);
+            background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, rgba(3, 7, 18, 0.95) 80%);
         }
 
-        /* LOGIN CONTAINER */
+        /* LOGIN CONTAINER - EXACT MATCH TO USER PREFERENCE */
         .auth-container {
-            max-width: 480px; width: 100%;
+            max-width: 520px; width: 100%;
             background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(20px);
-            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 30px;
-            box-shadow: 0 0 50px rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 40px;
+            box-shadow: 0 0 60px rgba(56, 189, 248, 0.25);
         }
-        .login-logo { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 15px auto; display: block; }
-        .brand-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #FDE68A; margin-bottom: 5px; letter-spacing: 2px; }
-        .brand-sub { text-align: center; font-size: 10px; color: #94A3B8; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .login-logo { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 25px rgba(245,158,11,0.6); margin: 0 auto 20px auto; display: block; }
+        .brand-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #FDE68A; margin-bottom: 8px; letter-spacing: 2px; }
+        .brand-sub { text-align: center; font-size: 12px; color: #94A3B8; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 10px; color: #94A3B8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group { margin-bottom: 22px; }
+        label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         input, select {
             width: 100%; background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 12px; border-radius: 8px; color: #38BDF8; font-size: 13px; outline: none; transition: 0.3s;
+            padding: 15px; border-radius: 10px; color: #38BDF8; font-size: 14px; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: #38BDF8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
+        input:focus { border-color: #38BDF8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
         .action-btn {
             width: 100%; background: linear-gradient(135deg, #38BDF8, #0284C7); color: #030712;
-            border: none; padding: 14px; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer;
+            border: none; padding: 16px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer;
             font-family: 'Orbitron', sans-serif; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(56, 189, 248, 0.4); transition: 0.2s;
         }
         .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
-        .error-msg { color: #EF4444; font-size: 10px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
+        .error-msg { color: #EF4444; font-size: 11px; margin-top: 10px; display: block; text-align: center; font-weight: 600; }
 
-        .packages-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-        .pkg-card { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; text-align: center; }
-        .pkg-title { font-size: 12px; font-weight: 900; margin-bottom: 4px; text-transform: uppercase; }
-        .pkg-price { font-size: 16px; font-weight: 900; color: #38BDF8; margin-bottom: 4px; }
-        .pkg-desc { font-size: 9px; color: #94A3B8; line-height: 1.3; }
+        .packages-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+        .pkg-card { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; text-align: center; }
+        .pkg-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; text-transform: uppercase; }
+        .pkg-price { font-size: 18px; font-weight: 900; color: #38BDF8; margin-bottom: 6px; }
+        .pkg-desc { font-size: 10px; color: #94A3B8; line-height: 1.4; }
 
         /* DASHBOARD STYLES */
-        #dashboard-wrapper { display: none; width: 100%; max-width: 1350px; height: 96vh; overflow-y: auto; padding-right: 8px; }
-        #dashboard-wrapper::-webkit-scrollbar { width: 5px; }
+        #dashboard-wrapper { display: none; width: 100%; max-width: 1400px; height: 95vh; overflow-y: auto; padding-right: 8px; }
+        #dashboard-wrapper::-webkit-scrollbar { width: 6px; }
         #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
 
         .top-nav {
-            display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
-            background: rgba(3, 7, 18, 0.92); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; margin-bottom: 16px; backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 24px;
+            background: rgba(3, 7, 18, 0.92); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px; margin-bottom: 20px; backdrop-filter: blur(10px);
         }
-        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr 350px; gap: 16px; }
+        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr 360px; gap: 20px; }
         @media(max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        .card { background: rgba(3, 7, 18, 0.88); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: rgba(3, 7, 18, 0.88); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+        .card-title { font-size: 12px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
         
-        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+        .market-list::-webkit-scrollbar { width: 4px; }
+        .market-list::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.2); border-radius: 4px; }
         .market-item {
-            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
         }
-        .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.1); }
+        .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 16px; text-align: center; }
-        .price-display { font-size: 28px; font-weight: 900; color: #38BDF8; font-family: 'Orbitron', sans-serif; margin: 6px 0; text-shadow: 0 0 12px rgba(56,189,248,0.4); }
-        .signal-status { font-size: 12px; font-weight: 800; color: #34D399; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; }
+        .price-display { font-size: 34px; font-weight: 900; color: #38BDF8; font-family: 'Orbitron', sans-serif; margin: 8px 0; text-shadow: 0 0 15px rgba(56,189,248,0.4); }
+        .signal-status { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .tick-history { display: flex; gap: 5px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
-        .tick-badge { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 5px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .tick-badge { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
         .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
 
-        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 12px; text-align: center; }
-        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 5px 2px; }
-        .histo-fill { height: 35px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
+        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 15px; text-align: center; }
+        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 2px; }
+        .histo-fill { height: 45px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 4px; }
         .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
 
-        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 10px; }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
         .logout-btn:hover { background: #EF4444; color: #FFF; }
-        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 8px; font-family: 'Orbitron', sans-serif; font-size: 11px; }
-        .locked-box { text-align: center; padding: 15px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 8px; }
+        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px; font-family: 'Orbitron', sans-serif; font-size: 12px; }
+        .locked-box { text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 10px; }
     </style>
 
     <!-- Firebase SDK & Core Logic -->
@@ -196,25 +198,25 @@
                 planBadge.style.color = "#E2E8F0";
                 autoContent.innerHTML = `
                     <div class="locked-box">
-                        <div style="font-size: 11px; color: #EF4444; font-weight: 800; margin-bottom: 5px;">🔒 AUTO-TRADING LOCKED</div>
-                        <p style="font-size: 9px; color: #94A3B8; line-height: 1.3;">Upgrade to Gold Package to unlock automated API trading execution.</p>
+                        <div style="font-size: 12px; color: #EF4444; font-weight: 800; margin-bottom: 6px;">🔒 AUTO-TRADING LOCKED</div>
+                        <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Upgrade to Gold Package to unlock automated API trading execution.</p>
                     </div>
                 `;
             } else {
                 planBadge.innerText = "Gold VIP (Lifetime / Unlocked)";
                 planBadge.style.color = "#F59E0B";
                 autoContent.innerHTML = `
-                    <div style="font-size: 9px; color: #94A3B8; margin-bottom: 6px;">Link Deriv account for auto execution.</div>
-                    <div style="margin-bottom: 6px;">
-                        <label style="font-size:8px;">API Token</label>
+                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Link Deriv account for auto execution.</div>
+                    <div style="margin-bottom: 8px;">
+                        <label style="font-size:9px;">API Token</label>
                         <input type="password" id="deriv-token" placeholder="Paste token">
                     </div>
-                    <div style="margin-bottom: 8px;">
-                        <label style="font-size:8px;">Stake ($)</label>
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size:9px;">Stake ($)</label>
                         <input type="number" id="stake" value="1.00">
                     </div>
                     <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
-                    <div id="bot-status" style="font-size: 9px; color: #34D399; margin-top: 6px; text-align: center; font-weight: bold;"></div>
+                    <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 8px; text-align: center; font-weight: bold;"></div>
                 `;
             }
 
@@ -245,12 +247,12 @@
     <div class="packages-box">
         <div class="pkg-card">
             <div class="pkg-title" style="color:#E2E8F0;">Silver VIP</div>
-            <div class="pkg-price">$10<span style="font-size:9px;color:#38BDF8;">/mo</span></div>
+            <div class="pkg-price">$10<span style="font-size:10px;color:#38BDF8;">/mo</span></div>
             <div class="pkg-desc">• Live Signals<br>• LDP Stream</div>
         </div>
         <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.4);">
             <div class="pkg-title" style="color:#FDE68A;">Gold VIP</div>
-            <div class="pkg-price">$20<span style="font-size:9px;color:#38BDF8;">/mo</span></div>
+            <div class="pkg-price">$20<span style="font-size:10px;color:#38BDF8;">/mo</span></div>
             <div class="pkg-desc">• <span style="color:#EF4444; font-weight:bold;">Auto-Trader</span><br>• Advanced AI</div>
         </div>
     </div>
@@ -259,51 +261,51 @@
 <!-- DASHBOARD CONTAINER -->
 <div id="dashboard-wrapper">
     <div class="top-nav">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B;" alt="Logo">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B;" alt="Logo">
             <div>
-                <div style="font-size: 12px; font-weight: 900; color: #FDE68A; font-family: 'Orbitron', sans-serif;">TRADING WITH OGGY</div>
-                <div style="font-size: 9px; color: #34D399; font-weight: bold;">● Live Deriv Stream Active</div>
+                <div style="font-size: 13px; font-weight: 900; color: #FDE68A; font-family: 'Orbitron', sans-serif;">TRADING WITH OGGY</div>
+                <div style="font-size: 10px; color: #34D399; font-weight: bold;">● Live Deriv Stream Active</div>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="font-size: 10px;">Tier: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="font-size: 11px;">Tier: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
 
     <div class="dashboard-grid">
-        <!-- LEFT COLUMN: ALL DERIV MARKETS -->
+        <!-- LEFT COLUMN: ALL MARKETS -->
         <div>
             <div class="card">
                 <div class="card-title">Volatility Markets</div>
                 <div class="market-list" id="market-list-container">
-                    <div class="market-item active" onclick="selectMarket('R_10', this)"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
-                    <div class="market-item" onclick="selectMarket('R_25', this)"><span>Volatility 25 Index</span><span style="font-size:9px; color:#38BDF8">R_25</span></div>
-                    <div class="market-item" onclick="selectMarket('R_50', this)"><span>Volatility 50 Index</span><span style="font-size:9px; color:#38BDF8">R_50</span></div>
-                    <div class="market-item" onclick="selectMarket('R_75', this)"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
-                    <div class="market-item" onclick="selectMarket('R_100', this)"><span>Volatility 100 Index</span><span style="font-size:9px; color:#38BDF8">R_100</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ10V', this)"><span>Volatility 10 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ25V', this)"><span>Volatility 25 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ50V', this)"><span>Volatility 50 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ75V', this)"><span>Volatility 75 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
-                    <div class="market-item" onclick="selectMarket('1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
+                    <div class="market-item active" onclick="selectMarket('R_10', this)"><span>Volatility 10 Index</span><span style="font-size:10px; color:#38BDF8">R_10</span></div>
+                    <div class="market-item" onclick="selectMarket('R_25', this)"><span>Volatility 25 Index</span><span style="font-size:10px; color:#38BDF8">R_25</span></div>
+                    <div class="market-item" onclick="selectMarket('R_50', this)"><span>Volatility 50 Index</span><span style="font-size:10px; color:#38BDF8">R_50</span></div>
+                    <div class="market-item" onclick="selectMarket('R_75', this)"><span>Volatility 75 Index</span><span style="font-size:10px; color:#38BDF8">R_75</span></div>
+                    <div class="market-item" onclick="selectMarket('R_100', this)"><span>Volatility 100 Index</span><span style="font-size:10px; color:#38BDF8">R_100</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ10V', this)"><span>Volatility 10 (1s)</span><span style="font-size:10px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ25V', this)"><span>Volatility 25 (1s)</span><span style="font-size:10px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ50V', this)"><span>Volatility 50 (1s)</span><span style="font-size:10px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ75V', this)"><span>Volatility 75 (1s)</span><span style="font-size:10px; color:#38BDF8">1s</span></div>
+                    <div class="market-item" onclick="selectMarket('1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:10px; color:#38BDF8">1s</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- CENTER COLUMN: LIVE TICK & LDP ANALYZER -->
+        <!-- CENTER COLUMN: LIVE TICK & LDP -->
         <div>
             <div class="card">
                 <div class="card-title">
                     <span id="active-market-title">Deriv Live Market Data (Volatility 10 Index)</span>
                 </div>
                 <div class="signal-box">
-                    <div style="font-size: 9px; color: #94A3B8;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
+                    <div style="font-size: 10px; color: #94A3B8;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
                     <div id="live-price" class="price-text price-display">$0.000</div>
                     <div id="market-status" class="signal-status">⚡ Connecting to Deriv...</div>
                     
-                    <div style="margin-top: 12px; font-size: 9px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div style="margin-top: 14px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
                     <div id="digit-history" class="tick-history"></div>
                 </div>
             </div>
@@ -312,9 +314,9 @@
             <div class="card">
                 <div class="card-title">
                     <span>Real-Time Last Digit Analyzer (LDP)</span>
-                    <span style="font-size: 9px; color: #34D399;" id="ldp-ratio-text">Even: 50% | Odd: 50%</span>
+                    <span style="font-size: 10px; color: #34D399;" id="ldp-ratio-text">Even: 50% | Odd: 50%</span>
                 </div>
-                <div style="font-size: 9px; color: #94A3B8; margin-bottom: 6px;">Digit Frequency Distribution (0 - 9)</div>
+                <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Digit Frequency Distribution (0 - 9)</div>
                 <div class="histogram-grid" id="histogram-container"></div>
             </div>
 
@@ -322,11 +324,11 @@
             <div class="card">
                 <div class="card-title">
                     <span>Signal Radar & Voice Alert</span>
-                    <button onclick="toggleVoice()" id="voice-toggle-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; padding: 3px 8px; border-radius: 5px; font-size: 9px; cursor: pointer; font-weight: bold;">Voice ON</button>
+                    <button onclick="toggleVoice()" id="voice-toggle-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: bold;">Voice ON</button>
                 </div>
-                <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
-                    <div id="signal-radar-status" style="font-size: 12px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET PATTERNS...</div>
-                    <div style="font-size: 9px; color: #94A3B8;" id="radar-subtext">Watching live ticks for strategy triggers. Audio alerts enabled.</div>
+                <div style="text-align: center; padding: 15px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 10px;">
+                    <div id="signal-radar-status" style="font-size: 13px; font-weight: 800; color: #38BDF8; margin-bottom: 6px;">⏳ SCANNING MARKET PATTERNS...</div>
+                    <div style="font-size: 10px; color: #94A3B8;" id="radar-subtext">Watching live ticks for strategy triggers. Audio alerts enabled.</div>
                 </div>
             </div>
         </div>
@@ -442,11 +444,11 @@
             let heightPct = Math.max(10, Math.round((count / maxCount) * 100));
             html += `
                 <div class="histo-bar-wrap">
-                    <div style="font-size:8px; color:#94A3B8; margin-bottom:2px;">${i}</div>
+                    <div style="font-size:9px; color:#94A3B8; margin-bottom:2px;">${i}</div>
                     <div class="histo-fill">
                         <div class="histo-inner" style="height: ${heightPct}%; background: ${i >= 5 ? '#34D399' : '#F87171'};"></div>
                     </div>
-                    <div style="font-size:7px; color:#38BDF8; margin-top:2px;">${pct}%</div>
+                    <div style="font-size:8px; color:#38BDF8; margin-top:2px;">${pct}%</div>
                 </div>
             `;
         }
