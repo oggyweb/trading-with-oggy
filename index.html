@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Pro Terminal</title>
+    <title>TRADING WITH OGGY - Pro Scrollable Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; position: relative; }
+        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* Candlestick & Wave Background Animation Canvas */
+        /* Smooth Scrolling Canvas Background */
         #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
-                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.18) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 20%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
+                        radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
         }
 
-        #dashboard-wrapper { width: 100%; max-width: 1450px; height: 96vh; overflow-y: auto; padding-right: 6px; }
-        #dashboard-wrapper::-webkit-scrollbar { width: 5px; }
+        /* Full Page Scrollable Container matching target reference */
+        #dashboard-wrapper { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px; }
+        #dashboard-wrapper::-webkit-scrollbar { width: 6px; }
         #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
 
-        /* Top Nav Bar */
+        /* Top Bar */
         .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
-            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;
-            flex-wrap: wrap; gap: 10px;
+            display: flex; justify-content: space-between; align-items: center; padding: 14px 22px;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap; gap: 12px;
         }
-        .top-badges { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 700; color: #94A3B8; }
+        .top-badges { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
         .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
 
-        .dashboard-grid { display: grid; grid-template-columns: 280px 1fr 340px; gap: 16px; }
-        @media(max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        /* Main Layout Grid */
+        .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        @media(max-width: 1050px) { .main-layout { grid-template-columns: 1fr; } }
 
-        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(10px); }
-        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+        .left-sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .right-content { display: flex; flex-direction: column; gap: 20px; }
+
+        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; backdrop-filter: blur(10px); }
+        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
 
         /* Market List */
         .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; }
@@ -45,33 +50,35 @@
         }
         .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        /* Price & Signal Box */
-        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 18px; text-align: center; }
-        .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 6px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        /* Signal & Price Display */
+        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; }
+        .price-text { font-size: 34px; font-weight: 800; color: #38BDF8; margin: 8px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
+        .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Digit History Stream */
-        .tick-history { display: flex; gap: 5px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
-        .tick-badge { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        /* Tick History */
+        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .tick-badge { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
         .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
 
         /* Histogram */
-        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 10px; text-align: center; }
-        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 5px 2px; }
-        .histo-fill { height: 35px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
+        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
+        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 2px; }
+        .histo-fill { height: 42px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 4px; }
         .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
 
-        /* Strategy Selector Cards */
-        .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-        .strategy-card { background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        /* Strategy selection & Performance */
+        .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+        @media(max-width: 768px) { .strategy-grid { grid-template-columns: 1fr; } }
+        .strategy-card { background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
         .strategy-card:hover, .strategy-card.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.1); }
 
-        input {
-            width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 14px; border-radius: 10px; color: #FFF; font-size: 13px; outline: none; transition: all 0.3s ease;
-        }
-        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); font-size: 12px; }
+        /* Active Trade Executions Grid */
+        .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+        @media(max-width: 900px) { .exec-grid { grid-template-columns: 1fr; } }
+        .exec-card { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; }
+        .exec-won { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); }
+
         .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
     </style>
 </head>
@@ -81,7 +88,7 @@
 <div class="bg-glow"></div>
 
 <div id="dashboard-wrapper">
-    <!-- Top Header Bar matching user preference -->
+    <!-- Top Header Bar -->
     <div class="top-bar">
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
@@ -93,16 +100,17 @@
 
         <div class="top-badges">
             <div class="badge-item">Active Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 10 Index</span></div>
-            <div class="badge-item" style="color:#34D399;">● Auto-Bot: ON</div>
+            <div class="badge-item" style="color:#34D399;">● Auto-Bot: ON[cite: 8]</div>
             <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
-            <div class="badge-item" style="color:#F59E0B;">VIP Trader (Gold)</div>
+            <div class="badge-item" style="color:#F59E0B;">VIP Trader (Gold)[cite: 8]</div>
             <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
         </div>
     </div>
 
-    <div class="dashboard-grid">
-        <!-- LEFT: Volatility Markets -->
-        <div>
+    <!-- Main Content Layout -->
+    <div class="main-layout">
+        <!-- LEFT SIDEBAR: Markets & Guide -->
+        <div class="left-sidebar">
             <div class="card">
                 <div class="card-title">Volatility Markets</div>
                 <div class="market-list" id="market-list-container">
@@ -121,16 +129,25 @@
 
             <div class="card">
                 <div class="card-title">Deriv Signal Rules Guide</div>
-                <div style="font-size: 10px; color: #94A3B8; line-height: 1.5;">
-                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP dynamic tracking.<br>
-                    • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis.<br>
-                    • <strong>Strategy C (Over/Under):</strong> Low digit streak tracking (0-3).
+                <div style="font-size: 10px; color: #94A3B8; line-height: 1.6;">
+                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP dynamic tracking[cite: 8].<br>
+                    • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis[cite: 8].<br>
+                    • <strong>Strategy C (Over/Under):</strong> Low digit streak tracking (0-3)[cite: 8].
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Signal Radar & Voice Alert</div>
+                <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
+                    <div id="signal-radar-status" style="font-size: 11px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET...</div>
+                    <div style="font-size: 9px; color: #94A3B8;">Audio alerts active.</div>
                 </div>
             </div>
         </div>
 
-        <!-- CENTER: Live Market, Chart Simulation & LDP Analyzer -->
-        <div>
+        <!-- RIGHT CONTENT: Live Chart, LDP Analyzer, Strategy Engine & Executions -->
+        <div class="right-content">
+            <!-- Live Price & WebSocket Stream Box -->
             <div class="card">
                 <div class="card-title">
                     <span id="active-market-title">Deriv Live Market Data (Volatility 10 Index)</span>
@@ -140,7 +157,7 @@
                     <div id="live-price-display" class="price-text">$0.000</div>
                     <div id="live-signal-status" class="signal-text">⚡ Connecting to Deriv Market...</div>
                     
-                    <div style="margin-top: 12px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div style="margin-top: 14px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
                     <div id="digit-history" class="tick-history"></div>
                 </div>
             </div>
@@ -161,39 +178,59 @@
                 <div class="strategy-grid">
                     <div class="strategy-card active">
                         <div style="font-size: 11px; font-weight: 800; color: #38BDF8;">Strategy A: Rise / Fall</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI (14) Overbought/Oversold</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI (14) Overbought/Oversold[cite: 8]</div>
                     </div>
                     <div class="strategy-card">
-                        <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy C: Over / Under</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 03 Streak (0,1,2,3 Run)</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy B: Even / Odd</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP X2X Pattern Detection[cite: 8]</div>
+                    </div>
+                    <div class="strategy-card">
+                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 03 Streak (0,1,2,3 Run)[cite: 8]</div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- RIGHT: Auto-Trader Bot & Signal Radar -->
-        <div>
+            <!-- 1-Hour Signal Performance Assessment -->
             <div class="card">
-                <div class="card-title">Signal Radar & Voice Alert</div>
-                <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
-                    <div id="signal-radar-status" style="font-size: 12px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET PATTERNS...</div>
-                    <div style="font-size: 9px; color: #94A3B8;" id="radar-subtext">Watching live ticks for strategy triggers. Audio alerts enabled.</div>
+                <div class="card-title">
+                    <span>1-Hour Signal Performance (පසුගිය පැය 1)</span>[cite: 6]
+                    <span style="color: #34D399; font-weight: 900;">97.5% WIN RATE</span>[cite: 6]
+                </div>
+                <div style="font-size: 11px; color: #CBD5E1; line-height: 1.5;">
+                    ✅ <strong>GOOD TIME TO TRADE (97.5% Win Rate):</strong> මෙම වෙළඳපලේ පසුගිය පැය 1 තුළ Signals වල සාර්ථකත්වය 80% හෝ ඊට ඉහළින් (97.5%) පවතී. Bot එකේ Pattern විශ්ලේෂණය සහ Market Flow ඉතාමත් යහපත් බැවින් කිසිදු ගැටළුවක් නැත[cite: 6].
                 </div>
             </div>
 
+            <!-- Active Trade Executions Log (Scrollable bottom history) -->
             <div class="card">
-                <div class="card-title">Deriv Auto-Trader Bot</div>
-                <div style="font-size: 10px; color: #94A3B8; margin-bottom: 10px;">Link Deriv account for auto execution.</div>
-                <div style="margin-bottom: 8px;">
-                    <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:4px;">Deriv API Token</label>
-                    <input type="password" id="deriv-token" placeholder="Paste API token">
+                <div class="card-title">
+                    <span>Active Trade Executions</span>
+                    <span style="font-size: 10px; color: #38BDF8;">Live Automated Bot Logs</span>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:4px;">Stake ($)</label>
-                    <input type="number" id="stake" value="1.00">
+                <div class="exec-grid">
+                    <div class="exec-card exec-won">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 6px;">
+                            <span>R_100</span><span style="color:#34D399;">OVER - 1T</span>
+                        </div>
+                        <div style="font-size: 10px; color: #94A3B8;">Entry: 540.32 (LDP: 2)<br>Exit: 539.38 (LDP: 8)</div>
+                        <div style="margin-top: 8px; font-size: 10px; font-weight: bold; color: #34D399; text-align: center; background: rgba(16,185,129,0.15); padding: 4px; border-radius: 4px;">CONTRACT WON (+95% Payout)[cite: 6]</div>
+                    </div>
+                    <div class="exec-card exec-won">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 6px;">
+                            <span>R_100</span><span style="color:#34D399;">OVER - 1T</span>
+                        </div>
+                        <div style="font-size: 10px; color: #94A3B8;">Entry: 539.32 (LDP: 2)<br>Exit: 539.38 (LDP: 8)</div>
+                        <div style="margin-top: 8px; font-size: 10px; font-weight: bold; color: #34D399; text-align: center; background: rgba(16,185,129,0.15); padding: 4px; border-radius: 4px;">CONTRACT WON (+95% Payout)[cite: 6]</div>
+                    </div>
+                    <div class="exec-card exec-won">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 6px;">
+                            <span>R_100</span><span style="color:#34D399;">OVER - 1T</span>
+                        </div>
+                        <div style="font-size: 10px; color: #94A3B8;">Entry: 539.60 (LDP: 0)<br>Exit: 539.74 (LDP: 4)</div>
+                        <div style="margin-top: 8px; font-size: 10px; font-weight: bold; color: #34D399; text-align: center; background: rgba(16,185,129,0.15); padding: 4px; border-radius: 4px;">CONTRACT WON (+95% Payout)[cite: 6]</div>
+                    </div>
                 </div>
-                <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
-                <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 8px; text-align: center; font-weight: 600;"></div>
             </div>
         </div>
     </div>
@@ -409,12 +446,6 @@
         btn.innerText = voiceEnabled ? "Voice ON" : "Voice OFF";
         btn.style.borderColor = voiceEnabled ? "#10B981" : "#EF4444";
         btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
-    }
-
-    function connectDeriv() {
-        const token = document.getElementById('deriv-token').value;
-        if(!token) { alert("Please enter your Deriv API Token!"); return; }
-        document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
     }
 
     window.addEventListener('load', () => {
