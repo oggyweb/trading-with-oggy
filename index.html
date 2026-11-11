@@ -42,7 +42,7 @@
         .top-badges { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
         .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
 
-        .main-layout { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; }
+        .main-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; }
         @media(max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
 
         .left-sidebar, .right-sidebar { display: flex; flex-direction: column; gap: 20px; }
@@ -69,10 +69,39 @@
         .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 8px 0; font-family: 'Cinzel', serif; }
         .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Dedicated Bot Signal Display Box */
-        .bot-signal-display {
-            background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 12px;
+        /* Exact Reference Match: Signal Radar & Voice Alert Panel */
+        .radar-panel-box {
+            background: rgba(10, 14, 26, 0.95);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.15);
+            transition: 0.3s ease;
         }
+        .radar-circle-container {
+            width: 140px; height: 140px; margin: 15px auto; border-radius: 50%;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.25) 0%, rgba(2, 6, 23, 0.8) 70%);
+            border: 1px dashed rgba(239, 68, 68, 0.4);
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .radar-inner-icon {
+            width: 65px; height: 65px; background: #EF4444; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 26px;
+            box-shadow: 0 0 20px #EF4444;
+        }
+        .radar-status-badge {
+            background: #EF4444; color: #FFF; font-size: 10px; font-weight: 900; padding: 4px 12px;
+            border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        .radar-action-btn {
+            width: 100%; background: #DC2626; color: #FFF; border: none; padding: 12px; border-radius: 10px;
+            font-weight: 800; font-size: 12px; cursor: pointer; margin-top: 15px; text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4); transition: 0.2s;
+        }
+        .radar-action-btn:hover { background: #B91C1C; }
 
         .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
         .tick-badge { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
@@ -164,9 +193,9 @@
             <div class="card">
                 <div class="card-title">Deriv Signal Rules Guide</div>
                 <div style="font-size: 10px; color: #94A3B8; line-height: 1.6;">
-                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP tracking.<br>
-                    • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis.<br>
-                    • <strong>Strategy C (Over/Under):</strong> Low digit streak (0-3).
+                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP tracking[cite: 8].<br>
+                    • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis[cite: 8].<br>
+                    • <strong>Strategy C (Over/Under):</strong> Low digit streak (0-3)[cite: 8].
                 </div>
             </div>
         </div>
@@ -211,17 +240,17 @@
             <div class="card">
                 <div class="card-title">Signal Strategy Selection</div>
                 <div class="strategy-grid">
-                    <div class="strategy-card active">
+                    <div class="strategy-card active" onclick="selectStrategy(0, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #38BDF8;">Strategy A: Rise / Fall</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI (14) Overbought/Oversold</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI (14) Overbought/Oversold[cite: 8]</div>
                     </div>
-                    <div class="strategy-card">
+                    <div class="strategy-card" onclick="selectStrategy(1, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy B: Even / Odd</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP X2X Pattern Detection</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP X2X Pattern Detection[cite: 8]</div>
                     </div>
-                    <div class="strategy-card">
+                    <div class="strategy-card" onclick="selectStrategy(2, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 03 Streak (0,1,2,3 Run)</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 03 Streak (0,1,2,3 Run)[cite: 8]</div>
                     </div>
                 </div>
             </div>
@@ -268,16 +297,35 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: Dedicated Signal Display Bot Box & Auto-Trader Bot -->
+        <!-- RIGHT SIDEBAR: Exact Reference Radar Bot Panel & Auto-Trader -->
         <div class="right-sidebar">
-            <!-- Dedicated Bot Signal Display Box -->
-            <div class="card">
-                <div class="card-title">Automated Bot Signal Feed</div>
-                <div class="bot-signal-display">
-                    <div style="font-size: 9px; color: #94A3B8; text-transform: uppercase;">Bot Target Status</div>
-                    <div id="bot-signal-feed" style="font-size: 12px; font-weight: 950; color: #38BDF8; margin-top: 4px;">STANDBY FOR TRIGGER</div>
+            <!-- Exact Reference Radar Bot Panel -->
+            <div class="radar-panel-box" id="radar-panel-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #F8FAFC; letter-spacing: 0.5px;">SIGNAL RADAR & VOICE ALERT</div>
+                    <div style="display: flex; gap: 6px;">
+                        <button onclick="toggleVoice()" id="radar-voice-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; font-size: 9px; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">Voice ON</button>
+                        <button onclick="triggerWinEffect()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #FFF; font-size: 9px; padding: 3px 8px; border-radius: 6px; cursor: pointer;">Test</button>
+                    </div>
                 </div>
-                <div style="font-size: 9px; color: #64748B; text-align: center;">Monitors active strategy criteria continuously.</div>
+
+                <div class="radar-circle-container" id="radar-circle">
+                    <div class="radar-inner-icon" id="radar-icon">📈</div>
+                </div>
+
+                <div id="radar-badge-wrap">
+                    <span class="radar-status-badge" id="radar-status-badge">WAITING FOR SIGNAL...</span>
+                </div>
+
+                <div style="font-size: 12px; font-weight: 800; color: #F8FAFC; margin-top: 12px;" id="radar-title-desc">Scanning Volatility 10 Index</div>
+                <div style="font-size: 9px; color: #94A3B8; margin-top: 4px;" id="radar-sub-desc">Watching live ticks for strategy triggers. Automatic voice alert announces immediately![cite: 8]</div>
+
+                <button class="radar-action-btn" id="radar-action-btn" onclick="executeManualTrade()">WAITING FOR SIGNAL...</button>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; font-size: 9px; color: #94A3B8;">
+                    <span>🔊 Voice Alert:</span>
+                    <span style="color: #34D399; font-weight: bold;">Enabled (Spoken on trigger)[cite: 8]</span>
+                </div>
             </div>
 
             <div class="card">
@@ -297,14 +345,6 @@
                     </div>
                     <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
                     <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 8px; text-align: center; font-weight: 600;"></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Test Win/Loss Effects</div>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <button onclick="triggerWinEffect()" style="flex:1; background:#10B981; color:#fff; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">Simulate WIN</button>
-                    <button onclick="triggerLossEffect()" style="flex:1; background:#EF4444; color:#fff; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">Simulate LOSS</button>
                 </div>
             </div>
         </div>
@@ -333,6 +373,11 @@
 
     function setTimeframe(tf, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function selectStrategy(index, el) {
+        document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
     }
 
@@ -445,6 +490,7 @@
     let digitCounts = new Array(10).fill(0);
     let totalTicksCount = 0;
     let voiceEnabled = true;
+    let marketNameGlobal = "Volatility 10 Index";
 
     function initLDPCandles() {
         const container = document.getElementById('ldp-candles-container');
@@ -535,10 +581,10 @@
         document.querySelectorAll('.market-item').forEach(item => item.classList.remove('active'));
         el.classList.add('active');
         currentMarket = symbol;
-        const marketName = el.querySelector('span').innerText;
-        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketName})`;
+        marketNameGlobal = el.querySelector('span').innerText;
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketNameGlobal})`;
         document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
-        document.getElementById('top-market-badge').innerText = marketName;
+        document.getElementById('top-market-badge').innerText = marketNameGlobal;
         
         recentDigits = [];
         digitCounts.fill(0);
@@ -583,35 +629,67 @@
     let lastSpokenSignal = "";
     function analyzeSignal(price, lastDigit) {
         const signalEl = document.getElementById('live-signal-status');
-        const botFeedEl = document.getElementById('bot-signal-feed');
+        const radarBox = document.getElementById('radar-panel-box');
+        const radarIcon = document.getElementById('radar-icon');
+        const radarBadge = document.getElementById('radar-status-badge');
+        const radarTitle = document.getElementById('radar-title-desc');
+        const radarSub = document.getElementById('radar-sub-desc');
+        const radarBtn = document.getElementById('radar-action-btn');
+
         if (!signalEl) return;
         
         let signalText = "";
         if (lastDigit >= 7) {
             signalEl.style.color = "#34D399";
             signalEl.innerHTML = `🟢 🚀 <span style="background:rgba(16,185,129,0.2); padding:2px 6px; border-radius:4px; border:1px solid #10B981;">RISE SIGNAL</span> (Digit: ${lastDigit})`;
-            if(botFeedEl) {
-                botFeedEl.style.color = "#34D399";
-                botFeedEl.innerText = `🚀 TRIGGER: RISE (LDP ${lastDigit})`;
-            }
+            
+            radarBox.style.borderColor = "rgba(16, 185, 129, 0.6)";
+            radarBox.style.boxShadow = "0 0 25px rgba(16, 185, 129, 0.25)";
+            radarIcon.style.background = "#10B981";
+            radarIcon.style.boxShadow = "0 0 20px #10B981";
+            radarIcon.innerText = "📈";
+            radarBadge.style.background = "#10B981";
+            radarBadge.innerText = "⚡ SIGNAL TRIGGERED";
+            radarTitle.innerText = "PURCHASE YOUR TRADE (RISE / CALL)";
+            radarSub.innerText = `High LDP digit detected at ${lastDigit}. Enter Rise Trade!`;
+            radarBtn.style.background = "#059669";
+            radarBtn.innerText = "⚡ PURCHASE TRADE NOW (5 TICKS) →";
+
             signalText = `Rise signal detected. Last digit is ${lastDigit}.`;
             triggerWinEffect();
         } else if (lastDigit <= 2) {
             signalEl.style.color = "#EF4444";
             signalEl.innerHTML = `🔴 🔻 <span style="background:rgba(239,68,68,0.2); padding:2px 6px; border-radius:4px; border:1px solid #EF4444;">FALL SIGNAL</span> (Digit: ${lastDigit})`;
-            if(botFeedEl) {
-                botFeedEl.style.color = "#EF4444";
-                botFeedEl.innerText = `🔻 TRIGGER: FALL (LDP ${lastDigit})`;
-            }
+            
+            radarBox.style.borderColor = "rgba(239, 68, 68, 0.6)";
+            radarBox.style.boxShadow = "0 0 25px rgba(239, 68, 68, 0.25)";
+            radarIcon.style.background = "#EF4444";
+            radarIcon.style.boxShadow = "0 0 20px #EF4444";
+            radarIcon.innerText = "📉";
+            radarBadge.style.background = "#EF4444";
+            radarBadge.innerText = "⚡ SIGNAL TRIGGERED";
+            radarTitle.innerText = "PURCHASE YOUR TRADE (FALL / PUT)";
+            radarSub.innerText = `Low LDP digit detected at ${lastDigit}. Enter Fall Trade!`;
+            radarBtn.style.background = "#DC2626";
+            radarBtn.innerText = "⚡ PURCHASE TRADE NOW (5 TICKS) →";
+
             signalText = `Fall signal detected. Last digit is ${lastDigit}.`;
             triggerLossEffect();
         } else {
             signalEl.style.color = "#38BDF8";
             signalEl.innerHTML = `🔊 SCANNING TICK PATTERN (Digit: ${lastDigit})`;
-            if(botFeedEl) {
-                botFeedEl.style.color = "#38BDF8";
-                botFeedEl.innerText = `SCANNING TICK (LDP ${lastDigit})`;
-            }
+            
+            radarBox.style.borderColor = "rgba(56, 189, 248, 0.3)";
+            radarBox.style.boxShadow = "0 0 15px rgba(56, 189, 248, 0.1)";
+            radarIcon.style.background = "#38BDF8";
+            radarIcon.style.boxShadow = "0 0 15px #38BDF8";
+            radarIcon.innerText = "⏳";
+            radarBadge.style.background = "#38BDF8";
+            radarBadge.innerText = "WAITING FOR SIGNAL...";
+            radarTitle.innerText = `Scanning ${marketNameGlobal}`;
+            radarSub.innerText = `Watching live ticks for strategy triggers. Automatic voice alert announces immediately![cite: 8]`;
+            radarBtn.style.background = "rgba(255,255,255,0.08)";
+            radarBtn.innerText = "WAITING FOR SIGNAL...";
             return;
         }
 
@@ -619,6 +697,10 @@
             lastSpokenSignal = signalText;
             speakMessage(signalText);
         }
+    }
+
+    function executeManualTrade() {
+        alert("Executing trade contract based on active signal trigger.");
     }
 
     function speakMessage(text) {
@@ -632,8 +714,13 @@
 
     function toggleVoice() {
         voiceEnabled = !voiceEnabled;
-        const btn = document.getElementById('voice-toggle-btn');
-        btn.innerText = voiceEnabled ? "Voice ON" : "Voice OFF";
+        const btn = document.getElementById('radar-voice-btn');
+        const topBtn = document.getElementById('voice-toggle-btn');
+        const statusText = voiceEnabled ? "Voice ON" : "Voice OFF";
+        btn.innerText = statusText;
+        topBtn.innerText = statusText;
+        btn.style.borderColor = voiceEnabled ? "#10B981" : "#EF4444";
+        btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
     }
 
     function connectDeriv() {
