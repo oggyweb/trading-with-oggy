@@ -9,11 +9,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION */
+        /* ORIGINAL NEXT-LEVEL PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION */
         #trading-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
         }
 
+        /* Deep Tech Blue Glows */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
             background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.3) 0%, rgba(1, 4, 9, 0.95) 70%),
@@ -102,7 +103,7 @@
         .tick-badge { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #F8FAFC; }
     </style>
 
-    <!-- Firebase SDK & Lifetime Key Auto-Reset / Security Logic -->
+    <!-- Firebase SDK Setup & Single-Device Binding Security Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -129,21 +130,20 @@
             return uid;
         }
 
-        // AUTO-RESET OGGY-LIFETIME-VIP TO GOLD & CLEAR DEVICE BINDING ON LOAD
         window.addEventListener('load', async () => {
             try {
                 const lifetimeRef = doc(db, "vip_keys", "OGGY-LIFETIME-VIP");
-                await setDoc(lifetimeRef, {
-                    expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
-                    tier: "tier2", // Gold Package (Auto-Trader Bot Unlocked)
-                    active: true,
-                    deviceId: "",  // Cleared device binding so it can be logged in freshly
-                    createdAt: new Date().toISOString()
-                }, { merge: true });
-                console.log("OGGY-LIFETIME-VIP successfully reset to Lifetime Gold!");
-            } catch(e) {
-                console.log("Lifetime setup note:", e);
-            }
+                const lifetimeSnap = await getDoc(lifetimeRef);
+                if (!lifetimeSnap.exists()) {
+                    await setDoc(lifetimeRef, {
+                        expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
+                        tier: "tier2", 
+                        active: true,
+                        deviceId: "", 
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            } catch(e) { console.log(e); }
         });
 
         window.handleKeyLogin = async function() {
@@ -220,7 +220,7 @@
                     </div>
                 `;
             } else {
-                planBadge.innerText = "Gold VIP (Lifetime / Unlocked)";
+                planBadge.innerText = "Gold VIP (Single-Device Bound)";
                 planBadge.style.color = "#F59E0B";
                 autoContent.innerHTML = `
                     <div style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">Link your Deriv account to run automated trades.</div>
@@ -247,7 +247,7 @@
 </head>
 <body>
 
-<!-- PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION -->
+<!-- ORIGINAL HIGH-TECH WAVES & GLOWING CANDLESTICKS CANVAS ANIMATION -->
 <canvas id="trading-canvas"></canvas>
 <div class="bg-glow"></div>
 
@@ -259,7 +259,7 @@
 
     <div class="form-group">
         <label>Enter VIP Access Key (1 Device Limit)</label>
-        <input type="text" id="login-key" placeholder="Enter your VIP key here (e.g. OGGY-LIFETIME-VIP)">
+        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
     </div>
 
     <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
@@ -328,7 +328,7 @@
 </div>
 
 <script>
-    /* PRO TRADING WAVE & GLOWING CANDLESTICK CANVAS ANIMATION */
+    /* FULL PRO TRADING WAVE & GLOWING CANDLESTICK CANVAS ANIMATION SCRIPT */
     const canvas = document.getElementById('trading-canvas');
     const ctx = canvas.getContext('2d');
 
