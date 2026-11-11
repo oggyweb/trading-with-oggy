@@ -3,122 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading With Oggy - Elite VIP Terminal</title>
+    <title>TRADING WITH OGGY - Elite VIP Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
+        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; position: relative; }
         
-        /* NEXT-LEVEL PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION */
-        #trading-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3;
-        }
-
-        /* Deep Tech Blue Glows */
+        /* Dynamic Pro Trading Wave & Glowing Candlestick Canvas */
+        #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.3) 0%, rgba(1, 4, 9, 0.95) 70%),
-                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.25) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.95) 75%),
+                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
         }
 
-        /* --- LOADING SCREEN --- */
-        #loader-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #010409; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        .loader-box { text-align: center; }
-        .loader-logo {
-            width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
-            border: 2px solid #38BDF8; box-shadow: 0 0 35px rgba(56, 189, 248, 0.6);
-            animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px;
-        }
-        .loader-title { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; color: #E0F2FE; letter-spacing: 3px; margin-bottom: 10px; text-shadow: 0 0 15px rgba(56,189,248,0.5); }
-        .loader-bar-container { width: 240px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 0 auto; overflow: hidden; }
-        .loader-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #38BDF8, #818CF8); animation: loadProgress 1.8s ease forwards; }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
-            100% { transform: scale(1.06); box-shadow: 0 0 40px rgba(56, 189, 248, 0.8); }
-        }
-        @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
-
-        /* --- MODERN GLASS LOGIN CONTAINER --- */
-        .auth-container {
-            max-width: 520px; width: 100%;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 24px;
-            padding: 35px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(56, 189, 248, 0.15);
-            opacity: 0; transform: translateY(20px); animation: fadeInCard 0.8s ease 1.8s forwards;
-        }
-        @keyframes fadeInCard { to { opacity: 1; transform: translateY(0); } }
-
-        .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.5); margin: 0 auto 14px auto; display: block; }
-        
-        .brand-title { 
-            text-align: center; font-size: 25px; font-weight: 900; color: #FDE68A; margin-bottom: 4px; 
-            font-family: 'Cinzel', serif; letter-spacing: 2px; 
-            background: linear-gradient(90deg, #FDE68A, #38BDF8, #FDE68A);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineText 4s linear infinite;
-        }
-        @keyframes shineText {
-            to { background-position: 200% center; }
-        }
-
-        .brand-sub { text-align: center; font-size: 11px; color: #94A3B8; margin-bottom: 22px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select {
-            width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 14px 18px; border-radius: 12px; color: #FFF; font-size: 14px; outline: none; transition: all 0.3s ease;
-        }
-        input:focus { border-color: #38BDF8; background: rgba(56, 189, 248, 0.05); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
-
-        .action-btn {
-            width: 100%; background: linear-gradient(135deg, #38BDF8, #0284C7); color: #010409;
-            border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 10px;
-            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.4); transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-        .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
-
-        .packages-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
-        .pkg-card {
-            background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px; padding: 16px; text-align: center; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
-        }
-        .pkg-card:hover { border-color: #38BDF8; transform: translateY(-3px); box-shadow: 0 0 25px rgba(56, 189, 248, 0.4); }
-        .pkg-title { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .pkg-silver { color: #E2E8F0; text-shadow: 0 0 10px rgba(226, 232, 240, 0.6); }
-        .pkg-gold { color: #FDE68A; text-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
-        .pkg-price { font-size: 22px; font-weight: 900; color: #38BDF8; margin-bottom: 10px; text-shadow: 0 0 15px rgba(56, 189, 248, 0.8); }
-        
-        .pkg-desc-silver { font-size: 13px; font-weight: 700; color: #CBD5E1; line-height: 1.6; text-shadow: 0 0 8px rgba(203, 213, 225, 0.6); }
-        .pkg-desc-gold { font-size: 13px; font-weight: 700; color: #FDE68A; line-height: 1.6; text-shadow: 0 0 8px rgba(253, 230, 138, 0.7); }
-
-        .red-neon-bot {
-            color: #FF4D4D; font-weight: 800;
-            text-shadow: 0 0 8px rgba(255, 77, 77, 0.9), 0 0 16px rgba(255, 0, 0, 0.6);
-            animation: redGlowPulse 1.5s infinite alternate;
-        }
-        @keyframes redGlowPulse {
-            0% { text-shadow: 0 0 5px rgba(255, 77, 77, 0.7), 0 0 10px rgba(255, 0, 0, 0.4); }
-            100% { text-shadow: 0 0 12px rgba(255, 77, 77, 1), 0 0 22px rgba(255, 0, 0, 0.8); }
-        }
-
-        .contact-info {
-            margin-top: 18px; background: rgba(2, 6, 23, 0.95); border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 12px; padding: 14px; font-size: 12px; color: #E2E8F0; text-align: center; line-height: 1.6;
-        }
-        .contact-info .clean-blue { color: #38BDF8; font-weight: 700; text-decoration: none; }
-        .error-msg { color: #EF4444; font-size: 11px; margin-top: 8px; display: block; text-align: center; font-weight: 600; }
-
-        /* --- DASHBOARD STYLES --- */
-        #dashboard-wrapper { display: none; width: 100%; max-width: 1350px; height: 96vh; overflow-y: auto; padding-right: 6px; animation: fadeInCard 0.6s ease forwards; }
+        #dashboard-wrapper { width: 100%; max-width: 1400px; height: 96vh; overflow-y: auto; padding-right: 6px; }
         #dashboard-wrapper::-webkit-scrollbar { width: 5px; }
         #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
 
@@ -133,7 +32,7 @@
         .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
 
         /* Market List Styling */
-        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
         .market-list::-webkit-scrollbar { width: 4px; }
         .market-list::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.2); border-radius: 4px; }
         .market-item {
@@ -144,10 +43,10 @@
         .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; }
         .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 8px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
         .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        
         .logout-btn { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
         .logout-btn:hover { background: #EF4444; color: #FFF; }
         
-        .locked-box { text-align: center; padding: 16px; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: 12px; }
         .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); font-size: 12px; }
         
         .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
@@ -159,244 +58,31 @@
         .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 6px 2px; }
         .histo-fill { height: 38px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
         .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
+        
+        input {
+            width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 14px; border-radius: 10px; color: #FFF; font-size: 13px; outline: none; transition: all 0.3s ease;
+        }
     </style>
-
-    <!-- Firebase SDK Setup & Single-Device Binding Security Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDEH3yUzF4lALEeN3uWiaFCMYi5Ueq1tBw",
-            authDomain: "trading-with-oggy.firebaseapp.com",
-            projectId: "trading-with-oggy",
-            storageBucket: "trading-with-oggy.firebasestorage.app",
-            messagingSenderId: "731602829211",
-            appId: "1:731602829211:web:ce10adc4f1e8963a5b2b3e",
-            measurementId: "G-QPR7DT3B63"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        function getDeviceUID() {
-            let uid = localStorage.getItem('oggy_device_uid');
-            if (!uid) {
-                uid = 'DEV-' + Math.random().toString(36).substring(2) + '-' + Date.now();
-                localStorage.setItem('oggy_device_uid', uid);
-            }
-            return uid;
-        }
-
-        window.addEventListener('load', async () => {
-            try {
-                const lifetimeRef = doc(db, "vip_keys", "OGGY-LIFETIME-VIP");
-                const lifetimeSnap = await getDoc(lifetimeRef);
-                if (!lifetimeSnap.exists()) {
-                    await setDoc(lifetimeRef, {
-                        expiry: new Date().getTime() + (100 * 365 * 24 * 60 * 60 * 1000), 
-                        tier: "tier2", 
-                        active: true,
-                        deviceId: "", 
-                        createdAt: new Date().toISOString()
-                    });
-                }
-            } catch(e) {
-                console.log("Auto-setup note:", e);
-            }
-
-            setTimeout(() => {
-                const loader = document.getElementById('loader-screen');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 600);
-            }, 1800);
-        });
-
-        window.handleKeyLogin = async function() {
-            const keyInput = document.getElementById('login-key').value.trim();
-            const errorSpan = document.getElementById('login-error');
-            errorSpan.style.color = "#94A3B8";
-            errorSpan.innerText = "Checking secure cloud device binding...";
-
-            if(!keyInput) {
-                errorSpan.style.color = "#EF4444";
-                errorSpan.innerText = "Please enter your VIP access key!";
-                return;
-            }
-
-            try {
-                const docRef = doc(db, "vip_keys", keyInput);
-                const docSnap = await getDoc(docRef);
-
-                if (!docSnap.exists()) {
-                    errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "Invalid Access Key! Contact admin.";
-                    return;
-                }
-
-                const keyData = docSnap.data();
-                const currentTime = new Date().getTime();
-                const currentDeviceID = getDeviceUID();
-
-                if(currentTime > keyData.expiry) {
-                    errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "This VIP Key has expired!";
-                    return;
-                }
-
-                if(!keyData.active) {
-                    errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "This Key has been disabled by Admin!";
-                    return;
-                }
-
-                if (keyData.deviceId && keyData.deviceId !== currentDeviceID) {
-                    errorSpan.style.color = "#EF4444";
-                    errorSpan.innerText = "Access Denied! This Key is already bound to another device.";
-                    return;
-                }
-
-                if (!keyData.deviceId) {
-                    await updateDoc(docRef, { deviceId: currentDeviceID });
-                }
-
-                localStorage.setItem('oggy_cloud_key', keyInput);
-                loadDashboard(keyData);
-            } catch(e) {
-                console.error(e);
-                errorSpan.style.color = "#EF4444";
-                errorSpan.innerText = "Server Connection Error! Check internet connection.";
-            }
-        };
-
-        function loadDashboard(keyData) {
-            document.getElementById('auth-wrapper').style.display = 'none';
-            document.getElementById('dashboard-wrapper').style.display = 'block';
-
-            const planBadge = document.getElementById('user-plan-badge');
-            const autoContent = document.getElementById('autotrade-content');
-
-            if(keyData.tier === 'tier1') {
-                planBadge.innerText = "Silver VIP (Signal & LDP)";
-                autoContent.innerHTML = `
-                    <div class="locked-box">
-                        <div style="font-size: 11px; color: #EF4444; font-weight: 700; margin-bottom: 5px;">🔒 Auto-Trading Locked</div>
-                        <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Upgrade to <strong>Gold Package</strong> to unlock automated bot execution.</p>
-                    </div>
-                `;
-            } else {
-                planBadge.innerText = "Gold VIP (Single-Device Bound)";
-                autoContent.innerHTML = `
-                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 10px;">Link Deriv account for auto execution.</div>
-                    <div style="margin-bottom: 8px;">
-                        <label style="font-size:9px; color:#94A3B8;">Deriv API Token</label>
-                        <input type="password" id="deriv-token" placeholder="Paste API token">
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <label style="font-size:9px; color:#94A3B8;">Stake ($)</label>
-                        <input type="number" id="stake" value="1.00">
-                    </div>
-                    <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
-                    <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 8px; text-align: center; font-weight: 600;"></div>
-                `;
-            }
-
-            initDerivStream();
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            const activeKey = localStorage.getItem('oggy_cloud_key');
-            if(activeKey) {
-                try {
-                    const docSnap = await getDoc(doc(db, "vip_keys", activeKey));
-                    if(docSnap.exists() && new Date().getTime() <= docSnap.data().expiry && docSnap.data().active) {
-                        loadDashboard(docSnap.data());
-                    } else {
-                        localStorage.removeItem('oggy_cloud_key');
-                    }
-                } catch(e) { console.error(e); }
-            }
-        });
-    </script>
 </head>
 <body>
 
-<!-- NEXT-LEVEL PRO TRADING WAVE & CANDLESTICK CANVAS ANIMATION -->
 <canvas id="trading-canvas"></canvas>
 <div class="bg-glow"></div>
-
-<!-- EPIC LOADING ANIMATION SCREEN -->
-<div id="loader-screen">
-    <div class="loader-box">
-        <img src="file_0000000006008208af7bbd2728ae3881.png" class="loader-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
-        <div class="loader-title">TRADING WITH OGGY</div>
-        <div style="font-size: 11px; color: #94A3B8; margin-bottom: 15px; letter-spacing: 1px;">INITIALIZING SECURE TERMINAL...</div>
-        <div class="loader-bar-container">
-            <div class="loader-bar"></div>
-        </div>
-    </div>
-</div>
-
-<!-- MODERN GLASS LOGIN CONTAINER -->
-<div id="auth-wrapper" class="auth-container">
-    <img src="file_0000000006008208af7bbd2728ae3881.png" class="login-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
-    <div class="brand-title">TRADING WITH OGGY</div>
-    <div class="brand-sub">Elite Cloud Verified Terminal</div>
-
-    <div class="form-group">
-        <label>Enter VIP Access Key (1 Device Limit)</label>
-        <input type="text" id="login-key" placeholder="Enter your VIP key here...">
-    </div>
-
-    <button class="action-btn" onclick="handleKeyLogin()">LAUNCH TERMINAL</button>
-    <span id="login-error" class="error-msg"></span>
-
-    <!-- Packages Section -->
-    <div class="packages-box">
-        <!-- Silver Package -->
-        <div class="pkg-card">
-            <div class="pkg-title pkg-silver">Silver Package</div>
-            <div class="pkg-price">$10 <span style="font-size:12px; font-weight:700; color:#38BDF8; text-shadow:0 0 5px #38BDF8;">/mo</span></div>
-            <div class="pkg-desc-silver">
-                1 Month Access<br>
-                • Real-time Signals<br>
-                • Live LDP Stream
-            </div>
-        </div>
-        <!-- Gold Package with Red Neon Auto-Trader Bot -->
-        <div class="pkg-card" style="border-color: rgba(245, 158, 11, 0.5);">
-            <div class="pkg-title pkg-gold">Gold Package</div>
-            <div class="pkg-price">$20 <span style="font-size:12px; font-weight:700; color:#38BDF8; text-shadow:0 0 5px #38BDF8;">/mo</span></div>
-            <div class="pkg-desc-gold">
-                1 Month Access<br>
-                • <span class="red-neon-bot">Auto-Trader Bot</span><br>
-                • Advanced Signals
-            </div>
-        </div>
-    </div>
-
-    <!-- Contact & Admin Support with Clean Blue (No Neon) -->
-    <div class="contact-info">
-        <strong>📥 Get Your VIP Access Key:</strong><br>
-        Send payment slip & get key via:<br>
-        • <strong>WhatsApp:</strong> <a href="https://wa.me/94753578716" target="_blank" class="clean-blue">+94 75 3578 716</a><br>
-        • <strong>Telegram:</strong> <a href="https://t.me/trading_with_oggy" target="_blank" class="clean-blue">@trading_with_oggy</a>
-    </div>
-</div>
 
 <!-- DASHBOARD CONTAINER -->
 <div id="dashboard-wrapper">
     <div class="top-bar">
         <div style="display: flex; align-items: center; gap: 14px;">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div style="font-size: 14px; font-weight: 800; color: #FDE68A; font-family: 'Cinzel', serif; letter-spacing: 0.5px;">TRADING WITH OGGY</div>
                 <div style="font-size: 10px; color: #34D399; font-weight: 600;">● Live Deriv Stream Active</div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="font-size: 11px;">Package: <strong id="user-plan-badge" style="color:#F59E0B"></strong></div>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+            <div style="font-size: 11px;">Status: <strong style="color:#F59E0B">Gold VIP (Active)</strong></div>
+            <button class="logout-btn" onclick="alert('Dashboard Session Closed')">Exit</button>
         </div>
     </div>
 
@@ -463,7 +149,17 @@
         <div>
             <div class="card">
                 <div class="card-title">Deriv Auto-Trader Bot</div>
-                <div id="autotrade-content"></div>
+                <div style="font-size: 10px; color: #94A3B8; margin-bottom: 10px;">Link Deriv account for auto execution.</div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:4px;">Deriv API Token</label>
+                    <input type="password" id="deriv-token" placeholder="Paste API token">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:4px;">Stake ($)</label>
+                    <input type="number" id="stake" value="1.00">
+                </div>
+                <button class="connect-btn" onclick="connectDeriv()">Connect & Start Bot</button>
+                <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 8px; text-align: center; font-weight: 600;"></div>
             </div>
         </div>
     </div>
@@ -693,11 +389,10 @@
         document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
     }
 
-    function logout() {
-        localStorage.removeItem('oggy_cloud_key');
-        if(derivWS) derivWS.close();
-        location.reload();
-    }
+    // Initialize stream on load
+    window.addEventListener('load', () => {
+        initDerivStream();
+    });
 </script>
 
 </body>
