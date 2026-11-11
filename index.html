@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Elite VIP Terminal</title>
+    <title>TRADING WITH OGGY - Pro Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; position: relative; }
         
-        /* Dynamic Pro Trading Wave & Glowing Candlestick Canvas */
+        /* Candlestick & Wave Background Animation Canvas */
         #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.95) 75%),
-                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 50%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
+                        radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.18) 0%, transparent 60%);
         }
 
-        #dashboard-wrapper { width: 100%; max-width: 1400px; height: 96vh; overflow-y: auto; padding-right: 6px; }
+        #dashboard-wrapper { width: 100%; max-width: 1450px; height: 96vh; overflow-y: auto; padding-right: 6px; }
         #dashboard-wrapper::-webkit-scrollbar { width: 5px; }
         #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
 
+        /* Top Nav Bar */
         .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 14px 22px;
-            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px;
+            flex-wrap: wrap; gap: 10px;
         }
-        .dashboard-grid { display: grid; grid-template-columns: 280px 1fr 340px; gap: 18px; }
+        .top-badges { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 700; color: #94A3B8; }
+        .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
+
+        .dashboard-grid { display: grid; grid-template-columns: 280px 1fr 340px; gap: 16px; }
         @media(max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; margin-bottom: 18px; backdrop-filter: blur(10px); }
-        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(10px); }
+        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Market List Styling */
-        .market-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+        /* Market List */
+        .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; }
         .market-list::-webkit-scrollbar { width: 4px; }
         .market-list::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.2); border-radius: 4px; }
         .market-item {
@@ -40,29 +45,34 @@
         }
         .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; }
-        .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 8px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .logout-btn { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
-        .logout-btn:hover { background: #EF4444; color: #FFF; }
-        
-        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); font-size: 12px; }
-        
-        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        .tick-badge { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        /* Price & Signal Box */
+        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 18px; text-align: center; }
+        .price-text { font-size: 32px; font-weight: 800; color: #38BDF8; margin: 6px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
+        .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Digit History Stream */
+        .tick-history { display: flex; gap: 5px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+        .tick-badge { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
         .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
 
-        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 12px; text-align: center; }
-        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 6px 2px; }
-        .histo-fill { height: 38px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
+        /* Histogram */
+        .histogram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 10px; text-align: center; }
+        .histo-bar-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 5px 2px; }
+        .histo-fill { height: 35px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 3px; }
         .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
-        
+
+        /* Strategy Selector Cards */
+        .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+        .strategy-card { background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .strategy-card:hover, .strategy-card.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.1); }
+
         input {
             width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 10px 14px; border-radius: 10px; color: #FFF; font-size: 13px; outline: none; transition: all 0.3s ease;
         }
+        .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); font-size: 12px; }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -70,24 +80,28 @@
 <canvas id="trading-canvas"></canvas>
 <div class="bg-glow"></div>
 
-<!-- DASHBOARD CONTAINER -->
 <div id="dashboard-wrapper">
+    <!-- Top Header Bar matching user preference -->
     <div class="top-bar">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div style="font-size: 14px; font-weight: 800; color: #FDE68A; font-family: 'Cinzel', serif; letter-spacing: 0.5px;">TRADING WITH OGGY</div>
                 <div style="font-size: 10px; color: #34D399; font-weight: 600;">● Live Deriv Stream Active</div>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="font-size: 11px;">Status: <strong style="color:#F59E0B">Gold VIP (Active)</strong></div>
-            <button class="logout-btn" onclick="alert('Dashboard Session Closed')">Exit</button>
+
+        <div class="top-badges">
+            <div class="badge-item">Active Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 10 Index</span></div>
+            <div class="badge-item" style="color:#34D399;">● Auto-Bot: ON</div>
+            <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
+            <div class="badge-item" style="color:#F59E0B;">VIP Trader (Gold)</div>
+            <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
         </div>
     </div>
 
     <div class="dashboard-grid">
-        <!-- Left: All Volatility Markets -->
+        <!-- LEFT: Volatility Markets -->
         <div>
             <div class="card">
                 <div class="card-title">Volatility Markets</div>
@@ -104,9 +118,18 @@
                     <div class="market-item" onclick="selectMarket('1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-title">Deriv Signal Rules Guide</div>
+                <div style="font-size: 10px; color: #94A3B8; line-height: 1.5;">
+                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP dynamic tracking.<br>
+                    • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis.<br>
+                    • <strong>Strategy C (Over/Under):</strong> Low digit streak tracking (0-3).
+                </div>
+            </div>
         </div>
 
-        <!-- Center: Live Market Stream, LDP History & Histogram Analyzer -->
+        <!-- CENTER: Live Market, Chart Simulation & LDP Analyzer -->
         <div>
             <div class="card">
                 <div class="card-title">
@@ -117,12 +140,12 @@
                     <div id="live-price-display" class="price-text">$0.000</div>
                     <div id="live-signal-status" class="signal-text">⚡ Connecting to Deriv Market...</div>
                     
-                    <div style="margin-top: 14px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
                     <div id="digit-history" class="tick-history"></div>
                 </div>
             </div>
 
-            <!-- Real-Time Last Digit Analyzer (LDP) Histogram -->
+            <!-- Real-Time Last Digit Analyzer (LDP) -->
             <div class="card">
                 <div class="card-title">
                     <span>Real-Time Last Digit Analyzer (LDP)</span>
@@ -132,21 +155,32 @@
                 <div class="histogram-grid" id="histogram-container"></div>
             </div>
 
-            <!-- Signal Radar & Voice Alert -->
+            <!-- Signal Strategy Selection -->
             <div class="card">
-                <div class="card-title">
-                    <span>Signal Radar & Voice Alert</span>
-                    <button onclick="toggleVoice()" id="voice-toggle-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; padding: 3px 8px; border-radius: 5px; font-size: 9px; cursor: pointer; font-weight: bold;">Voice ON</button>
+                <div class="card-title">Signal Strategy Selection</div>
+                <div class="strategy-grid">
+                    <div class="strategy-card active">
+                        <div style="font-size: 11px; font-weight: 800; color: #38BDF8;">Strategy A: Rise / Fall</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI (14) Overbought/Oversold</div>
+                    </div>
+                    <div class="strategy-card">
+                        <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy C: Over / Under</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 03 Streak (0,1,2,3 Run)</div>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Auto-Trader Bot & Signal Radar -->
+        <div>
+            <div class="card">
+                <div class="card-title">Signal Radar & Voice Alert</div>
                 <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
                     <div id="signal-radar-status" style="font-size: 12px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET PATTERNS...</div>
                     <div style="font-size: 9px; color: #94A3B8;" id="radar-subtext">Watching live ticks for strategy triggers. Audio alerts enabled.</div>
                 </div>
             </div>
-        </div>
 
-        <!-- Right: Auto-Trader Bot Panel -->
-        <div>
             <div class="card">
                 <div class="card-title">Deriv Auto-Trader Bot</div>
                 <div style="font-size: 10px; color: #94A3B8; margin-bottom: 10px;">Link Deriv account for auto execution.</div>
@@ -166,7 +200,7 @@
 </div>
 
 <script>
-    /* --- PRO TRADING WAVE & GLOWING CANDLESTICK ANIMATION SCRIPT --- */
+    /* --- ADVANCED CANDLESTICK & WAVE ANIMATION SCRIPT --- */
     const canvas = document.getElementById('trading-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -179,26 +213,24 @@
 
     let step = 0;
 
-    function animateWaves() {
+    function animateTradingBackground() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         let centerY = canvas.height / 2;
 
         for (let j = 0; j < 3; j++) {
             ctx.beginPath();
-            ctx.lineWidth = j === 0 ? 3 : 1.5;
-            
-            let alpha = j === 0 ? 0.8 : 0.4;
+            ctx.lineWidth = j === 0 ? 2.5 : 1.2;
+            let alpha = j === 0 ? 0.35 : 0.15;
             ctx.strokeStyle = j === 0 ? `rgba(56, 189, 248, ${alpha})` : `rgba(129, 140, 248, ${alpha})`;
-            ctx.shadowBlur = j === 0 ? 20 : 8;
+            ctx.shadowBlur = j === 0 ? 15 : 5;
             ctx.shadowColor = "#38BDF8";
 
-            let frequency = 0.0025 + (j * 0.0008);
-            let amplitude = 100 + (j * 25);
-            let speed = step * (0.015 + (j * 0.004));
+            let frequency = 0.002 + (j * 0.0006);
+            let amplitude = 120 + (j * 30);
+            let speed = step * (0.012 + (j * 0.003));
 
-            for (let x = 0; x < canvas.width; x += 10) {
-                let y = centerY + Math.sin(x * frequency + speed) * amplitude + Math.cos(x * 0.0015 - speed) * 50;
+            for (let x = 0; x < canvas.width; x += 15) {
+                let y = centerY + Math.sin(x * frequency + speed) * amplitude + Math.cos(x * 0.001 - speed) * 40;
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
@@ -206,34 +238,34 @@
             ctx.shadowBlur = 0;
         }
 
-        let candleSpacing = 80;
-        let startX = (step * 1.5) % candleSpacing;
+        let candleSpacing = 100;
+        let startX = (step * 1.2) % candleSpacing;
 
         for (let x = startX; x < canvas.width; x += candleSpacing) {
-            let waveY = centerY + Math.sin(x * 0.0025 + step * 0.015) * 100;
-            let candleHeight = 50 + Math.sin(x * 0.5) * 30;
-            let isGreen = Math.sin(x) > 0;
+            let waveY = centerY + Math.sin(x * 0.002 + step * 0.012) * 110;
+            let candleHeight = 40 + Math.sin(x * 0.4) * 25;
+            let isGreen = Math.sin(x * 0.5) > 0;
 
-            ctx.strokeStyle = isGreen ? 'rgba(52, 211, 153, 0.7)' : 'rgba(248, 113, 113, 0.7)';
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = isGreen ? 'rgba(52, 211, 153, 0.25)' : 'rgba(248, 113, 113, 0.25)';
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(x, waveY - candleHeight - 20);
-            ctx.lineTo(x, waveY + candleHeight + 20);
+            ctx.moveTo(x, waveY - candleHeight - 15);
+            ctx.lineTo(x, waveY + candleHeight + 15);
             ctx.stroke();
 
-            ctx.fillStyle = isGreen ? 'rgba(52, 211, 153, 0.5)' : 'rgba(248, 113, 113, 0.5)';
-            ctx.shadowBlur = 12;
+            ctx.fillStyle = isGreen ? 'rgba(52, 211, 153, 0.18)' : 'rgba(248, 113, 113, 0.18)';
+            ctx.shadowBlur = 8;
             ctx.shadowColor = isGreen ? '#34D399' : '#F87171';
-            ctx.fillRect(x - 8, waveY - candleHeight / 2, 16, candleHeight);
+            ctx.fillRect(x - 6, waveY - candleHeight / 2, 12, candleHeight);
             ctx.shadowBlur = 0;
         }
 
-        step += 0.8;
-        requestAnimationFrame(animateWaves);
+        step += 0.6;
+        requestAnimationFrame(animateTradingBackground);
     }
-    animateWaves();
+    animateTradingBackground();
 
-    /* --- DERIV WEBSOCKET & LDP ANALYZER SCRIPT --- */
+    /* --- DERIV LIVE WEBSOCKET & LDP ANALYZER --- */
     let derivWS = null;
     let currentMarket = "R_10";
     let recentDigits = [];
@@ -246,16 +278,11 @@
         derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
-            console.log("Connected to Deriv Live WebSocket Server");
-            derivWS.send(JSON.stringify({
-                ticks: currentMarket,
-                subscribe: 1
-            }));
+            derivWS.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
         };
 
         derivWS.onmessage = function(event) {
             const data = JSON.parse(event.data);
-
             if (data.msg_type === 'tick') {
                 const tick = data.tick;
                 const price = tick.quote.toFixed(3);
@@ -276,7 +303,6 @@
         };
 
         derivWS.onerror = function(error) {
-            console.error("Deriv WS Error:", error);
             document.getElementById('live-signal-status').innerText = "⚠️ Market Stream Reconnecting...";
         };
     }
@@ -286,8 +312,10 @@
         el.classList.add('active');
         
         currentMarket = symbol;
-        document.getElementById('active-market-title').innerText = `Deriv Live Market Data (${el.querySelector('span').innerText})`;
+        const marketName = el.querySelector('span').innerText;
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Data (${marketName})`;
         document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
+        document.getElementById('top-market-badge').innerText = marketName;
         
         recentDigits = [];
         digitCounts.fill(0);
@@ -389,7 +417,6 @@
         document.getElementById('bot-status').innerText = "✅ Bot Active & Linked to Deriv Account";
     }
 
-    // Initialize stream on load
     window.addEventListener('load', () => {
         initDerivStream();
     });
