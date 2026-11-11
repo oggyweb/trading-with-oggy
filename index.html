@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Pro Scrollable Terminal</title>
+    <title>TRADING WITH OGGY - Elite Pro Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; padding: 20px; overflow-x: hidden; position: relative; }
         
-        /* Smooth Scrolling Canvas Background */
+        /* Smooth Candlestick & Wave Canvas Background */
         #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
@@ -17,21 +17,34 @@
                         radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
         }
 
-        /* Full Page Scrollable Container matching target reference */
         #dashboard-wrapper { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px; }
         #dashboard-wrapper::-webkit-scrollbar { width: 6px; }
         #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
 
         /* Top Bar */
         .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 14px 22px;
-            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);
-            flex-wrap: wrap; gap: 12px;
+            display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+        
+        /* Professional Animated Brand Name */
+        .brand-container { display: flex; align-items: center; gap: 16px; }
+        .brand-logo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 15px rgba(245,158,11,0.6); }
+        .brand-title {
+            font-size: 16px; font-weight: 900; font-family: 'Cinzel', serif; letter-spacing: 1px;
+            background: linear-gradient(90deg, #FDE68A, #F59E0B, #38BDF8, #FDE68A);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 5s linear infinite;
+        }
+        @keyframes shineText { to { background-position: 200% center; } }
+
         .top-badges { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
         .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
 
-        /* Main Layout Grid */
+        /* Main Grid */
         .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
         @media(max-width: 1050px) { .main-layout { grid-template-columns: 1fr; } }
 
@@ -50,14 +63,23 @@
         }
         .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        /* Signal & Price Display */
-        .signal-box { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; }
-        .price-text { font-size: 34px; font-weight: 800; color: #38BDF8; margin: 8px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 13px; font-weight: 800; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        /* Timeframe Bar inside Market View */
+        .timeframe-bar { display: flex; gap: 6px; margin-bottom: 12px; background: rgba(2,6,23,0.6); padding: 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); }
+        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
+
+        /* Prominent Signal & Voice Alert Box */
+        .signal-box-prominent {
+            background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.95));
+            border: 2px solid #10B981; border-radius: 14px; padding: 24px; text-align: center;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden;
+        }
+        .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 8px 0; text-shadow: 0 0 25px rgba(56, 189, 248, 0.4); font-family: 'Cinzel', serif; }
+        .signal-text { font-size: 15px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 10px rgba(52,211,153,0.4); }
 
         /* Tick History */
-        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        .tick-badge { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+        .tick-badge { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
         .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
 
@@ -67,11 +89,16 @@
         .histo-fill { height: 42px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 4px; }
         .histo-inner { width: 100%; background: #38BDF8; border-radius: 2px; transition: height 0.3s; }
 
-        /* Strategy selection & Performance */
+        /* Strategy selection */
         .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
         @media(max-width: 768px) { .strategy-grid { grid-template-columns: 1fr; } }
         .strategy-card { background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
         .strategy-card:hover, .strategy-card.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.1); }
+
+        /* Loading Fill Animation Bar for Win Rate */
+        .winrate-loading-container { width: 100%; background: rgba(255,255,255,0.08); height: 10px; border-radius: 5px; margin-top: 10px; overflow: hidden; position: relative; }
+        .winrate-loading-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #10B981, #34D399, #38BDF8); border-radius: 5px; animation: fillBar 2s cubic-bezier(0.1, 1, 0.1, 1) forwards; box-shadow: 0 0 12px #34D399; }
+        @keyframes fillBar { to { width: 97.5%; } }
 
         /* Active Trade Executions Grid */
         .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
@@ -88,21 +115,21 @@
 <div class="bg-glow"></div>
 
 <div id="dashboard-wrapper">
-    <!-- Top Header Bar -->
+    <!-- Top Header Bar with Live Clock and Animated Brand Name -->
     <div class="top-bar">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,0.4);" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
+        <div class="brand-container">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
-                <div style="font-size: 14px; font-weight: 800; color: #FDE68A; font-family: 'Cinzel', serif; letter-spacing: 0.5px;">TRADING WITH OGGY</div>
-                <div style="font-size: 10px; color: #34D399; font-weight: 600;">● Live Deriv Stream Active</div>
+                <div class="brand-title">TRADING WITH OGGY</div>
+                <div style="font-size: 10px; color: #34D399; font-weight: 600;">● Live Deriv WebSocket Terminal</div>
             </div>
         </div>
 
         <div class="top-badges">
+            <div class="badge-item" id="live-clock-display" style="color:#FDE68A; font-family: monospace;">⏳ Loading Time...</div>
             <div class="badge-item">Active Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 10 Index</span></div>
             <div class="badge-item" style="color:#34D399;">● Auto-Bot: ON[cite: 8]</div>
             <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
-            <div class="badge-item" style="color:#F59E0B;">VIP Trader (Gold)[cite: 8]</div>
             <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
         </div>
     </div>
@@ -130,34 +157,35 @@
             <div class="card">
                 <div class="card-title">Deriv Signal Rules Guide</div>
                 <div style="font-size: 10px; color: #94A3B8; line-height: 1.6;">
-                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP dynamic tracking[cite: 8].<br>
+                    • <strong>Strategy A (Rise/Fall):</strong> RSI & LDP tracking[cite: 8].<br>
                     • <strong>Strategy B (Even/Odd):</strong> Digit pattern analysis[cite: 8].<br>
-                    • <strong>Strategy C (Over/Under):</strong> Low digit streak tracking (0-3)[cite: 8].
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Signal Radar & Voice Alert</div>
-                <div style="text-align: center; padding: 12px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.2); border-radius: 8px;">
-                    <div id="signal-radar-status" style="font-size: 11px; font-weight: 800; color: #38BDF8; margin-bottom: 4px;">⏳ SCANNING MARKET...</div>
-                    <div style="font-size: 9px; color: #94A3B8;">Audio alerts active.</div>
+                    • <strong>Strategy C (Over/Under):</strong> Low digit streak (0-3)[cite: 8].
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT CONTENT: Live Chart, LDP Analyzer, Strategy Engine & Executions -->
+        <!-- RIGHT CONTENT: Live Chart with Timeframes, LDP Analyzer & Prominent Voice Alert -->
         <div class="right-content">
-            <!-- Live Price & WebSocket Stream Box -->
+            <!-- Prominent Signal & Voice Alert + Timeframe Box -->
             <div class="card">
                 <div class="card-title">
-                    <span id="active-market-title">Deriv Live Market Data (Volatility 10 Index)</span>
+                    <span id="active-market-title">Deriv Live Market Stream (Volatility 10 Index)</span>
+                    <!-- Timeframe Selector added -->
+                    <div class="timeframe-bar" style="margin-bottom:0;">
+                        <button class="tf-btn active" onclick="setTimeframe('Tick', this)">Tick</button>
+                        <button class="tf-btn" onclick="setTimeframe('5s', this)">5s</button>
+                        <button class="tf-btn" onclick="setTimeframe('15s', this)">15s</button>
+                        <button class="tf-btn" onclick="setTimeframe('30s', this)">30s</button>
+                        <button class="tf-btn" onclick="setTimeframe('1hr', this)">1hr</button>
+                    </div>
                 </div>
-                <div class="signal-box">
-                    <div style="font-size: 10px; color: #94A3B8;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
+
+                <div class="signal-box-prominent">
+                    <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_10 | WebSocket Stream</div>
                     <div id="live-price-display" class="price-text">$0.000</div>
-                    <div id="live-signal-status" class="signal-text">⚡ Connecting to Deriv Market...</div>
+                    <div id="live-signal-status" class="signal-text">🔊 VOICE ALERT ACTIVE: SCANNING MARKET...</div>
                     
-                    <div style="margin-top: 14px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
+                    <div style="margin-top: 16px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
                     <div id="digit-history" class="tick-history"></div>
                 </div>
             </div>
@@ -191,18 +219,22 @@
                 </div>
             </div>
 
-            <!-- 1-Hour Signal Performance Assessment -->
+            <!-- 1-Hour Signal Performance with Win Rate Loading Fill Animation -->
             <div class="card">
                 <div class="card-title">
                     <span>1-Hour Signal Performance (පසුගිය පැය 1)</span>[cite: 6]
-                    <span style="color: #34D399; font-weight: 900;">97.5% WIN RATE</span>[cite: 6]
+                    <span style="color: #34D399; font-weight: 900; font-size: 14px;" id="winrate-val">97.5% WIN RATE</span>[cite: 6]
                 </div>
-                <div style="font-size: 11px; color: #CBD5E1; line-height: 1.5;">
-                    ✅ <strong>GOOD TIME TO TRADE (97.5% Win Rate):</strong> මෙම වෙළඳපලේ පසුගිය පැය 1 තුළ Signals වල සාර්ථකත්වය 80% හෝ ඊට ඉහළින් (97.5%) පවතී. Bot එකේ Pattern විශ්ලේෂණය සහ Market Flow ඉතාමත් යහපත් බැවින් කිසිදු ගැටළුවක් නැත[cite: 6].
+                <div style="font-size: 11px; color: #CBD5E1; line-height: 1.5; margin-bottom: 8px;">
+                    ✅ <strong>GOOD TIME TO TRADE (97.5% Win Rate):</strong> මෙම වෙළඳපලේ පසුගිය පැය 1 තුළ Signals වල සාර්ථකත්වය ඉතා ඉහළ මට්ටමක පවතී. Bot එකේ Pattern සහ Market Flow විශ්ලේෂණය යහපත්ය[cite: 6].
+                </div>
+                <!-- Loading fill animation bar -->
+                <div class="winrate-loading-container">
+                    <div class="winrate-loading-bar"></div>
                 </div>
             </div>
 
-            <!-- Active Trade Executions Log (Scrollable bottom history) -->
+            <!-- Active Trade Executions Log -->
             <div class="card">
                 <div class="card-title">
                     <span>Active Trade Executions</span>
@@ -237,6 +269,23 @@
 </div>
 
 <script>
+    /* --- LIVE CLOCK & DATE IN TOP BAR --- */
+    function updateLiveClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateString = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        document.getElementById('live-clock-display').innerText = `🕒 ${dateString} | ${timeString}`;
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    /* --- TIMEFRAME SELECTOR --- */
+    function setTimeframe(tf, el) {
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        console.log("Switched timeframe to: " + tf);
+    }
+
     /* --- ADVANCED CANDLESTICK & WAVE ANIMATION SCRIPT --- */
     const canvas = document.getElementById('trading-canvas');
     const ctx = canvas.getContext('2d');
@@ -350,7 +399,7 @@
         
         currentMarket = symbol;
         const marketName = el.querySelector('span').innerText;
-        document.getElementById('active-market-title').innerText = `Deriv Live Market Data (${marketName})`;
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketName})`;
         document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
         document.getElementById('top-market-badge').innerText = marketName;
         
@@ -403,24 +452,20 @@
     let lastSpokenSignal = "";
     function analyzeSignal(price, lastDigit) {
         const signalEl = document.getElementById('live-signal-status');
-        const radarEl = document.getElementById('signal-radar-status');
         if (!signalEl) return;
         
         let signalText = "";
         if (lastDigit >= 7) {
             signalEl.style.color = "#34D399";
-            signalEl.innerText = "🚀 RISE SIGNAL DETECTED (High LDP)";
-            if(radarEl) { radarEl.style.color = "#34D399"; radarEl.innerText = `🚀 RISE SIGNAL DETECTED (Digit: ${lastDigit})`; }
+            signalEl.innerText = `🚀 RISE SIGNAL DETECTED! (Digit: ${lastDigit})`;
             signalText = `Rise signal detected. Last digit is ${lastDigit}.`;
         } else if (lastDigit <= 2) {
             signalEl.style.color = "#F87171";
-            signalEl.innerText = "🔻 FALL SIGNAL DETECTED (Low LDP)";
-            if(radarEl) { radarEl.style.color = "#F87171"; radarEl.innerText = `🔻 FALL SIGNAL DETECTED (Digit: ${lastDigit})`; }
+            signalEl.innerText = `🔻 FALL SIGNAL DETECTED! (Digit: ${lastDigit})`;
             signalText = `Fall signal detected. Last digit is ${lastDigit}.`;
         } else {
-            signalEl.style.color = "#FBBF24";
-            signalEl.innerText = "⏳ SCANNING TICK PATTERNS...";
-            if(radarEl) { radarEl.style.color = "#38BDF8"; radarEl.innerText = `⏳ SCANNING TICK PATTERNS (Digit: ${lastDigit})`; }
+            signalEl.style.color = "#38BDF8";
+            signalEl.innerText = `🔊 VOICE ALERT ACTIVE: SCANNING TICK (Digit: ${lastDigit})`;
             return;
         }
 
