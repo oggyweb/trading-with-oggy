@@ -51,14 +51,14 @@
         .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; backdrop-filter: blur(10px); }
         .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
 
-        .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 480px; overflow-y: auto; }
+        .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; }
         .market-item {
             background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
         }
         .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
 
-        .timeframe-bar { display: flex; gap: 6px; background: rgba(2,6,23,0.6); padding: 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-top: 12px; justify-content: center; }
-        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 10px; font-weight: 700; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .timeframe-bar { display: flex; gap: 4px; background: rgba(2,6,23,0.6); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-top: 12px; justify-content: center; }
+        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
 
         .signal-box-prominent {
@@ -66,127 +66,7 @@
             border: 2px solid #10B981; border-radius: 14px; padding: 24px; text-align: center;
             box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
         }
-        .price-text { font-size: 42px; font-weight: 900; color: #38BDF8; margin: 10px 0; font-family: 'Cinzel', serif; }
-        .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .radar-panel-box {
-            background: rgba(10, 14, 26, 0.95);
-            border: 2px solid rgba(56, 189, 248, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);
-            transition: 0.3s ease;
-        }
-        .radar-circle-container {
-            width: 130px; height: 130px; margin: 15px auto; border-radius: 50%;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(2, 6, 23, 0.8) 70%);
-            border: 1px dashed rgba(56, 189, 248, 0.4);
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
-        .radar-inner-icon {
-            width: 55px; height: 55px; background: #38BDF8; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #010409; font-size: 22px; font-weight: bold;
-            box-shadow: 0 0 15px #38BDF8;
-        }
-        .radar-status-badge {
-            background: #38BDF8; color: #010409; font-size: 10px; font-weight: 900; padding: 5px 14px;
-            border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-        }
-        .radar-action-btn {
-            width: 100%; background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 12px; border-radius: 10px;
-            font-weight: 800; font-size: 12px; cursor: pointer; margin-top: 15px; text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); transition: 0.2s;
-        }
-
-        .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
-        .tick-badge { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .tick-green { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #34D399; }
-        .tick-red { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #F87171; }
-
-        .ldp-candles-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
-        .ldp-candle-col { background:Here is your updated, fully fixed **TRADING WITH OGGY** terminal code in English.
-
-### Updates Included:
-1. **Live Display of Selected Market & Timeframe:** The live stream box title now clearly displays both the active market name and the currently selected timeframe (e.g., `Volatility 10 Index | Timeframe: 5m`).
-2. **Extended Chart Width & Alignment:** The live market stream container has been stretched and matched in width to align perfectly with the sidebar and layout structure.
-3. **Clean Layout Hierarchy:** Elements below have been neatly organized so the dashboard layout flows smoothly.
-
-Save the code below as an `.html` file (e.g., `index.html`) and open it in any browser or push it to your GitHub repository:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Elite Pro Terminal</title>
-    <link href="[https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap](https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap)" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: #010409; color: #F8FAFC; min-height: 100vh; display: flex; justify-content: center; padding: 20px; overflow-x: hidden; position: relative; }
-        
-        #trading-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -3; }
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
-            background: radial-gradient(circle at 50% 20%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
-                        radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
-        }
-
-        #dashboard-wrapper { width: 100%; max-width: 1450px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px; }
-        #dashboard-wrapper::-webkit-scrollbar { width: 6px; }
-        #dashboard-wrapper::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
-
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 18px 24px;
-            background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
-            flex-wrap: wrap; gap: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .brand-container { display: flex; align-items: center; gap: 18px; }
-        .brand-logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #F59E0B; box-shadow: 0 0 20px rgba(245,158,11,0.7); }
-        .brand-title {
-            font-size: 22px; font-weight: 900; font-family: 'Cinzel', serif; letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #FDE68A, #F59E0B, #38BDF8, #FDE68A);
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineText 5s linear infinite;
-            text-shadow: 0 0 20px rgba(245,158,11,0.4);
-        }
-        @keyframes shineText { to { background-position: 200% center; } }
-
-        .top-badges { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: #94A3B8; flex-wrap: wrap; }
-        .badge-item { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
-
-        .main-layout { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; }
-        @media(max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
-
-        .left-sidebar, .right-sidebar { display: flex; flex-direction: column; gap: 20px; }
-        .center-content { display: flex; flex-direction: column; gap: 20px; width: 100%; }
-
-        .card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; backdrop-filter: blur(10px); width: 100%; }
-        .card-title { font-size: 11px; font-weight: 800; color: #94A3B8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
-
-        .market-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; }
-        .market-item {
-            background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.15); padding: 10px 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
-        .market-item:hover, .market-item.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.12); box-shadow: 0 0 10px rgba(56,189,248,0.2); }
-
-        .timeframe-bar { display: flex; gap: 4px; background: rgba(2,6,23,0.6); padding: 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-top: 12px; justify-content: center; width: 100%; }
-        .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; flex: 1; text-align: center; }
-        .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
-
-        .signal-box-prominent {
-            background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.95));
-            border: 2px solid #10B981; border-radius: 14px; padding: 28px; text-align: center;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
-            width: 100%;
-        }
-        .price-text { font-size: 42px; font-weight: 900; color: #38BDF8; margin: 10px 0; font-family: 'Cinzel', serif; }
+        .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 8px 0; font-family: 'Cinzel', serif; }
         .signal-text { font-size: 14px; font-weight: 900; color: #34D399; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
         .radar-panel-box {
@@ -270,7 +150,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
     <!-- Top Header Bar with Enlarged Brand Title -->
     <div class="top-bar">
         <div class="brand-container">
-            <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='[https://i.imgur.com/8Km9tLL.png](https://i.imgur.com/8Km9tLL.png)'">
+            <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
                 <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Live Deriv WebSocket Terminal Pro</div>
@@ -320,7 +200,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
         <div class="center-content">
             <div class="card">
                 <div class="card-title">
-                    <span id="active-market-title">DERIV LIVE MARKET STREAM (VOLATILITY 10 INDEX) | TIMEFRAME: 5M</span>
+                    <span id="active-market-title">Deriv Live Market Stream (Volatility 10 Index)</span>
                 </div>
 
                 <div class="signal-box-prominent" id="signal-main-box">
@@ -332,7 +212,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
                     <div id="digit-history" class="tick-history"></div>
                 </div>
 
-                <!-- Timeframe Bar placed directly below the chart/signal stream area, matching full width -->
+                <!-- Timeframe Bar placed directly below the chart/signal stream area -->
                 <div class="timeframe-bar">
                     <button class="tf-btn" onclick="setTimeframe('1m', this)">1m</button>
                     <button class="tf-btn" onclick="setTimeframe('3m', this)">3m</button>
@@ -413,8 +293,9 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: Radar Bot Panel & Auto-Trader -->
+        <!-- RIGHT SIDEBAR: Exact Reference Radar Bot Panel & Auto-Trader -->
         <div class="right-sidebar">
+            <!-- Exact Reference Radar Bot Panel -->
             <div class="radar-panel-box" id="radar-panel-box">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="font-size: 11px; font-weight: 800; color: #F8FAFC; letter-spacing: 0.5px;">SIGNAL RADAR & VOICE ALERT</div>
@@ -468,8 +349,6 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
 
 <script>
     const userTier = 'GOLD'; 
-    let currentTimeframe = "5m";
-    let marketNameGlobal = "Volatility 10 Index";
 
     window.addEventListener('DOMContentLoaded', () => {
         if(userTier !== 'GOLD') {
@@ -491,12 +370,6 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
     function setTimeframe(tf, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
-        currentTimeframe = tf.toUpperCase();
-        updateStreamHeader();
-    }
-
-    function updateStreamHeader() {
-        document.getElementById('active-market-title').innerText = `DERIV LIVE MARKET STREAM (${marketNameGlobal.toUpperCase()}) | TIMEFRAME: ${currentTimeframe}`;
     }
 
     function selectStrategy(index, el) {
@@ -613,6 +486,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
     let digitCounts = new Array(10).fill(0);
     let totalTicksCount = 0;
     let voiceEnabled = true;
+    let marketNameGlobal = "Volatility 10 Index";
 
     function initLDPCandles() {
         const container = document.getElementById('ldp-candles-container');
@@ -671,7 +545,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
 
     function initDerivStream() {
         if(derivWS) derivWS.close();
-        derivWS = new WebSocket('wss://[ws.derivws.com/websockets/v3?app_id=1089](https://ws.derivws.com/websockets/v3?app_id=1089)');
+        derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
             derivWS.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
@@ -704,7 +578,7 @@ Save the code below as an `.html` file (e.g., `index.html`) and open it in any b
         el.classList.add('active');
         currentMarket = symbol;
         marketNameGlobal = el.querySelector('span').innerText;
-        updateStreamHeader();
+        document.getElementById('active-market-title').innerText = `Deriv Live Market Stream (${marketNameGlobal})`;
         document.getElementById('active-market-label').innerText = `Symbol: ${symbol} | WebSocket Stream`;
         document.getElementById('top-market-badge').innerText = marketNameGlobal;
         
