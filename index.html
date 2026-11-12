@@ -125,7 +125,6 @@
         .ldp-candle-track { width: 14px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 4px; display: flex; align-items: flex-end; position: relative; overflow: hidden; margin: 4px 0; border: 1px solid rgba(255,255,255,0.08); }
         .ldp-candle-fill { width: 100%; background: linear-gradient(180deg, #38BDF8, #0284C7); border-radius: 2px; transition: height 0.4s ease; }
 
-        /* Exact Replica of User's Image Style for History Cards */
         .exec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
         @media(max-width: 768px) { .exec-grid { grid-template-columns: 1fr; } }
         
@@ -357,7 +356,7 @@
                 </div>
             </div>
 
-            <!-- Active Trade Executions History (Updated to Exact Image Style) -->
+            <!-- Active Trade Executions History -->
             <div class="card">
                 <div class="card-title">
                     <span>Live Signal Execution History (Hourly Auto-Reset)</span>
@@ -550,9 +549,9 @@
         symbolCodeGlobal = symbol;
         if(MARKETS[symbol]) {
             currentPrice = MARKETS[symbol].base;
-            marketNameGlobal = symbol; // Display code like R_100 or market name
-            document.getElementById('chart-title').innerText = `${MARKETS[symbol].name} (${symbol})`;
-            document.getElementById('top-market-badge').innerText = MARKETS[symbol].name;
+            marketNameGlobal = MARKETS[symbol].name;
+            document.getElementById('chart-title').innerText = `${marketNameGlobal} (${symbol})`;
+            document.getElementById('top-market-badge').innerText = marketNameGlobal;
             document.getElementById('market-select').value = symbol;
             updateActiveLabels();
         }
@@ -596,7 +595,7 @@
 
     function updateActiveLabels() {
         const stratNames = ['Rise/Fall', 'Even/Odd', 'Over/Under'];
-        document.getElementById('active-market-label').innerText = `Market: ${symbolCodeGlobal} | Strategy: ${stratNames[activeStrategy]} | Mode: ${signalTimeframe}`;
+        document.getElementById('active-market-label').innerText = `Market: ${marketNameGlobal} | Strategy: ${stratNames[activeStrategy]} | Mode: ${signalTimeframe}`;
     }
 
     function loadMarketData() {
@@ -761,7 +760,7 @@
             else if (signalTimeframe === '10 MIN') targetTicks = 50;
 
             activeSignalTracker = {
-                marketSymbol: symbolCodeGlobal,
+                marketName: marketNameGlobal,
                 signalName: detectedSignal,
                 direction: signalDirection,
                 mode: signalTimeframe,
@@ -774,7 +773,7 @@
 
             tradeHistoryLog.unshift({
                 id: activeSignalTracker.id,
-                market: activeSignalTracker.marketSymbol,
+                market: activeSignalTracker.marketName,
                 signal: activeSignalTracker.signalName,
                 mode: activeSignalTracker.mode,
                 entryPrice: price.toFixed(decimals),
@@ -791,7 +790,8 @@
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
             if (voiceEnabled) {
-                const voiceAnnouncement = `${detectedSignal} on ${symbolCodeGlobal}`;
+                // Exact format required: [Signal Name] [Market Name] (e.g. "RISE Volatility 100 Index")
+                const voiceAnnouncement = `${detectedSignal} ${marketNameGlobal}`;
                 speakMessage(voiceAnnouncement);
             }
         }
@@ -872,7 +872,7 @@
 
         mainBox.style.borderColor = primaryColor;
         signalEl.style.color = textColor;
-        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${symbolCodeGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
+        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
 
         radarBox.style.borderColor = primaryColor;
         radarIcon.style.background = primaryColor;
@@ -881,7 +881,7 @@
         radarBadge.style.background = primaryColor;
         radarBadge.style.color = '#FFF';
         radarBadge.innerText = `⚡ ${signalName}`;
-        radarTitle.innerText = `${symbolCodeGlobal}`;
+        radarTitle.innerText = `${marketNameGlobal}`;
         radarSub.innerText = reason;
         radarBtn.style.background = primaryColor;
         radarBtn.style.color = '#FFF';
@@ -909,7 +909,7 @@
         radarBadge.style.background = '#38BDF8';
         radarBadge.style.color = '#010409';
         radarBadge.innerText = 'WAITING FOR SIGNAL...';
-        radarTitle.innerText = symbolCodeGlobal;
+        radarTitle.innerText = marketNameGlobal;
         radarSub.innerText = 'Waiting for technical criteria to trigger signal.';
         radarBtn.style.background = 'rgba(56,189,248,0.15)';
         radarBtn.style.color = '#38BDF8';
@@ -1045,7 +1045,7 @@
 
     function executeManualTrade() {
         if (activeSignalTracker) {
-            alert(`Signal Action: Place ${activeSignalTracker.signalName} manually on ${symbolCodeGlobal} (${signalTimeframe})!`);
+            alert(`Signal Action: Place ${activeSignalTracker.signalName} manually on ${marketNameGlobal} (${signalTimeframe})!`);
         } else {
             alert("No active signal right now. Please wait for the next radar trigger.");
         }
