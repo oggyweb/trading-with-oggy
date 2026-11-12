@@ -70,20 +70,15 @@
             box-shadow: 0 0 35px rgba(16, 185, 129, 0.25); position: relative; overflow: hidden; transition: 0.3s;
             width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
+        .price-text { font-size: 38px; font-weight: 900; color: #38BDF8; margin: 6px 0; font-family: 'Cinzel', serif; }
         .signal-text { font-size: 13px; font-weight: 900; color: #34D399; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CUSTOM CANVAS CHART CARD */
-        .chart-box {
-            background: #020617; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 14px; padding: 16px; position: relative;
+        /* REAL DERIV SMARTCHART CONTAINER */
+        .live-chart-container {
+            width: 100%; height: 500px; border-radius: 14px; overflow: hidden; border: 2px solid rgba(56, 189, 248, 0.35);
+            background: #020617; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
-        .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .chart-title-main { font-size: 16px; font-weight: 800; color: #F8FAFC; }
-        .chart-subtitle { font-size: 10px; color: #64748B; margin-top: 2px; }
-        .price-badge { font-size: 24px; font-weight: 900; color: #34D399; font-family: 'Cinzel', serif; }
-        .stats-strip { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-        .stat-pill { background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; font-size: 10px; color: #94A3B8; }
-
-        canvas#liveLineChart { width: 100%; height: 320px; background: #010409; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: block; }
+        .live-chart-container iframe { width: 100%; height: 100%; border: none; }
 
         .radar-panel-box {
             background: rgba(10, 14, 26, 0.95);
@@ -166,7 +161,7 @@
 
         <div class="top-badges">
             <div class="badge-item" id="live-clock-display" style="color:#FDE68A; font-family: monospace;">⏳ Loading...</div>
-            <div class="badge-item">Active Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 75 Index</span></div>
+            <div class="badge-item">Active Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 10 Index</span></div>
             <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
             <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
         </div>
@@ -174,15 +169,15 @@
 
     <!-- Main Grid Layout -->
     <div class="main-layout">
-        <!-- LEFT SIDEBAR -->
+        <!-- LEFT SIDEBAR: Volatility Markets -->
         <div class="left-sidebar">
             <div class="card">
                 <div class="card-title">Volatility Markets</div>
                 <div class="market-list" id="market-list-container">
-                    <div class="market-item" onclick="selectMarket('Volatility 10 Index', this, 'R_10')"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
+                    <div class="market-item active" onclick="selectMarket('Volatility 10 Index', this, 'R_10')"><span>Volatility 10 Index</span><span style="font-size:9px; color:#38BDF8">R_10</span></div>
                     <div class="market-item" onclick="selectMarket('Volatility 25 Index', this, 'R_25')"><span>Volatility 25 Index</span><span style="font-size:9px; color:#38BDF8">R_25</span></div>
                     <div class="market-item" onclick="selectMarket('Volatility 50 Index', this, 'R_50')"><span>Volatility 50 Index</span><span style="font-size:9px; color:#38BDF8">R_50</span></div>
-                    <div class="market-item active" onclick="selectMarket('Volatility 75 Index', this, 'R_75')"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
+                    <div class="market-item" onclick="selectMarket('Volatility 75 Index', this, 'R_75')"><span>Volatility 75 Index</span><span style="font-size:9px; color:#38BDF8">R_75</span></div>
                     <div class="market-item" onclick="selectMarket('Volatility 100 Index', this, 'R_100')"><span>Volatility 100 Index</span><span style="font-size:9px; color:#38BDF8">R_100</span></div>
                     <div class="market-item" onclick="selectMarket('Volatility 10 (1s)', this, '1HZ10V')"><span>Volatility 10 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
                     <div class="market-item" onclick="selectMarket('Volatility 25 (1s)', this, '1HZ25V')"><span>Volatility 25 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
@@ -202,42 +197,33 @@
             </div>
         </div>
 
-        <!-- CENTER CONTENT: Custom Canvas Chart -->
+        <!-- CENTER CONTENT: Real Deriv SmartCharts Widget & Stream -->
         <div class="center-content">
-            <div class="chart-box">
-                <div class="chart-header">
-                    <div>
-                        <div class="chart-title-main" id="chart-market-name">Volatility 75 Index <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; color:#38BDF8;" id="chart-market-code">R_75</span></div>
-                        <div class="chart-subtitle">Constant volatility generated live via WebSocket</div>
-                    </div>
-                    <div class="price-badge" id="live-chart-price">$0.000</div>
+            <div class="card">
+                <div class="card-title">
+                    <span id="active-market-title">Deriv Live Official SmartChart (Volatility 10 Index)</span>
                 </div>
 
-                <div class="stats-strip">
-                    <div class="stat-pill">Last Digit (LDP): <strong id="ldp-val-pill" style="color:#EF4444;">-</strong></div>
-                    <div class="stat-pill">RSI (14): <strong id="rsi-val-pill" style="color:#38BDF8;">-</strong></div>
-                    <div class="stat-pill">Ticks Count: <strong id="ticks-count-pill">0</strong></div>
-                    <div class="stat-pill">High: <strong id="high-price-pill" style="color:#34D399;">-</strong></div>
-                    <div class="stat-pill">Low: <strong id="low-price-pill" style="color:#F87171;">-</strong></div>
+                <!-- REAL DERIV INTERACTIVE SMARTCHART IFRAME -->
+                <div class="live-chart-container">
+                    <iframe id="deriv-chart-iframe" src="https://charts.deriv.com/deriv?symbol=R_10&interval=300&theme=dark" allowfullscreen></iframe>
                 </div>
 
-                <div style="position:relative; margin-top:10px;">
-                    <canvas id="liveLineChart"></canvas>
-                </div>
-
+                <!-- Timeframe Bar -->
                 <div class="timeframe-bar">
-                    <button class="tf-btn" onclick="setTimeframe('1m', this)">1m</button>
-                    <button class="tf-btn" onclick="setTimeframe('3m', this)">3m</button>
-                    <button class="tf-btn active" onclick="setTimeframe('5m', this)">5m</button>
-                    <button class="tf-btn" onclick="setTimeframe('15m', this)">15m</button>
-                    <button class="tf-btn" onclick="setTimeframe('30m', this)">30m</button>
-                    <button class="tf-btn" onclick="setTimeframe('1hr', this)">1hr</button>
+                    <button class="tf-btn" onclick="setTimeframe('1m', 60, this)">1m</button>
+                    <button class="tf-btn" onclick="setTimeframe('3m', 180, this)">3m</button>
+                    <button class="tf-btn active" onclick="setTimeframe('5m', 300, this)">5m</button>
+                    <button class="tf-btn" onclick="setTimeframe('15m', 900, this)">15m</button>
+                    <button class="tf-btn" onclick="setTimeframe('30m', 1800, this)">30m</button>
+                    <button class="tf-btn" onclick="setTimeframe('1hr', 3600, this)">1hr</button>
                 </div>
             </div>
 
             <!-- Signal Stream & Voice Alert Status Box -->
             <div class="signal-box-prominent" id="signal-main-box">
-                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_75 | WebSocket Stream</div>
+                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_10 | WebSocket Live Tick Stream</div>
+                <div id="live-price-display" class="price-text">$0.000</div>
                 <div id="live-signal-status" class="signal-text">🔊 VOICE ALERT ACTIVE: SCANNING MARKET...</div>
                 
                 <div style="margin-top: 10px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
@@ -295,7 +281,7 @@
                 <div class="exec-grid">
                     <div class="exec-card">
                         <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 4px;">
-                            <span>R_75</span><span style="color:#34D399;">WIN (+95%)</span>
+                            <span>R_10</span><span style="color:#34D399;">WIN (+95%)</span>
                         </div>
                         <div style="font-size: 9px; color: #94A3B8;">Entry LDP: 2 | Exit LDP: 8</div>
                     </div>
@@ -307,7 +293,7 @@
                     </div>
                     <div class="exec-card">
                         <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 4px;">
-                            <span>R_10</span><span style="color:#34D399;">WIN (+95%)</span>
+                            <span>R_100</span><span style="color:#34D399;">WIN (+95%)</span>
                         </div>
                         <div style="font-size: 9px; color: #94A3B8;">Entry LDP: 0 | Exit LDP: 7</div>
                     </div>
@@ -358,37 +344,21 @@
 
 <script>
     const userTier = 'GOLD'; 
-    let currentSymbol = 'R_75';
-    let marketNameGlobal = 'Volatility 75 Index';
+    let currentSymbol = 'R_10';
+    let currentInterval = 300; // default 5m
+    let marketNameGlobal = 'Volatility 10 Index';
     let derivWS = null;
 
-    let priceHistory = [1000, 1001, 1002, 1001.5, 1003]; // Initial default points so chart renders immediately without waiting
-    let rsiHistory = [50, 52, 55, 53, 56];
-    let recentDigits = [3, 7, 1, 9, 4];
-    let digitCounts = new Array(10).fill(2);
-    let totalTicksCount = 5;
+    let recentDigits = [];
+    let digitCounts = new Array(10).fill(0);
+    let totalTicksCount = 0;
     let voiceEnabled = true;
 
-    const canvasChart = document.getElementById('liveLineChart');
-    const ctxChart = canvasChart.getContext('2d');
-
-    function resizeChartCanvas() {
-        if(canvasChart && canvasChart.parentElement) {
-            canvasChart.width = canvasChart.parentElement.clientWidth - 32;
-            canvasChart.height = 320;
-            drawCustomChart();
-        }
-    }
-    window.addEventListener('resize', resizeChartCanvas);
-
     window.addEventListener('DOMContentLoaded', () => {
-        resizeChartCanvas();
         if(userTier !== 'GOLD') {
             document.getElementById('autotrader-panel').classList.add('locked-overlay');
         }
         initLDPCandles();
-        renderDigitHistory();
-        drawCustomChart();
         initDerivStream();
     });
 
@@ -402,9 +372,16 @@
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-    function setTimeframe(tf, el) {
+    function setTimeframe(tfText, intervalSeconds, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
+        currentInterval = intervalSeconds;
+        updateChartIframe();
+    }
+
+    function updateChartIframe() {
+        const iframe = document.getElementById('deriv-chart-iframe');
+        iframe.src = `https://charts.deriv.com/deriv?symbol=${currentSymbol}&interval=${currentInterval}&theme=dark`;
     }
 
     function selectStrategy(index, el) {
@@ -449,7 +426,7 @@
     }
     animateTradingBackground();
 
-    /* --- DERIV WEBSOCKET & CANVAS CHART ENGINE --- */
+    /* --- DERIV WEBSOCKET STREAM --- */
     function initDerivStream() {
         if(derivWS) derivWS.close();
         derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
@@ -466,20 +443,7 @@
                 const priceStr = price.toFixed(3);
                 const lastDigit = parseInt(priceStr.slice(-1));
 
-                document.getElementById('live-chart-price').innerText = `$${priceStr}`;
-                document.getElementById('ldp-val-pill').innerText = lastDigit;
-
-                priceHistory.push(price);
-                if(priceHistory.length > 60) priceHistory.shift();
-
-                let rsiVal = calculateRSI(priceHistory, 14);
-                rsiHistory.push(rsiVal);
-                if(rsiHistory.length > 60) rsiHistory.shift();
-
-                document.getElementById('rsi-val-pill').innerText = rsiVal ? rsiVal.toFixed(2) : '-';
-                document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(3);
-                document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(3);
-                document.getElementById('ticks-count-pill').innerText = totalTicksCount + 1;
+                document.getElementById('live-price-display').innerText = `$${priceStr}`;
 
                 recentDigits.push(lastDigit);
                 if(recentDigits.length > 15) recentDigits.shift();
@@ -489,101 +453,9 @@
 
                 renderDigitHistory();
                 renderLDPCandles();
-                drawCustomChart();
                 analyzeSignal(priceStr, lastDigit);
             }
         };
-    }
-
-    function calculateRSI(prices, period = 14) {
-        if (prices.length < period + 1) return 50;
-        let gains = 0, losses = 0;
-        for (let i = prices.length - period; i < prices.length; i++) {
-            let diff = prices[i] - prices[i - 1];
-            if (diff >= 0) gains += diff;
-            else losses -= diff;
-        }
-        let avgGain = gains / period;
-        let avgLoss = losses / period;
-        if (avgLoss === 0) return 100;
-        let rs = avgGain / avgLoss;
-        return 100 - (100 / (1 + rs));
-    }
-
-    function drawCustomChart() {
-        if(!canvasChart) return;
-        const w = canvasChart.width;
-        const h = canvasChart.height;
-        ctxChart.clearRect(0, 0, w, h);
-
-        if(priceHistory.length < 2) return;
-
-        let mainChartHeight = h * 0.65;
-        let rsiChartHeight = h * 0.28;
-        let rsiTop = h * 0.70;
-
-        let minPrice = Math.min(...priceHistory);
-        let maxPrice = Math.max(...priceHistory);
-        let priceRange = (maxPrice - minPrice) || 1;
-
-        // Draw Price Line
-        ctxChart.beginPath();
-        ctxChart.strokeStyle = '#34D399';
-        ctxChart.lineWidth = 2.5;
-
-        let stepX = w / Math.max(priceHistory.length - 1, 1);
-        for(let i = 0; i < priceHistory.length; i++) {
-            let x = i * stepX;
-            let normY = (priceHistory[i] - minPrice) / priceRange;
-            let y = (mainChartHeight - 15) - (normY * (mainChartHeight - 30)) + 5;
-            if(i === 0) ctxChart.moveTo(x, y);
-            else ctxChart.lineTo(x, y);
-        }
-        ctxChart.stroke();
-
-        // Gradient Fill Under Line
-        let grad = ctxChart.createLinearGradient(0, 0, 0, mainChartHeight);
-        grad.addColorStop(0, 'rgba(52, 211, 153, 0.25)');
-        grad.addColorStop(1, 'rgba(52, 211, 153, 0.0)');
-        ctxChart.lineTo(w, mainChartHeight);
-        ctxChart.lineTo(0, mainChartHeight);
-        ctxChart.fillStyle = grad;
-        ctxChart.fill();
-
-        // Draw RSI Box Below
-        ctxChart.fillStyle = '#0a0f1d';
-        ctxChart.fillRect(0, rsiTop, w, rsiChartHeight);
-
-        // RSI 70/30 lines
-        ctxChart.strokeStyle = 'rgba(239, 68, 68, 0.4)';
-        ctxChart.beginPath();
-        let y70 = rsiTop + (rsiChartHeight * 0.3);
-        ctxChart.moveTo(0, y70); ctxChart.lineTo(w, y70);
-        ctxChart.stroke();
-
-        ctxChart.strokeStyle = 'rgba(16, 185, 129, 0.4)';
-        ctxChart.beginPath();
-        let y30 = rsiTop + (rsiChartHeight * 0.7);
-        ctxChart.moveTo(0, y30); ctxChart.lineTo(w, y30);
-        ctxChart.stroke();
-
-        ctxChart.fillStyle = '#94A3B8';
-        ctxChart.font = '9px Montserrat';
-        ctxChart.fillText('RSI (Period 14 Oscillator)', 8, rsiTop + 12);
-
-        // Draw RSI Line
-        ctxChart.beginPath();
-        ctxChart.strokeStyle = '#818CF8';
-        ctxChart.lineWidth = 1.8;
-        for(let i = 0; i < rsiHistory.length; i++) {
-            if(rsiHistory[i] === null) continue;
-            let x = i * stepX;
-            let normRsi = rsiHistory[i] / 100;
-            let y = (rsiTop + rsiChartHeight) - (normRsi * (rsiChartHeight - 10)) - 5;
-            if(i === 0) ctxChart.moveTo(x, y);
-            else ctxChart.lineTo(x, y);
-        }
-        ctxChart.stroke();
     }
 
     function selectMarket(marketName, el, symbolCode) {
@@ -591,16 +463,15 @@
         el.classList.add('active');
         currentSymbol = symbolCode;
         marketNameGlobal = marketName;
-        document.getElementById('chart-market-name').innerHTML = `${marketNameGlobal} <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; color:#38BDF8;">${symbolCode}</span>`;
+        document.getElementById('active-market-title').innerText = `Deriv Live Official SmartChart (${marketNameGlobal})`;
         document.getElementById('top-market-badge').innerText = marketNameGlobal;
-        document.getElementById('active-market-label').innerText = `Symbol: ${symbolCode} | WebSocket Stream`;
+        document.getElementById('active-market-label').innerText = `Symbol: ${symbolCode} | WebSocket Live Tick Stream`;
 
-        priceHistory = [1000, 1001, 1002];
-        rsiHistory = [50, 52, 54];
         recentDigits = [];
         digitCounts.fill(0);
         totalTicksCount = 0;
         initDerivStream();
+        updateChartIframe();
     }
 
     function initLDPCandles() {
