@@ -260,7 +260,7 @@
             <div class="card">
                 <div class="card-title">
                     <span>Select Active Signal Strategy</span>
-                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Strategy C: Over / Under (LDP 3)</span>
+                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Strategy C: Over / Under (LDP 3 Tracking)</span>
                 </div>
                 <div class="strategy-grid">
                     <div class="strategy-card" onclick="selectStrategy(0, this)">
@@ -272,15 +272,15 @@
                         <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">Last Digit X2X Pattern Detection</div>
                     </div>
                     <div class="strategy-card active" onclick="selectStrategy(2, this)">
-                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under (LDP 3)</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 0-3 Tracking (3 consecutive digits)</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 3 Tracking (3 consecutive 0-3 digits)</div>
                     </div>
                 </div>
             </div>
 
             <!-- Signal Stream & Voice Alert Status Box -->
             <div class="signal-box-prominent" id="signal-main-box">
-                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Market: Volatility 100 Index | Mode: 5T</div>
+                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Market: Volatility 100 Index | Strategy: Over / Under | Mode: 5T</div>
                 <div id="live-signal-status" class="signal-text">🔊 AWAITING LIVE SIGNAL TRIGGER...</div>
                 <div id="signal-eval-status" style="font-size: 11px; color: #F59E0B; margin-top: 6px; font-weight: 700;"></div>
                 
@@ -531,7 +531,7 @@
         const techNotes = [
             'Strategy A: RSI 14 Period (>70 Fall / <30 Rise)',
             'Strategy B: Last Digit X2X Pattern Detection',
-            'Strategy C: Over / Under (LDP 3)'
+            'Strategy C: Over / Under (LDP 3 Tracking)'
         ];
         document.getElementById('strategy-tech-note').innerText = techNotes[index];
         updateActiveLabels();
@@ -699,7 +699,7 @@
             if (d1 <= 3 && d2 <= 3 && d3 <= 3) {
                 detectedSignal = 'OVER';
                 signalDirection = 'OVER';
-                techReason = `Strategy C: 3 consecutive digits in {0,1,2,3} (${d3}, ${d2}, ${d1})`;
+                techReason = `Strategy C: 3 consecutive digits in {0,1,2,3} (LDP 3 Tracking)`;
             }
         }
 
@@ -784,7 +784,7 @@
             detailStr = `Result Check | Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit}`;
         } else if (dir === 'OVER') {
             isWin = (currentDigit > 3);
-            detailStr = `Result Check | Barrier: Over | Exit Digit: ${currentDigit}`;
+            detailStr = `Result Check | Barrier: Over (LDP 3) | Exit Digit: ${currentDigit}`;
         }
 
         const resultStatus = isWin ? 'WIN' : 'LOSS';
