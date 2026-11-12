@@ -125,6 +125,7 @@
         .ldp-candle-fill { width: 100%; background: linear-gradient(180deg, #38BDF8, #0284C7); border-radius: 2px; transition: height 0.4s ease; }
 
         .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        @media(max-width: 768px) { .exec-grid { grid-template-columns: 1fr; } }
         .exec-card { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px; }
 
         .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
@@ -226,12 +227,12 @@
                 </div>
 
                 <div class="timeframe-bar">
-                    <button class="tf-btn" onclick="setTimeframe('1m', this)">1m</button>
-                    <button class="tf-btn" onclick="setTimeframe('3m', this)">3m</button>
-                    <button class="tf-btn active" onclick="setTimeframe('5m', this)">5m</button>
-                    <button class="tf-btn" onclick="setTimeframe('15m', this)">15m</button>
-                    <button class="tf-btn" onclick="setTimeframe('30m', this)">30m</button>
-                    <button class="tf-btn" onclick="setTimeframe('1hr', this)">1hr</button>
+                    <button class="tf-btn" onclick="setTimeframe('1m', 1, this)">1m</button>
+                    <button class="tf-btn" onclick="setTimeframe('3m', 2, this)">3m</button>
+                    <button class="tf-btn active" onclick="setTimeframe('5m', 1, this)">5m</button>
+                    <button class="tf-btn" onclick="setTimeframe('15m', 3, this)">15m</button>
+                    <button class="tf-btn" onclick="setTimeframe('30m', 4, this)">30m</button>
+                    <button class="tf-btn" onclick="setTimeframe('1hr', 5, this)">1hr</button>
                 </div>
             </div>
 
@@ -361,6 +362,8 @@
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
     let derivWS = null;
+    let tickStepInterval = 1;
+    let tickCounter = 0;
 
     let priceHistory = [];
     let rsiHistory = [];
@@ -374,7 +377,7 @@
 
     function resizeChartCanvas() {
         if(canvasChart && canvasChart.parentElement) {
-            canvasChart.width = canvasChart.parentElement.clientWidth - 32;
+            canvasChart.width = canvasChart.parentElement.clientWidth;
             canvasChart.height = 340;
             drawCustomChart();
         }
@@ -400,9 +403,11 @@
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-    function setTimeframe(tf, el) {
+    function setTimeframe(tf, stepSize, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
+        tickStepInterval = stepSize;
+        initDerivStream();
     }
 
     function selectStrategy(index, el) {
@@ -447,36 +452,94 @@
     }
     animateTradingBackground();
 
-    /* --- REAL-TIME DERIV WEBSOCKET & CANVAS CHART ENGINE --- */
+    /* --- REAL-TIME DERIV WEBSOCKET (HISTORY + LIVE TICKS) --- */
     function initDerivStream() {
-        if(derivWS) derivWS.close();
+        if(derivWS) {
+            derivWS.onclose = null;
+            derivWS.close();
+        }
         derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
-            derivWS.send(JSON.stringify({ ticks: currentSymbol, subscribe: 1 }));
+            // Request last 60 ticks + subscribe to live stream immediately
+            derivWS.send(JSON.stringify({
+                ticks_history: currentSymbol,
+                adjust_start_time: 1,
+                count: 60,
+                end: 'latest',
+                style: 'ticks',
+                subscribe: 1
+            }));
         };
 
         derivWS.onmessage = function(event) {
             const data = JSON.parse(event.data);
+            
+            // Load initial 60 historical ticks instantly so chart is never blank
+            if (data.msg_type === 'history' && data.history && data.history.prices) {
+                priceHistory = [];
+                rsiHistory = [];
+                recentDigits = [];
+                digitCounts.fill(0);
+                totalTicksCount = 0;
+
+                const prices = data.history.prices;
+                prices.forEach(p => {
+                    const price = parseFloat(p);
+                    const priceStr = price.toFixed(2);
+                    const lastDigit = parseInt(priceStr.slice(-1));
+                    
+                    priceHistory.push(price);
+                    rsiHistory.push(calculateRSI(priceHistory, 14));
+                    recentDigits.push(lastDigit);
+                    if(recentDigits.length > 15) recentDigits.shift();
+                    digitCounts[lastDigit]++;
+                    totalTicksCount++;
+                });
+
+                const latestPrice = priceHistory[priceHistory.length - 1];
+                const latestStr = latestPrice.toFixed(2);
+                const latestDigit = parseInt(latestStr.slice(-1));
+
+                document.getElementById('live-chart-price').innerText = `$${latestStr}`;
+                document.getElementById('ldp-val-pill').innerText = latestDigit;
+                document.getElementById('rsi-val-pill').innerText = rsiHistory[rsiHistory.length - 1].toFixed(2);
+                document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(2);
+                document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(2);
+                document.getElementById('ticks-count-pill').innerText = totalTicksCount;
+
+                renderDigitHistory();
+                renderLDPCandles();
+                drawCustomChart();
+            }
+
+            // Process real-time incoming ticks
             if (data.msg_type === 'tick') {
                 const tick = data.tick;
                 const price = parseFloat(tick.quote);
-                const priceStr = price.toFixed(3);
+                const priceStr = price.toFixed(2);
                 const lastDigit = parseInt(priceStr.slice(-1));
 
                 document.getElementById('live-chart-price').innerText = `$${priceStr}`;
                 document.getElementById('ldp-val-pill').innerText = lastDigit;
 
-                priceHistory.push(price);
-                if(priceHistory.length > 50) priceHistory.shift();
+                tickCounter++;
+                if (tickCounter % tickStepInterval === 0) {
+                    priceHistory.push(price);
+                    if(priceHistory.length > 60) priceHistory.shift();
 
-                let rsiVal = calculateRSI(priceHistory, 14);
-                rsiHistory.push(rsiVal);
-                if(rsiHistory.length > 50) rsiHistory.shift();
+                    let rsiVal = calculateRSI(priceHistory, 14);
+                    rsiHistory.push(rsiVal);
+                    if(rsiHistory.length > 60) rsiHistory.shift();
+                } else if (priceHistory.length > 0) {
+                    priceHistory[priceHistory.length - 1] = price;
+                    rsiHistory[rsiHistory.length - 1] = calculateRSI(priceHistory, 14);
+                }
 
-                document.getElementById('rsi-val-pill').innerText = rsiVal ? rsiVal.toFixed(2) : '-';
-                document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(3);
-                document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(3);
+                const currentRsi = rsiHistory[rsiHistory.length - 1];
+                document.getElementById('rsi-val-pill').innerText = currentRsi ? currentRsi.toFixed(2) : '-';
+                document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(2);
+                document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(2);
                 document.getElementById('ticks-count-pill').innerText = totalTicksCount + 1;
 
                 recentDigits.push(lastDigit);
@@ -491,19 +554,24 @@
                 analyzeSignal(priceStr, lastDigit);
             }
         };
+
+        derivWS.onclose = function() {
+            setTimeout(initDerivStream, 2000);
+        };
     }
 
     function calculateRSI(prices, period = 14) {
-        if (prices.length < period + 1) return 50;
+        if (prices.length < 2) return 50;
+        const lookback = Math.min(prices.length - 1, period);
         let gains = 0, losses = 0;
-        for (let i = prices.length - period; i < prices.length; i++) {
+        for (let i = prices.length - lookback; i < prices.length; i++) {
             let diff = prices[i] - prices[i - 1];
             if (diff >= 0) gains += diff;
             else losses -= diff;
         }
-        let avgGain = gains / period;
-        let avgLoss = losses / period;
-        if (avgLoss === 0) return 100;
+        let avgGain = gains / lookback;
+        let avgLoss = losses / lookback;
+        if (avgLoss === 0) return avgGain === 0 ? 50 : 100;
         let rs = avgGain / avgLoss;
         return 100 - (100 / (1 + rs));
     }
@@ -517,62 +585,110 @@
         if(priceHistory.length < 2) {
             ctxChart.fillStyle = '#64748B';
             ctxChart.font = '12px Montserrat';
-            ctxChart.fillText('Connecting to live market ticks...', w / 2 - 100, h / 2);
+            ctxChart.fillText('Loading live market stream...', w / 2 - 80, h / 2);
             return;
         }
 
         let mainChartHeight = h * 0.65;
         let rsiChartHeight = h * 0.28;
         let rsiTop = h * 0.70;
+        let rightPadding = 55;
+        let plotWidth = w - rightPadding;
 
         let minPrice = Math.min(...priceHistory);
         let maxPrice = Math.max(...priceHistory);
-        let priceRange = (maxPrice - minPrice) || 1;
+        let priceRange = (maxPrice - minPrice) || 0.01;
+
+        // Subtle Horizontal Grid & Price Labels
+        ctxChart.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctxChart.fillStyle = '#64748B';
+        ctxChart.font = '10px monospace';
+        for(let g = 0; g <= 4; g++) {
+            let gy = 15 + ((mainChartHeight - 30) * (g / 4));
+            let gPrice = maxPrice - (priceRange * (g / 4));
+            ctxChart.beginPath();
+            ctxChart.moveTo(0, gy);
+            ctxChart.lineTo(plotWidth, gy);
+            ctxChart.stroke();
+            ctxChart.fillText(gPrice.toFixed(2), plotWidth + 6, gy + 3);
+        }
 
         // Draw Price Line
         ctxChart.beginPath();
-        ctxChart.strokeStyle = '#34D399';
-        ctxChart.lineWidth = 2.5;
+        ctxChart.strokeStyle = '#10B981';
+        ctxChart.lineWidth = 2.2;
 
-        let stepX = w / Math.max(priceHistory.length - 1, 1);
+        let stepX = plotWidth / Math.max(priceHistory.length - 1, 1);
+        let lastX = 0, lastY = 0;
+
         for(let i = 0; i < priceHistory.length; i++) {
             let x = i * stepX;
             let normY = (priceHistory[i] - minPrice) / priceRange;
-            let y = (mainChartHeight - 15) - (normY * (mainChartHeight - 30)) + 5;
+            let y = (mainChartHeight - 15) - (normY * (mainChartHeight - 30)) + 15;
             if(i === 0) ctxChart.moveTo(x, y);
             else ctxChart.lineTo(x, y);
+            lastX = x;
+            lastY = y;
         }
         ctxChart.stroke();
 
         // Gradient Fill Under Line
         let grad = ctxChart.createLinearGradient(0, 0, 0, mainChartHeight);
-        grad.addColorStop(0, 'rgba(52, 211, 153, 0.25)');
-        grad.addColorStop(1, 'rgba(52, 211, 153, 0.0)');
-        ctxChart.lineTo(w, mainChartHeight);
+        grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+        grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+        ctxChart.lineTo(lastX, mainChartHeight);
         ctxChart.lineTo(0, mainChartHeight);
         ctxChart.fillStyle = grad;
         ctxChart.fill();
+
+        // Current Live Price Dashed Line & Green Pill
+        ctxChart.setLineDash([4, 4]);
+        ctxChart.strokeStyle = '#34D399';
+        ctxChart.beginPath();
+        ctxChart.moveTo(0, lastY);
+        ctxChart.lineTo(plotWidth, lastY);
+        ctxChart.stroke();
+        ctxChart.setLineDash([]);
+
+        ctxChart.fillStyle = '#10B981';
+        ctxChart.beginPath();
+        ctxChart.arc(lastX, lastY, 4, 0, Math.PI * 2);
+        ctxChart.fill();
+
+        ctxChart.fillStyle = '#10B981';
+        ctxChart.fillRect(plotWidth + 2, lastY - 9, rightPadding - 4, 18);
+        ctxChart.fillStyle = '#010409';
+        ctxChart.font = 'bold 10px monospace';
+        ctxChart.fillText(priceHistory[priceHistory.length - 1].toFixed(2), plotWidth + 5, lastY + 3);
 
         // Draw RSI Box Below
         ctxChart.fillStyle = '#0a0f1d';
         ctxChart.fillRect(0, rsiTop, w, rsiChartHeight);
 
         // RSI 70/30 lines
-        ctxChart.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+        ctxChart.setLineDash([3, 3]);
+        ctxChart.strokeStyle = 'rgba(239, 68, 68, 0.5)';
         ctxChart.beginPath();
         let y70 = rsiTop + (rsiChartHeight * 0.3);
-        ctxChart.moveTo(0, y70); ctxChart.lineTo(w, y70);
+        ctxChart.moveTo(0, y70); ctxChart.lineTo(plotWidth, y70);
         ctxChart.stroke();
 
-        ctxChart.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+        ctxChart.strokeStyle = 'rgba(16, 185, 129, 0.5)';
         ctxChart.beginPath();
         let y30 = rsiTop + (rsiChartHeight * 0.7);
-        ctxChart.moveTo(0, y30); ctxChart.lineTo(w, y30);
+        ctxChart.moveTo(0, y30); ctxChart.lineTo(plotWidth, y30);
         ctxChart.stroke();
+        ctxChart.setLineDash([]);
 
-        ctxChart.fillStyle = '#94A3B8';
+        ctxChart.fillStyle = '#EF4444';
         ctxChart.font = '9px Montserrat';
-        ctxChart.fillText('RSI (Period 14 Oscillator)', 8, rsiTop + 12);
+        ctxChart.fillText('70 Overbought', plotWidth - 68, y70 - 3);
+        ctxChart.fillStyle = '#10B981';
+        ctxChart.fillText('30 Oversold', plotWidth - 60, y30 + 10);
+
+        ctxChart.fillStyle = '#818CF8';
+        ctxChart.font = 'bold 10px Montserrat';
+        ctxChart.fillText('RSI (Period 14 Oscillator)', 8, rsiTop + 13);
 
         // Draw RSI Line
         ctxChart.beginPath();
@@ -603,6 +719,7 @@
         recentDigits = [];
         digitCounts.fill(0);
         totalTicksCount = 0;
+        drawCustomChart();
         initDerivStream();
     }
 
@@ -645,6 +762,16 @@
                 pctEl.innerText = `${pct}%`;
             }
         }
+
+        let evenCount = 0, oddCount = 0;
+        for(let i = 0; i < 10; i++) {
+            if(i % 2 === 0) evenCount += digitCounts[i];
+            else oddCount += digitCounts[i];
+        }
+        let totalEO = evenCount + oddCount || 1;
+        let evenPct = Math.round((evenCount / totalEO) * 100);
+        let oddPct = 100 - evenPct;
+        document.getElementById('ldp-ratio-text').innerText = `Even: ${evenPct}% | Odd: ${oddPct}%`;
     }
 
     let lastSpokenSignal = "";
@@ -740,16 +867,10 @@
         btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
     }
 
-    function connectDeriv`schein`() {
-        const token = document.getElementById('deriv-token').value;
-        if(!token) { alert("Please enter your Deriv API Token!"); return; }
-        document.getElementById('bot-status').innerText = "✅ Bot Active & Linked Successfully";
-    }
-
     function connectDeriv() {
         const token = document.getElementById('deriv-token').value;
         if(!token) { alert("Please enter your Deriv API Token!"); return; }
-        document.getElementById('bot-status').innerText, document.getElementById('bot-status').innerText = "✅ Bot Active & Linked Successfully";
+        document.getElementById('bot-status').innerText = "✅ Bot Active & Linked Successfully";
     }
 </script>
 
