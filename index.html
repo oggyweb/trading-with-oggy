@@ -125,13 +125,59 @@
         .ldp-candle-track { width: 14px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 4px; display: flex; align-items: flex-end; position: relative; overflow: hidden; margin: 4px 0; border: 1px solid rgba(255,255,255,0.08); }
         .ldp-candle-fill { width: 100%; background: linear-gradient(180deg, #38BDF8, #0284C7); border-radius: 2px; transition: height 0.4s ease; }
 
-        /* Larger History Cards Grid & Style */
-        .exec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 12px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+        /* Exact Replica of User's Image Style for History Cards */
+        .exec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
         @media(max-width: 768px) { .exec-grid { grid-template-columns: 1fr; } }
-        .exec-card { background: rgba(2, 6, 23, 0.95); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 14px 16px; position: relative; overflow: hidden; }
-        .exec-card.loss { border-color: rgba(239, 68, 68, 0.5); }
-        .exec-card.pending { border-color: rgba(245, 158, 11, 0.7); }
         
+        .exec-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1.5px solid rgba(16, 185, 129, 0.5);
+            border-radius: 14px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .exec-card.loss { border-color: rgba(239, 68, 68, 0.6); }
+        .exec-card.pending { border-color: rgba(245, 158, 11, 0.7); }
+
+        .exec-card-header { display: flex; justify-content: space-between; align-items: center; }
+        .exec-market-title { font-size: 14px; font-weight: 900; color: #F8FAFC; font-family: monospace; }
+        .exec-signal-badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: rgba(16,185,129,0.2); color: #34D399; border: 1px solid #10B981; }
+        .exec-signal-badge.loss-badge { background: rgba(239,68,68,0.2); color: #F87171; border-color: #EF4444; }
+        .exec-signal-badge.pending-badge { background: rgba(245,158,11,0.2); color: #F59E0B; border-color: #F59E0B; }
+
+        .exec-row { display: flex; justify-content: space-between; font-size: 11px; color: #94A3B8; font-family: monospace; }
+        .exec-row strong { color: #F8FAFC; }
+
+        .exec-result-box {
+            margin-top: 4px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #10B981;
+            color: #010409;
+            font-weight: 900;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(16,185,129,0.4);
+        }
+        .exec-result-box.loss-box {
+            background: #EF4444;
+            color: #FFF;
+            box-shadow: 0 0 15px rgba(239,68,68,0.4);
+        }
+        .exec-result-box.pending-box {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #F59E0B;
+            color: #F59E0B;
+            box-shadow: none;
+        }
+
         .trade-progress-bar { position: absolute; bottom: 0; left: 0; height: 4px; background: #38BDF8; width: 0%; transition: width 0.3s linear; }
 
         .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
@@ -311,7 +357,7 @@
                 </div>
             </div>
 
-            <!-- Active Trade Executions History (Larger Cards & No Demo Logs) -->
+            <!-- Active Trade Executions History (Updated to Exact Image Style) -->
             <div class="card">
                 <div class="card-title">
                     <span>Live Signal Execution History (Hourly Auto-Reset)</span>
@@ -367,6 +413,7 @@
 <script>
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
+    let symbolCodeGlobal = 'R_100';
     let activeStrategy = 2; // Default to Strategy C (Over/Under)
     let signalTimeframe = '5T'; 
     let voiceEnabled = true;
@@ -383,7 +430,7 @@
     let totalTicksCount = 0;
 
     let activeSignalTracker = null; 
-    let tradeHistoryLog = []; // Starts completely empty
+    let tradeHistoryLog = [];
 
     const MARKETS = {
         'R_100': { name: 'Volatility 100 Index', base: 532.87, decimals: 2 },
@@ -500,11 +547,12 @@
 
     function switchMarket(symbol) {
         currentSymbol = symbol;
+        symbolCodeGlobal = symbol;
         if(MARKETS[symbol]) {
             currentPrice = MARKETS[symbol].base;
-            marketNameGlobal = MARKETS[symbol].name;
-            document.getElementById('chart-title').innerText = `${marketNameGlobal} (${symbol})`;
-            document.getElementById('top-market-badge').innerText = marketNameGlobal;
+            marketNameGlobal = symbol; // Display code like R_100 or market name
+            document.getElementById('chart-title').innerText = `${MARKETS[symbol].name} (${symbol})`;
+            document.getElementById('top-market-badge').innerText = MARKETS[symbol].name;
             document.getElementById('market-select').value = symbol;
             updateActiveLabels();
         }
@@ -547,8 +595,8 @@
     }
 
     function updateActiveLabels() {
-        const stratNames = ['Rise / Fall', 'Even / Odd', 'Over / Under'];
-        document.getElementById('active-market-label').innerText = `Market: ${marketNameGlobal} | Strategy: ${stratNames[activeStrategy]} | Mode: ${signalTimeframe}`;
+        const stratNames = ['Rise/Fall', 'Even/Odd', 'Over/Under'];
+        document.getElementById('active-market-label').innerText = `Market: ${symbolCodeGlobal} | Strategy: ${stratNames[activeStrategy]} | Mode: ${signalTimeframe}`;
     }
 
     function loadMarketData() {
@@ -669,11 +717,11 @@
 
         if (activeStrategy === 0) {
             if (rsi < 30) {
-                detectedSignal = 'RISE (CALL)';
+                detectedSignal = 'RISE';
                 signalDirection = 'RISE';
                 techReason = `Strategy A: RSI is ${rsi.toFixed(1)} (< 30 Oversold)`;
             } else if (rsi > 70) {
-                detectedSignal = 'FALL (PUT)';
+                detectedSignal = 'FALL';
                 signalDirection = 'FALL';
                 techReason = `Strategy A: RSI is ${rsi.toFixed(1)} (> 70 Overbought)`;
             }
@@ -682,11 +730,11 @@
             const d1 = recentDigits[recentDigits.length - 1];
             const d2 = recentDigits[recentDigits.length - 2];
             if (d1 % 2 === 0 && d2 % 2 === 0) {
-                detectedSignal = 'EVEN DIGIT';
+                detectedSignal = 'EVEN';
                 signalDirection = 'EVEN';
                 techReason = `Strategy B: Even X2X pattern detected (${d2}, ${d1})`;
             } else if (d1 % 2 !== 0 && d2 % 2 !== 0) {
-                detectedSignal = 'ODD DIGIT';
+                detectedSignal = 'ODD';
                 signalDirection = 'ODD';
                 techReason = `Strategy B: Odd X2X pattern detected (${d2}, ${d1})`;
             }
@@ -704,8 +752,6 @@
         }
 
         if (detectedSignal) {
-            const stratNames = ['Rise/Fall', 'Even/Odd', 'Over/Under'];
-            
             let targetTicks = 5;
             if (signalTimeframe === '1T') targetTicks = 1;
             else if (signalTimeframe === '5T') targetTicks = 5;
@@ -715,11 +761,10 @@
             else if (signalTimeframe === '10 MIN') targetTicks = 50;
 
             activeSignalTracker = {
-                market: marketNameGlobal,
-                strategy: stratNames[activeStrategy],
-                mode: signalTimeframe,
+                marketSymbol: symbolCodeGlobal,
                 signalName: detectedSignal,
                 direction: signalDirection,
+                mode: signalTimeframe,
                 entryPrice: price,
                 entryDigit: lastDigit,
                 totalTicks: targetTicks,
@@ -729,20 +774,24 @@
 
             tradeHistoryLog.unshift({
                 id: activeSignalTracker.id,
-                market: activeSignalTracker.market,
-                strategy: activeSignalTracker.strategy,
-                mode: activeSignalTracker.mode,
+                market: activeSignalTracker.marketSymbol,
                 signal: activeSignalTracker.signalName,
+                mode: activeSignalTracker.mode,
+                entryPrice: price.toFixed(decimals),
+                entryDigit: lastDigit,
+                exitPrice: '-',
+                exitDigit: '-',
                 result: 'PENDING',
                 progress: 0,
-                detail: `Live Signal [${signalTimeframe}] | Entry: ${price.toFixed(decimals)}`
+                totalTicks: targetTicks,
+                ticksRemaining: targetTicks
             });
 
             renderExecutionHistory();
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
             if (voiceEnabled) {
-                const voiceAnnouncement = `${detectedSignal} on ${marketNameGlobal}`;
+                const voiceAnnouncement = `${detectedSignal} on ${symbolCodeGlobal}`;
                 speakMessage(voiceAnnouncement);
             }
         }
@@ -758,6 +807,7 @@
         const tradeItem = tradeHistoryLog.find(t => t.id === activeSignalTracker.id);
         if (tradeItem) {
             tradeItem.progress = progressPct;
+            tradeItem.ticksRemaining = activeSignalTracker.ticksRemaining;
             renderExecutionHistory();
         }
 
@@ -767,24 +817,18 @@
         if (activeSignalTracker.ticksRemaining > 0) return;
 
         let isWin = false;
-        let detailStr = '';
         const dir = activeSignalTracker.direction;
 
         if (dir === 'RISE') {
             isWin = currentPriceVal > activeSignalTracker.entryPrice;
-            detailStr = `Result Check | Entry: ${activeSignalTracker.entryPrice.toFixed(decimals)} | Exit: ${currentPriceVal.toFixed(decimals)}`;
         } else if (dir === 'FALL') {
             isWin = currentPriceVal < activeSignalTracker.entryPrice;
-            detailStr = `Result Check | Entry: ${activeSignalTracker.entryPrice.toFixed(decimals)} | Exit: ${currentPriceVal.toFixed(decimals)}`;
         } else if (dir === 'EVEN') {
             isWin = (currentDigit % 2 === 0);
-            detailStr = `Result Check | Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit}`;
         } else if (dir === 'ODD') {
             isWin = (currentDigit % 2 !== 0);
-            detailStr = `Result Check | Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit}`;
         } else if (dir === 'OVER') {
             isWin = (currentDigit > 3);
-            detailStr = `Result Check | Barrier: Over (LDP 3) | Exit Digit: ${currentDigit}`;
         }
 
         const resultStatus = isWin ? 'WIN' : 'LOSS';
@@ -794,7 +838,8 @@
         if (tradeItem) {
             tradeItem.result = resultStatus;
             tradeItem.progress = 100;
-            tradeItem.detail = detailStr;
+            tradeItem.exitPrice = currentPriceVal.toFixed(decimals);
+            tradeItem.exitDigit = currentDigit;
         }
 
         if (tradeHistoryLog.length > 12) tradeHistoryLog.pop();
@@ -827,7 +872,7 @@
 
         mainBox.style.borderColor = primaryColor;
         signalEl.style.color = textColor;
-        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
+        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${symbolCodeGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
 
         radarBox.style.borderColor = primaryColor;
         radarIcon.style.background = primaryColor;
@@ -836,7 +881,7 @@
         radarBadge.style.background = primaryColor;
         radarBadge.style.color = '#FFF';
         radarBadge.innerText = `⚡ ${signalName}`;
-        radarTitle.innerText = `${marketNameGlobal}`;
+        radarTitle.innerText = `${symbolCodeGlobal}`;
         radarSub.innerText = reason;
         radarBtn.style.background = primaryColor;
         radarBtn.style.color = '#FFF';
@@ -864,7 +909,7 @@
         radarBadge.style.background = '#38BDF8';
         radarBadge.style.color = '#010409';
         radarBadge.innerText = 'WAITING FOR SIGNAL...';
-        radarTitle.innerText = marketNameGlobal;
+        radarTitle.innerText = symbolCodeGlobal;
         radarSub.innerText = 'Waiting for technical criteria to trigger signal.';
         radarBtn.style.background = 'rgba(56,189,248,0.15)';
         radarBtn.style.color = '#38BDF8';
@@ -882,17 +927,44 @@
             const isWin = item.result === 'WIN';
             const isPending = item.result === 'PENDING';
             const cardClass = isPending ? 'pending' : (isWin ? '' : 'loss');
-            const resultColor = isPending ? '#F59E0B' : (isWin ? '#34D399' : '#F87171');
+            
+            let badgeClass = '';
+            let badgeText = `${item.signal} • ${item.mode}`;
+            if (!isPending) {
+                badgeClass = isWin ? '' : 'loss-badge';
+            } else {
+                badgeClass = 'pending-badge';
+            }
+
+            let resultBoxHtml = '';
+            if (isPending) {
+                resultBoxHtml = `<div class="exec-result-box pending-box">⏳ Tracking... (${item.ticksRemaining} ticks left)</div>`;
+            } else if (isWin) {
+                resultBoxHtml = `<div class="exec-result-box">✓ CONTRACT WON (+95% Payout)</div>`;
+            } else {
+                resultBoxHtml = `<div class="exec-result-box loss-box">✕ CONTRACT LOST (-100%)</div>`;
+            }
 
             return `
                 <div class="exec-card ${cardClass}">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin-bottom: 6px;">
-                        <span style="color:#F8FAFC;">${item.market} <span style="font-size:10px; color:#38BDF8;">[${item.mode}]</span></span>
-                        <span style="color:${resultColor};">${item.result} ${isWin ? '(+95%)' : (isPending ? '⏳ ACTIVE' : '(-100%)')}</span>
+                    <div class="exec-card-header">
+                        <span class="exec-market-title">${item.market}</span>
+                        <span class="exec-signal-badge ${badgeClass}">${badgeText}</span>
                     </div>
-                    <div style="font-size: 11px; color: #38BDF8; font-weight:700; margin-bottom:3px;">${item.strategy} ➔ ${item.signal}</div>
-                    <div style="font-size: 10px; color: #94A3B8; margin-bottom:8px;">${item.detail}</div>
-                    <div class="trade-progress-bar" style="width: ${item.progress || 0}%; background: ${isPending ? '#38BDF8' : resultColor};"></div>
+                    <div class="exec-row">
+                        <span>Entry:</span>
+                        <span><strong>${item.entryPrice}</strong> ${item.entryDigit !== undefined ? `(LDP: ${item.entryDigit})` : ''}</span>
+                    </div>
+                    <div class="exec-row">
+                        <span>Exit:</span>
+                        <span><strong>${item.exitPrice}</strong> ${item.exitDigit !== '-' ? `(LDP: ${item.exitDigit})` : ''}</span>
+                    </div>
+                    <div class="exec-row">
+                        <span>Tick Progress:</span>
+                        <span><strong>${item.totalTicks - item.ticksRemaining} / ${item.totalTicks} Ticks</strong></span>
+                    </div>
+                    ${resultBoxHtml}
+                    <div class="trade-progress-bar" style="width: ${item.progress || 0}%; background: ${isPending ? '#38BDF8' : (isWin ? '#10B981' : '#EF4444')};"></div>
                 </div>
             `;
         }).join('');
@@ -973,7 +1045,7 @@
 
     function executeManualTrade() {
         if (activeSignalTracker) {
-            alert(`Signal Action: Place ${activeSignalTracker.signalName} manually on ${activeSignalTracker.market} (${signalTimeframe})!`);
+            alert(`Signal Action: Place ${activeSignalTracker.signalName} manually on ${symbolCodeGlobal} (${signalTimeframe})!`);
         } else {
             alert("No active signal right now. Please wait for the next radar trigger.");
         }
