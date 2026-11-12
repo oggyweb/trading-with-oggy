@@ -373,7 +373,6 @@
 
     let chart, rsiChart, lineSeries, candleSeries, rsiSeries;
     let tickData = [];
-    let candleData = [];
     let ws = null;
     let mockInterval = null;
     let currentPrice = 532.87;
@@ -384,7 +383,7 @@
     let totalTicksCount = 0;
 
     let activeSignalTracker = null; 
-    let tradeHistoryLog = []; // Starts completely empty (no demo logs)
+    let tradeHistoryLog = []; // Starts completely empty
 
     const MARKETS = {
         'R_100': { name: 'Volatility 100 Index', base: 532.87, decimals: 2 },
@@ -661,7 +660,6 @@
         }
     }
 
-    /* --- LIVE SIGNAL GENERATOR --- */
     function generateLiveSignal(price, lastDigit, rsi, decimals) {
         if (recentDigits.length < 3) return;
 
@@ -744,7 +742,6 @@
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
             if (voiceEnabled) {
-                // Direct announcement without saying "signal" word: "[Signal Name] on [Market Name]"
                 const voiceAnnouncement = `${detectedSignal} on ${marketNameGlobal}`;
                 speakMessage(voiceAnnouncement);
             }
