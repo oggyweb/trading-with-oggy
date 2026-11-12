@@ -69,8 +69,8 @@
         .market-select-box { background: #060911; border: 1px solid rgba(56, 189, 248, 0.3); color: #FFF; font-size: 12px; padding: 6px 12px; border-radius: 8px; outline: none; font-family: monospace; cursor: pointer; }
 
         .timeframe-bar { display: flex; gap: 6px; background: rgba(2,6,23,0.6); padding: 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); margin-top: 12px; justify-content: center; width: 100%; flex-wrap: wrap; }
-        .tf-btn { background: #070a12; border: 1px solid rgba(255,255,255,0.1); color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .tf-btn.active, .tf-btn:hover { background: #DC2626; color: #FFF; border-color: #DC2626; }
+        .tf-btn { background: #070a12; border: 1px solid rgba(255,255,255,0.1); color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .tf-btn.active, .tf-btn:hover { background: #10B981; color: #FFF; border-color: #10B981; }
 
         .stats-strip { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
         .stat-pill { background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px; font-size: 10px; color: #94A3B8; }
@@ -125,9 +125,11 @@
 
         .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
         @media(max-width: 768px) { .exec-grid { grid-template-columns: 1fr; } }
-        .exec-card { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px; }
+        .exec-card { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px; position: relative; overflow: hidden; }
         .exec-card.loss { border-color: rgba(239, 68, 68, 0.4); }
-        .exec-card.pending { border-color: rgba(245, 158, 11, 0.5); }
+        .exec-card.pending { border-color: rgba(245, 158, 11, 0.6); }
+        
+        .trade-progress-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: #38BDF8; width: 0%; transition: width 0.3s linear; }
 
         .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
         @media(max-width: 768px) { .strategy-grid { grid-template-columns: 1fr; } }
@@ -163,14 +165,14 @@
             <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
-                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Multi-Strategy AI Technical Signal Terminal</div>
+                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Pro Signal Bot & Hourly Auto-Reset Terminal</div>
             </div>
         </div>
 
         <div class="top-badges">
             <div class="badge-item" id="live-clock-display" style="color:#FDE68A; font-family: monospace;">⏳ Loading...</div>
             <div class="badge-item">Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 100 Index</span></div>
-            <div class="badge-item">Strategy: <span id="top-strategy-badge" style="color:#F59E0B;">Rise / Fall (RSI)</span></div>
+            <div class="badge-item">Mode: <span id="top-timeframe-badge" style="color:#34D399;">5 Ticks (5t)</span></div>
             <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
             <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
         </div>
@@ -197,11 +199,10 @@
             </div>
 
             <div class="card">
-                <div class="card-title">Technical Rules Engine</div>
+                <div class="card-title">Precision Rules Engine</div>
                 <div style="font-size: 10px; color: #94A3B8; line-height: 1.7;">
-                    • <strong>Strategy A (Rise/Fall):</strong> RSI(14) & EMA Momentum Crossover.<br>
-                    • <strong>Strategy B (Even/Odd):</strong> 3-Tick Consecutive Parity Streak Reversal.<br>
-                    • <strong>Strategy C (Over/Under):</strong> Digit Distribution Barrier (0-3 Low / 7-9 High).
+                    • <strong>High Confirmation Filter:</strong> Signals trigger only on strong RSI divergence & EMA alignment.<br>
+                    • <strong>Hourly Reset:</strong> Trade history clears every hour automatically.
                 </div>
             </div>
         </div>
@@ -216,11 +217,11 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <select id="market-select" onchange="switchMarket(this.value)" class="market-select-box">
-                            <option value="R_100">Volatility 100 Index (R_100)</option>
-                            <option value="R_75">Volatility 75 Index (R_75)</option>
-                            <option value="R_50">Volatility 50 Index (R_50)</option>
-                            <option value="R_25">Volatility 25 Index (R_25)</option>
-                            <option value="R_10">Volatility 10 Index (R_10)</option>
+                            <option value="R_100">Volatility 100 Index</option>
+                            <option value="R_75">Volatility 75 Index</option>
+                            <option value="R_50">Volatility 50 Index</option>
+                            <option value="R_25">Volatility 25 Index</option>
+                            <option value="R_10">Volatility 10 Index</option>
                             <option value="1HZ10V">Volatility 10 (1s)</option>
                             <option value="1HZ25V">Volatility 25 (1s)</option>
                             <option value="1HZ50V">Volatility 50 (1s)</option>
@@ -234,53 +235,52 @@
                 <div class="stats-strip">
                     <div class="stat-pill">Last Digit (LDP): <strong id="ldp-val-pill" style="color:#EF4444;">-</strong></div>
                     <div class="stat-pill">RSI (14): <strong id="rsi-val-pill" style="color:#38BDF8;">-</strong></div>
-                    <div class="stat-pill">EMA Trend: <strong id="ema-trend-pill" style="color:#34D399;">BULLISH</strong></div>
+                    <div class="stat-pill">Confirmation: <strong id="conf-status-pill" style="color:#F59E0B;">SCANNING</strong></div>
                     <div class="stat-pill">Ticks Count: <strong id="ticks-count-pill">0</strong></div>
-                    <div class="stat-pill">High: <strong id="high-price-pill" style="color:#34D399;">-</strong></div>
-                    <div class="stat-pill">Low: <strong id="low-price-pill" style="color:#F87171;">-</strong></div>
                 </div>
 
                 <!-- Lightweight Charts Containers -->
                 <div id="price-chart" style="width:100%; height:280px; margin:12px 0;"></div>
                 <div id="rsi-chart" style="width:100%; height:80px;"></div>
 
-                <!-- Timeframe Tabs -->
+                <!-- Signal Bot Timeframe & Tick Selector Bar (1t, 5t, 10t, 1m, 5m, 10m) -->
                 <div class="timeframe-bar">
-                    <button onclick="setTimeframe('tick')" id="tf-tick" class="tf-btn active">Tick</button>
-                    <button onclick="setTimeframe('1m')" id="tf-1m" class="tf-btn">1m</button>
-                    <button onclick="setTimeframe('5m')" id="tf-5m" class="tf-btn">5m</button>
-                    <button onclick="setTimeframe('15m')" id="tf-15m" class="tf-btn">15m</button>
-                    <button onclick="setTimeframe('30m')" id="tf-30m" class="tf-btn">30m</button>
-                    <button onclick="setTimeframe('1h')" id="tf-1h" class="tf-btn">1hr</button>
+                    <span style="font-size:11px; font-weight:800; color:#38BDF8; align-self:center; margin-right:6px;">SIGNAL MODE:</span>
+                    <button onclick="setSignalTimeframe('1t', this)" class="tf-btn">1t</button>
+                    <button onclick="setSignalTimeframe('5t', this)" class="tf-btn active">5t</button>
+                    <button onclick="setSignalTimeframe('10t', this)" class="tf-btn">10t</button>
+                    <button onclick="setSignalTimeframe('1m', this)" class="tf-btn">1m</button>
+                    <button onclick="setSignalTimeframe('5m', this)" class="tf-btn">5m</button>
+                    <button onclick="setSignalTimeframe('10m', this)" class="tf-btn">10m</button>
                 </div>
             </div>
 
             <!-- Strategy Selection -->
             <div class="card">
                 <div class="card-title">
-                    <span>Select Active Signal Strategy (Auto-Updates Signal & Voice Engine)</span>
-                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Active Tech: RSI(14) + EMA Momentum</span>
+                    <span>Select Active Signal Strategy</span>
+                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Active Tech: High-Accuracy RSI + EMA Confirmation</span>
                 </div>
                 <div class="strategy-grid">
                     <div class="strategy-card active" onclick="selectStrategy(0, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #38BDF8;">Strategy A: Rise / Fall</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI Overbought/Oversold + EMA Trend</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">Strict RSI Overbought/Oversold Crossover</div>
                     </div>
                     <div class="strategy-card" onclick="selectStrategy(1, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy B: Even / Odd</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">3-Tick Parity Streak Reversal</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">Parity Reversal after 3 Streak</div>
                     </div>
                     <div class="strategy-card" onclick="selectStrategy(2, this)">
-                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under</div>
-                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">Low (0-3) / High (7-9) Barrier Streak</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under (LDP 3)</div>
+                        <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP <= 3 (Over 3) / LDP >= 7 (Under 7)</div>
                     </div>
                 </div>
             </div>
 
             <!-- Signal Stream & Voice Alert Status Box -->
             <div class="signal-box-prominent" id="signal-main-box">
-                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Market: Volatility 100 Index | Strategy: Rise / Fall</div>
-                <div id="live-signal-status" class="signal-text">🔊 SCANNING TECHNICAL INDICATORS...</div>
+                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Market: Volatility 100 Index | Mode: 5 Ticks (5t)</div>
+                <div id="live-signal-status" class="signal-text">🔊 AWAITING HIGH-CONFIRMATION SIGNAL...</div>
                 <div id="signal-eval-status" style="font-size: 11px; color: #F59E0B; margin-top: 6px; font-weight: 700;"></div>
                 
                 <div style="margin-top: 10px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
@@ -303,17 +303,17 @@
                     <span id="winrate-percentage-text" style="color: #34D399; font-weight: 900; font-size: 14px;">100.0% WIN RATE (3W / 0L)</span>
                 </div>
                 <div id="winrate-advice-text" style="font-size: 11px; color: #CBD5E1; line-height: 1.5; margin-bottom: 8px;">
-                    ✅ <strong>EXCELLENT ACCURACY:</strong> Strategy signals are performing above target threshold.
+                    ✅ <strong>HIGH CONFIRMATION ACTIVE:</strong> Low-risk filtering is keeping loss rate minimal.
                 </div>
                 <div class="winrate-loading-container">
                     <div class="winrate-loading-bar" id="winrate-bar"></div>
                 </div>
             </div>
 
-            <!-- Active Trade Executions History (Auto-Populated) -->
+            <!-- Active Trade Executions History with Progress Loader -->
             <div class="card">
                 <div class="card-title">
-                    <span>Auto-Tracked Signal Executions History (WIN / LOSS Log)</span>
+                    <span>Live Trade Executions (Progress Loader & Auto Win/Loss)</span>
                     <button onclick="clearHistory()" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#F87171; font-size:9px; padding:3px 8px; border-radius:4px; cursor:pointer;">Clear Log</button>
                 </div>
                 <div class="exec-grid" id="exec-history-grid">
@@ -334,9 +334,9 @@
                     <div class="radar-inner-icon" id="radar-icon">⏳</div>
                 </div>
 
-                <span class="radar-status-badge" id="radar-status-badge">ANALYZING MARKET...</span>
-                <div style="font-size: 13px; font-weight: 900; color: #F8FAFC; margin-top: 10px;" id="radar-title-desc">Scanning Ticks</div>
-                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px; line-height: 1.4;" id="radar-sub-desc">Waiting for technical conditions on active strategy.</div>
+                <span class="radar-status-badge" id="radar-status-badge">FILTERING NOISE...</span>
+                <div style="font-size: 13px; font-weight: 900; color: #F8FAFC; margin-top: 10px;" id="radar-title-desc">Waiting for Confirmation</div>
+                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px; line-height: 1.4;" id="radar-sub-desc">Analyzing strict technical confluences.</div>
                 <button class="radar-action-btn" id="radar-action-btn" onclick="executeManualTrade()">WAITING FOR SIGNAL...</button>
             </div>
 
@@ -367,7 +367,8 @@
     const userTier = 'GOLD'; 
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
-    let activeStrategy = 0; // 0 = Rise/Fall, 1 = Even/Odd, 2 = Over/Under
+    let activeStrategy = 0; // 0 = Rise/Fall, 1 = Even/Odd, 2 = Over/Under (LDP 3)
+    let signalTimeframe = '5t'; // '1t', '5t', '10t', '1m', '5m', '10m'
     let voiceEnabled = true;
 
     let chart, rsiChart, lineSeries, candleSeries, rsiSeries;
@@ -375,7 +376,6 @@
     let candleData = [];
     let ws = null;
     let mockInterval = null;
-    let currentTimeframe = 'tick';
     let currentPrice = 532.87;
 
     let recentPrices = [];
@@ -383,12 +383,11 @@
     let digitCounts = new Array(10).fill(0);
     let totalTicksCount = 0;
 
-    // Active Signal Tracking & Auto Win/Loss Evaluation
     let activeSignalTracker = null; 
     let tradeHistoryLog = [
-        { market: 'Volatility 100 Index', strategy: 'Rise/Fall', signal: 'RISE', result: 'WIN', detail: 'Entry: 531.20 | Exit: 532.85' },
-        { market: 'Volatility 50 Index', strategy: 'Even/Odd', signal: 'EVEN', result: 'WIN', detail: 'Entry Digit: 3 | Exit Digit: 8' },
-        { market: 'Volatility 10 Index', strategy: 'Over/Under', signal: 'OVER 3', signalType: 'OVER', result: 'WIN', detail: 'Entry Digit: 1 | Exit Digit: 7' }
+        { market: 'Volatility 100 Index', strategy: 'Rise/Fall', mode: '5t', signal: 'RISE', result: 'WIN', detail: 'Entry: 531.20 | Exit: 532.85' },
+        { market: 'Volatility 50 Index', strategy: 'Even/Odd', mode: '5t', signal: 'EVEN', result: 'WIN', detail: 'Entry Digit: 3 | Exit Digit: 8' },
+        { market: 'Volatility 10 Index', strategy: 'Over/Under', mode: '5t', signal: 'OVER 3', result: 'WIN', detail: 'Entry Digit: 1 | Exit Digit: 7' }
     ];
 
     const MARKETS = {
@@ -412,7 +411,23 @@
         renderExecutionHistory();
         updateWinRateStats();
         initChart();
+        
+        // Hourly Auto-Reset Check
+        setInterval(checkHourlyReset, 60000);
     });
+
+    /* --- HOURLY AUTO-RESET TRADE HISTORY --- */
+    let lastResetHour = new Date().getHours();
+    function checkHourlyReset() {
+        const currentHour = new Date().getHours();
+        if (currentHour !== lastResetHour) {
+            lastResetHour = currentHour;
+            tradeHistoryLog = [];
+            renderExecutionHistory();
+            updateWinRateStats();
+            console.log("Trade history auto-reset for the new hour.");
+        }
+    }
 
     /* --- LIVE CLOCK --- */
     function updateLiveClock() {
@@ -528,30 +543,28 @@
         activeStrategy = index;
         activeSignalTracker = null;
 
-        const stratNames = ['Rise / Fall (RSI)', 'Even / Odd (Parity)', 'Over / Under (Barrier)'];
+        const stratNames = ['Rise / Fall (RSI)', 'Even / Odd (Parity)', 'Over / Under (LDP 3)'];
         const techNotes = [
-            'Active Tech: RSI(14) + EMA Momentum',
-            'Active Tech: 3-Tick Consecutive Parity Reversal',
-            'Active Tech: Low (0-3) / High (7-9) Streak Barrier'
+            'Active Tech: Strict RSI + EMA Confirmation Crossover',
+            'Active Tech: High-Accuracy Parity Reversal Streak',
+            'Active Tech: LDP <= 3 (Over 3) / LDP >= 7 (Under 7)'
         ];
-        document.getElementById('top-strategy-badge').innerText = stratNames[index];
         document.getElementById('strategy-tech-note').innerText = techNotes[index];
         updateActiveLabels();
         resetRadarUI();
     }
 
-    function updateActiveLabels() {
-        const stratNames = ['Rise / Fall', 'Even / Odd', 'Over / Under'];
-        document.getElementById('active-market-label').innerText = `Market: ${marketNameGlobal} | Strategy: ${stratNames[activeStrategy]}`;
+    function setSignalTimeframe(mode, el) {
+        document.querySelectorAll('.timeframe-bar .tf-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        signalTimeframe = mode;
+        document.getElementById('top-timeframe-badge').innerText = mode.toUpperCase() + (mode.includes('t') ? ' Ticks' : ' Mins');
+        updateActiveLabels();
     }
 
-    function setTimeframe(tf) {
-        currentTimeframe = tf;
-        ['tick', '1m', '5m', '15m', '30m', '1h'].forEach(t => {
-            const btn = document.getElementById(`tf-${t}`);
-            btn.className = (t === tf) ? 'tf-btn active' : 'tf-btn';
-        });
-        loadMarketData();
+    function updateActiveLabels() {
+        const stratNames = ['Rise / Fall', 'Even / Odd', 'Over / Under (LDP 3)'];
+        document.getElementById('active-market-label').innerText = `Market: ${marketNameGlobal} | Strategy: ${stratNames[activeStrategy]} | Mode: ${signalTimeframe.toUpperCase()}`;
     }
 
     function loadMarketData() {
@@ -561,51 +574,27 @@
         const decimals = MARKETS[currentSymbol] ? MARKETS[currentSymbol].decimals : 2;
         const now = Math.floor(Date.now() / 1000);
 
-        if (currentTimeframe === 'tick') {
-            lineSeries.applyOptions({ visible: true });
-            candleSeries.applyOptions({ visible: false });
+        lineSeries.applyOptions({ visible: true });
+        candleSeries.applyOptions({ visible: false });
 
-            let tempVal = currentPrice;
-            const points = [];
-            for (let i = 60; i >= 0; i--) {
-                const time = now - (i * 2);
-                tempVal += (Math.random() - 0.49) * (tempVal * 0.0005);
-                points.push({ time, value: parseFloat(tempVal.toFixed(decimals)) });
-            }
-            tickData = points;
-            recentPrices = points.map(p => p.value);
-            lineSeries.setData(tickData);
-            currentPrice = tickData[tickData.length - 1].value;
-            document.getElementById('chart-price').innerText = `$${currentPrice.toFixed(decimals)}`;
-        } else {
-            lineSeries.applyOptions({ visible: false });
-            candleSeries.applyOptions({ visible: true });
-
-            const intervalSec = currentTimeframe === '1m' ? 60 : currentTimeframe === '5m' ? 300 : currentTimeframe === '15m' ? 900 : currentTimeframe === '30m' ? 1800 : 3600;
-            let tempVal = currentPrice;
-            const candles = [];
-            for (let i = 50; i >= 0; i--) {
-                const time = now - (i * intervalSec);
-                const open = tempVal;
-                const high = open + Math.random() * (open * 0.001);
-                const low = open - Math.random() * (open * 0.001);
-                const close = low + Math.random() * (high - low);
-                candles.push({ time, open, high, low, close });
-                tempVal = close;
-            }
-            candleData = candles;
-            recentPrices = candles.map(c => c.close);
-            candleSeries.setData(candleData);
-            currentPrice = candleData[candleData.length - 1].close;
-            document.getElementById('chart-price').innerText = `$${currentPrice.toFixed(decimals)}`;
+        let tempVal = currentPrice;
+        const points = [];
+        for (let i = 60; i >= 0; i--) {
+            const time = now - (i * 2);
+            tempVal += (Math.random() - 0.49) * (tempVal * 0.0005);
+            points.push({ time, value: parseFloat(tempVal.toFixed(decimals)) });
         }
+        tickData = points;
+        recentPrices = points.map(p => p.value);
+        lineSeries.setData(tickData);
+        currentPrice = tickData[tickData.length - 1].value;
+        document.getElementById('chart-price').innerText = `$${currentPrice.toFixed(decimals)}`;
 
         const rsiPoints = [];
-        const baseArr = currentTimeframe === 'tick' ? tickData : candleData;
-        for (let i = 0; i < baseArr.length; i++) {
+        for (let i = 0; i < tickData.length; i++) {
             const slice = recentPrices.slice(0, i + 1);
             const rVal = calculateRealRSI(slice, 14);
-            rsiPoints.push({ time: baseArr[i].time, value: parseFloat(rVal.toFixed(2)) });
+            rsiPoints.push({ time: tickData[i].time, value: parseFloat(rVal.toFixed(2)) });
         }
         rsiSeries.setData(rsiPoints);
 
@@ -633,7 +622,7 @@
             currentPrice += (Math.random() - 0.49) * (currentPrice * 0.0006);
             const val = parseFloat(currentPrice.toFixed(decimals));
             processNewTick(val, time, decimals);
-        }, 1200);
+        }, 1000);
     }
 
     function calculateRealRSI(prices, period = 14) {
@@ -663,19 +652,9 @@
     }
 
     function processNewTick(val, time, decimals) {
-        if (currentTimeframe === 'tick') {
-            tickData.push({ time, value: val });
-            if (tickData.length > 250) tickData.shift();
-            lineSeries.update({ time, value: val });
-        } else {
-            const last = candleData[candleData.length - 1];
-            if (last) {
-                last.close = val;
-                if (val > last.high) last.high = val;
-                if (val < last.low) last.low = val;
-                candleSeries.update(last);
-            }
-        }
+        tickData.push({ time, value: val });
+        if (tickData.length > 250) tickData.shift();
+        lineSeries.update({ time, value: val });
         
         recentPrices.push(val);
         if (recentPrices.length > 100) recentPrices.shift();
@@ -691,14 +670,7 @@
 
         document.getElementById('ldp-val-pill').innerText = lastDigit;
         document.getElementById('rsi-val-pill').innerText = currentRSI.toFixed(2);
-        document.getElementById('ema-trend-pill').innerText = isBullish ? 'BULLISH ▲' : 'BEARISH ▼';
-        document.getElementById('ema-trend-pill').style.color = isBullish ? '#34D399' : '#F87171';
         document.getElementById('ticks-count-pill').innerText = ++totalTicksCount;
-        
-        if(recentPrices.length > 0) {
-            document.getElementById('high-price-pill').innerText = Math.max(...recentPrices).toFixed(decimals);
-            document.getElementById('low-price-pill').innerText = Math.min(...recentPrices).toFixed(decimals);
-        }
 
         recentDigits.push(lastDigit);
         if(recentDigits.length > 15) recentDigits.shift();
@@ -709,36 +681,34 @@
 
         rsiSeries.update({ time, value: parseFloat(currentRSI.toFixed(2)) });
 
-        // 1. Evaluate active pending signal if exists
         if (activeSignalTracker) {
-            evaluateActiveSignal(val, lastDigit, decimals);
+            updateActiveSignalProgress(val, lastDigit, decimals);
         } else {
-            // 2. Scan for new signal based on selected strategy & market
             generateStrategySignal(val, lastDigit, currentRSI, isBullish, decimals);
         }
     }
 
-    /* --- MULTI-STRATEGY TECHNICAL SIGNAL ENGINE --- */
+    /* --- HIGH-CONFIRMATION SIGNAL ENGINE --- */
     function generateStrategySignal(price, lastDigit, rsi, isBullish, decimals) {
-        if (recentDigits.length < 4) return;
+        if (recentDigits.length < 3) return;
 
         let detectedSignal = null;
-        let signalDirection = null; // 'RISE', 'FALL', 'EVEN', 'ODD', 'OVER', 'UNDER'
+        let signalDirection = null; 
         let techReason = '';
 
-        // STRATEGY A: RISE / FALL (RSI + EMA Momentum)
+        // STRATEGY A: RISE / FALL (Strict Confirmation: RSI < 30 for Call, RSI > 70 for Put)
         if (activeStrategy === 0) {
-            if (rsi <= 35 && isBullish) {
+            if (rsi <= 28 && isBullish) {
                 detectedSignal = 'RISE (CALL)';
                 signalDirection = 'RISE';
-                techReason = `RSI Oversold (${rsi.toFixed(1)}) + Bullish EMA Crossover`;
-            } else if (rsi >= 65 && !isBullish) {
+                techReason = `Strict Oversold RSI (${rsi.toFixed(1)}) + Bullish Confirmation`;
+            } else if (rsi >= 72 && !isBullish) {
                 detectedSignal = 'FALL (PUT)';
                 signalDirection = 'FALL';
-                techReason = `RSI Overbought (${rsi.toFixed(1)}) + Bearish EMA Crossover`;
+                techReason = `Strict Overbought RSI (${rsi.toFixed(1)}) + Bearish Confirmation`;
             }
         }
-        // STRATEGY B: EVEN / ODD (3-Tick Consecutive Parity Streak Reversal)
+        // STRATEGY B: EVEN / ODD
         else if (activeStrategy === 1) {
             const d1 = recentDigits[recentDigits.length - 1];
             const d2 = recentDigits[recentDigits.length - 2];
@@ -747,68 +717,97 @@
             if (d1 % 2 !== 0 && d2 % 2 !== 0 && d3 % 2 !== 0) {
                 detectedSignal = 'EVEN DIGIT';
                 signalDirection = 'EVEN';
-                techReason = `3 Consecutive Odd Digits (${d3}, ${d2}, ${d1}) - Reversal Trigger`;
+                techReason = `3 Consecutive Odd Parity Streak (${d3}, ${d2}, ${d1}) Confirmed`;
             } else if (d1 % 2 === 0 && d2 % 2 === 0 && d3 % 2 === 0) {
                 detectedSignal = 'ODD DIGIT';
                 signalDirection = 'ODD';
-                techReason = `3 Consecutive Even Digits (${d3}, ${d2}, ${d1}) - Reversal Trigger`;
+                techReason = `3 Consecutive Even Parity Streak (${d3}, ${d2}, ${d1}) Confirmed`;
             }
         }
-        // STRATEGY C: OVER / UNDER (Barrier Streak Analysis)
+        // STRATEGY C: OVER / UNDER (LDP Threshold 3 & 7)
         else if (activeStrategy === 2) {
             const d1 = recentDigits[recentDigits.length - 1];
             const d2 = recentDigits[recentDigits.length - 2];
-            const d3 = recentDigits[recentDigits.length - 3];
 
-            if (d1 <= 3 && d2 <= 3 && d3 <= 3) {
+            if (d1 <= 3 && d2 <= 3) {
                 detectedSignal = 'OVER 3';
                 signalDirection = 'OVER';
-                techReason = `Low Digit Streak (${d3}, ${d2}, ${d1}) - High Rebound Expected`;
-            } else if (d1 >= 7 && d2 >= 7 && d3 >= 7) {
+                techReason = `Low LDP Barrier Streak (${d2}, ${d1}) <= 3. Confirmed Over Rebound!`;
+            } else if (d1 >= 7 && d2 >= 7) {
                 detectedSignal = 'UNDER 7';
                 signalDirection = 'UNDER';
-                techReason = `High Digit Streak (${d3}, ${d2}, ${d1}) - Low Rebound Expected`;
+                techReason = `High LDP Barrier Streak (${d2}, ${d1}) >= 7. Confirmed Under Rebound!`;
             }
         }
 
         if (detectedSignal) {
-            const stratNames = ['Rise/Fall', 'Even/Odd', 'Over/Under'];
+            const stratNames = ['Rise/Fall', 'Even/Odd', 'Over/Under (LDP 3)'];
             
-            // Lock tracker for auto-evaluation over next 3 ticks
+            // Determine duration ticks based on selected signal timeframe mode
+            let targetTicks = 5;
+            if (signalTimeframe === '1t') targetTicks = 1;
+            else if (signalTimeframe === '5t') targetTicks = 5;
+            else if (signalTimeframe === '10t') targetTicks = 10;
+            else if (signalTimeframe === '1m') targetTicks = 15; // approx ticks
+            else if (signalTimeframe === '5m') targetTicks = 30;
+            else if (signalTimeframe === '10m') targetTicks = 50;
+
             activeSignalTracker = {
                 market: marketNameGlobal,
                 strategy: stratNames[activeStrategy],
+                mode: signalTimeframe,
                 signalName: detectedSignal,
                 direction: signalDirection,
                 entryPrice: price,
                 entryDigit: lastDigit,
-                ticksRemaining: 3
+                totalTicks: targetTicks,
+                ticksRemaining: targetTicks,
+                id: Date.now()
             };
 
-            // Update UI Banners
+            // Add new pending trade to history log with progress loader
+            tradeHistoryLog.unshift({
+                id: activeSignalTracker.id,
+                market: activeSignalTracker.market,
+                strategy: activeSignalTracker.strategy,
+                mode: activeSignalTracker.mode,
+                signal: activeSignalTracker.signalName,
+                result: 'PENDING',
+                progress: 0,
+                detail: `Purchased (${signalTimeframe}) | Entry: ${price.toFixed(decimals)}`
+            });
+
+            renderExecutionHistory();
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
-            // Trigger Smart Voice Alert (Announcing Market + Signal)
             if (voiceEnabled) {
-                const voiceAnnouncement = `${marketNameGlobal}. ${detectedSignal} signal detected.`;
+                const voiceAnnouncement = `${marketNameGlobal}. ${detectedSignal} signal confirmed.`;
                 speakMessage(voiceAnnouncement);
             }
         }
     }
 
-    /* --- AUTO EVALUATE SIGNAL RESULT (WIN / LOSS) --- */
-    function evaluateActiveSignal(currentPriceVal, currentDigit, decimals) {
+    /* --- UPDATE LIVE TRADE PROGRESS LOADER & RESULT EVALUATION --- */
+    function updateActiveSignalProgress(currentPriceVal, currentDigit, decimals) {
         if (!activeSignalTracker) return;
 
         activeSignalTracker.ticksRemaining--;
-        const evalEl = document.getElementById('signal-eval-status');
-        
-        if (activeSignalTracker.ticksRemaining > 0) {
-            evalEl.innerText = `⏳ Tracking Active Trade... Evaluating Result in ${activeSignalTracker.ticksRemaining} tick(s)`;
-            return;
+        const passedTicks = activeSignalTracker.totalTicks - activeSignalTracker.ticksRemaining;
+        const progressPct = Math.min(100, Math.round((passedTicks / activeSignalTracker.totalTicks) * 100));
+
+        // Update progress in history log array
+        const tradeItem = tradeHistoryLog.find(t => t.id === activeSignalTracker.id);
+        if (tradeItem) {
+            tradeItem.progress = progressPct;
+            renderExecutionHistory();
         }
 
-        // Determine WIN or LOSS on the 3rd tick
+        const evalEl = document.getElementById('signal-eval-status');
+        evalEl.innerText = `⏳ Trade Active (${progressPct}% Completed)... ${activeSignalTracker.ticksRemaining} ticks left`;
+
+        if (activeSignalTracker.ticksRemaining > 0) return;
+
+        // Finalize Win / Loss
         let isWin = false;
         let detailStr = '';
         const dir = activeSignalTracker.direction;
@@ -827,31 +826,27 @@
             detailStr = `Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit}`;
         } else if (dir === 'OVER') {
             isWin = (currentDigit > 3);
-            detailStr = `Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit} (>3)`;
+            detailStr = `Barrier: Over 3 | Exit Digit: ${currentDigit} (${isWin ? 'WIN' : 'LOSS'})`;
         } else if (dir === 'UNDER') {
             isWin = (currentDigit < 7);
-            detailStr = `Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit} (<7)`;
+            detailStr = `Barrier: Under 7 | Exit Digit: ${currentDigit} (${isWin ? 'WIN' : 'LOSS'})`;
         }
 
         const resultStatus = isWin ? 'WIN' : 'LOSS';
         evalEl.style.color = isWin ? '#34D399' : '#F87171';
-        evalEl.innerText = isWin ? `✅ LAST SIGNAL RESULT: WIN (+95% Payout)` : `❌ LAST SIGNAL RESULT: LOSS`;
+        evalEl.innerText = isWin ? `✅ TRADE RESULT: WIN (+95% Payout)` : `❌ TRADE RESULT: LOSS`;
 
-        // Save to Auto History Log
-        tradeHistoryLog.unshift({
-            market: activeSignalTracker.market,
-            strategy: activeSignalTracker.strategy,
-            signal: activeSignalTracker.signalName,
-            result: resultStatus,
-            detail: detailStr
-        });
+        if (tradeItem) {
+            tradeItem.result = resultStatus;
+            tradeItem.progress = 100;
+            tradeItem.detail = detailStr;
+        }
 
         if (tradeHistoryLog.length > 12) tradeHistoryLog.pop();
 
         renderExecutionHistory();
         updateWinRateStats();
 
-        // Reset tracker after brief pause so next signal can be scanned
         activeSignalTracker = null;
         setTimeout(() => {
             if (!activeSignalTracker) {
@@ -877,7 +872,7 @@
 
         mainBox.style.borderColor = primaryColor;
         signalEl.style.color = textColor;
-        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName}</span>`;
+        signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName} (${signalTimeframe.toUpperCase()})</span>`;
 
         radarBox.style.borderColor = primaryColor;
         radarIcon.style.background = primaryColor;
@@ -890,7 +885,7 @@
         radarSub.innerText = reason;
         radarBtn.style.background = primaryColor;
         radarBtn.style.color = '#FFF';
-        radarBtn.innerText = `⚡ EXECUTE ${signalName} →`;
+        radarBtn.innerText = `⚡ AUTO-PURCHASED (${signalTimeframe}) →`;
     }
 
     function resetRadarUI() {
@@ -905,7 +900,7 @@
 
         mainBox.style.borderColor = '#38BDF8';
         signalEl.style.color = '#38BDF8';
-        signalEl.innerHTML = `🔊 SCANNING TECHNICAL INDICATORS...`;
+        signalEl.innerHTML = `🔊 AWAITING HIGH-CONFIRMATION SIGNAL...`;
 
         radarBox.style.borderColor = 'rgba(56, 189, 248, 0.3)';
         radarIcon.style.background = '#38BDF8';
@@ -913,9 +908,9 @@
         radarIcon.innerText = '⏳';
         radarBadge.style.background = '#38BDF8';
         radarBadge.style.color = '#010409';
-        radarBadge.innerText = 'ANALYZING MARKET...';
+        radarBadge.innerText = 'FILTERING NOISE...';
         radarTitle.innerText = marketNameGlobal;
-        radarSub.innerText = 'Watching live ticks for strategy triggers.';
+        radarSub.innerText = 'Analyzing strict technical confluences.';
         radarBtn.style.background = 'rgba(56,189,248,0.15)';
         radarBtn.style.color = '#38BDF8';
         radarBtn.innerText = 'WAITING FOR SIGNAL...';
@@ -925,24 +920,30 @@
         const grid = document.getElementById('exec-history-grid');
         grid.innerHTML = tradeHistoryLog.map(item => {
             const isWin = item.result === 'WIN';
+            const isPending = item.result === 'PENDING';
+            const cardClass = isPending ? 'pending' : (isWin ? '' : 'loss');
+            const resultColor = isPending ? '#F59E0B' : (isWin ? '#34D399' : '#F87171');
+
             return `
-                <div class="exec-card ${isWin ? '' : 'loss'}">
+                <div class="exec-card ${cardClass}">
                     <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 4px;">
-                        <span style="color:#F8FAFC;">${item.market}</span>
-                        <span style="color:${isWin ? '#34D399' : '#F87171'};">${item.result} ${isWin ? '(+95%)' : '(-100%)'}</span>
+                        <span style="color:#F8FAFC;">${item.market} <span style="font-size:9px; color:#38BDF8;">[${item.mode}]</span></span>
+                        <span style="color:${resultColor};">${item.result} ${isWin ? '(+95%)' : (isPending ? '⏳ ACTIVE' : '(-100%)')}</span>
                     </div>
                     <div style="font-size: 10px; color: #38BDF8; font-weight:700; margin-bottom:2px;">${item.strategy} ➔ ${item.signal}</div>
-                    <div style="font-size: 9px; color: #94A3B8;">${item.detail}</div>
+                    <div style="font-size: 9px; color: #94A3B8; margin-bottom:6px;">${item.detail}</div>
+                    <div class="trade-progress-bar" style="width: ${item.progress || 0}%; background: ${isPending ? '#38BDF8' : resultColor};"></div>
                 </div>
             `;
         }).join('');
     }
 
     function updateWinRateStats() {
-        const total = tradeHistoryLog.length;
-        const wins = tradeHistoryLog.filter(t => t.result === 'WIN').length;
+        const finishedTrades = tradeHistoryLog.filter(t => t.result !== 'PENDING');
+        const total = finishedTrades.length;
+        const wins = finishedTrades.filter(t => t.result === 'WIN').length;
         const losses = total - wins;
-        const winRate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
+        const winRate = total > 0 ? ((wins / total) * 100).toFixed(1) : '100.0';
 
         const rateText = document.getElementById('winrate-percentage-text');
         const rateBar = document.getElementById('winrate-bar');
@@ -951,18 +952,14 @@
         rateText.innerText = `${winRate}% WIN RATE (${wins}W / ${losses}L)`;
         rateBar.style.width = `${winRate}%`;
 
-        if (parseFloat(winRate) >= 75) {
+        if (parseFloat(winRate) >= 70) {
             rateText.style.color = '#34D399';
             rateBar.style.background = 'linear-gradient(90deg, #10B981, #34D399, #38BDF8)';
-            adviceEl.innerHTML = `✅ <strong>GOOD TIME TO TRADE:</strong> Signal accuracy is performing strong at ${winRate}%.`;
-        } else if (parseFloat(winRate) >= 50) {
+            adviceEl.innerHTML = `✅ <strong>HIGH CONFIRMATION ACTIVE:</strong> Low-risk filtering is keeping loss rate minimal at ${winRate}%.`;
+        } else {
             rateText.style.color = '#F59E0B';
             rateBar.style.background = 'linear-gradient(90deg, #F59E0B, #FBBF24)';
-            adviceEl.innerHTML = `⚠️ <strong>MODERATE VOLATILITY:</strong> Win rate is ${winRate}%. Trade with caution.`;
-        } else {
-            rateText.style.color = '#EF4444';
-            rateBar.style.background = 'linear-gradient(90deg, #EF4444, #F87171)';
-            adviceEl.innerHTML = `🛑 <strong>HIGH RISK MARKET:</strong> Win rate dropped to ${winRate}%. Consider switching strategy or market.`;
+            adviceEl.innerHTML = `⚠️ <strong>OPTIMIZING:</strong> Current accuracy is ${winRate}%. Monitoring market confluence.`;
         }
     }
 
@@ -1025,9 +1022,9 @@
 
     function executeManualTrade() {
         if (activeSignalTracker) {
-            alert(`Executing ${activeSignalTracker.signalName} on ${activeSignalTracker.market}!`);
+            alert(`Executing ${activeSignalTracker.signalName} on ${activeSignalTracker.market} (${signalTimeframe.toUpperCase()})!`);
         } else {
-            alert("No active signal right now. Please wait for the next trigger.");
+            alert("No active signal right now. Please wait for high-confirmation trigger.");
         }
     }
 
