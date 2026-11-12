@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Pro Signal & Terminal</title>
+    <title>TRADING WITH OGGY - Live Signal Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
     <style>
@@ -202,7 +202,7 @@
             </div>
         </div>
 
-        <!-- CENTER CONTENT: TradingView Lightweight Charts & RSI Integration -->
+        <!-- CENTER CONTENT -->
         <div class="center-content">
             <div class="chart-box">
                 <div class="chart-header">
@@ -259,10 +259,10 @@
             <div class="card">
                 <div class="card-title">
                     <span>Select Active Signal Strategy</span>
-                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Strategy A: RSI 14 Period (&gt;70 Fall / &lt;30 Rise)</span>
+                    <span style="color:#38BDF8; font-size:10px;" id="strategy-tech-note">Strategy C: Over / Under (LDP 3)</span>
                 </div>
                 <div class="strategy-grid">
-                    <div class="strategy-card active" onclick="selectStrategy(0, this)">
+                    <div class="strategy-card" onclick="selectStrategy(0, this)">
                         <div style="font-size: 11px; font-weight: 800; color: #38BDF8;">Strategy A: Rise / Fall</div>
                         <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">RSI &gt; 70 = FALL, RSI &lt; 30 = RISE</div>
                     </div>
@@ -270,8 +270,8 @@
                         <div style="font-size: 11px; font-weight: 800; color: #FDE68A;">Strategy B: Even / Odd</div>
                         <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">Last Digit X2X Pattern Detection</div>
                     </div>
-                    <div class="strategy-card" onclick="selectStrategy(2, this)">
-                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under</div>
+                    <div class="strategy-card active" onclick="selectStrategy(2, this)">
+                        <div style="font-size: 11px; font-weight: 800; color: #34D399;">Strategy C: Over / Under (LDP 3)</div>
                         <div style="font-size: 9px; color: #94A3B8; margin-top: 3px;">LDP 0-3 Tracking (3 consecutive digits)</div>
                     </div>
                 </div>
@@ -320,7 +320,7 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: Restored Waiting Radar & Optional Bot Link -->
+        <!-- RIGHT SIDEBAR -->
         <div class="right-sidebar">
             <div class="radar-panel-box" id="radar-panel-box">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -341,10 +341,10 @@
             <div class="card">
                 <div class="card-title">
                     <span>Deriv Account Link</span>
-                    <span style="font-size:9px; color:#38BDF8;">OPTIONAL</span>
+                    <span class="gold-badge">GOLD BUYER ONLY</span>
                 </div>
                 <div id="autotrader-panel">
-                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Optional API token connection.</div>
+                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Optional Gold API token connection.</div>
                     <div style="margin-bottom: 8px;">
                         <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">API Token</label>
                         <input type="password" id="deriv-token" placeholder="Enter API token">
@@ -364,8 +364,8 @@
 <script>
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
-    let activeStrategy = 0; // 0 = Rise/Fall, 1 = Even/Odd, 2 = Over/Under
-    let signalTimeframe = '5T'; // '1T', '5T', '10T', '1 MIN', '5 MIN', '10 MIN'
+    let activeStrategy = 2; // Default to Strategy C (Over/Under)
+    let signalTimeframe = '5T'; 
     let voiceEnabled = true;
 
     let chart, rsiChart, lineSeries, candleSeries, rsiSeries;
@@ -382,9 +382,9 @@
 
     let activeSignalTracker = null; 
     let tradeHistoryLog = [
-        { market: 'Volatility 100 Index', strategy: 'Rise/Fall', mode: '5T', signal: 'RISE', result: 'WIN', progress: 100, detail: 'Entry: 531.20 | Exit: 532.85' },
+        { market: 'Volatility 100 Index', strategy: 'Over/Under', mode: '5T', signal: 'OVER', result: 'WIN', progress: 100, detail: 'Entry Digit: 1 | Exit Digit: 7' },
         { market: 'Volatility 50 Index', strategy: 'Even/Odd', mode: '5T', signal: 'EVEN', result: 'WIN', progress: 100, detail: 'Entry Digit: 3 | Exit Digit: 8' },
-        { market: 'Volatility 10 Index', strategy: 'Over/Under', mode: '5T', signal: 'OVER 3', result: 'WIN', progress: 100, detail: 'Entry Digit: 1 | Exit Digit: 7' }
+        { market: 'Volatility 10 Index', strategy: 'Rise/Fall', mode: '5T', signal: 'RISE', result: 'WIN', progress: 100, detail: 'Entry: 531.20 | Exit: 532.85' }
     ];
 
     const MARKETS = {
@@ -405,12 +405,9 @@
         renderExecutionHistory();
         updateWinRateStats();
         initChart();
-        
-        // Hourly Auto-Reset Check
         setInterval(checkHourlyReset, 60000);
     });
 
-    /* --- HOURLY AUTO-RESET TRADE HISTORY --- */
     let lastResetHour = new Date().getHours();
     function checkHourlyReset() {
         const currentHour = new Date().getHours();
@@ -419,11 +416,9 @@
             tradeHistoryLog = [];
             renderExecutionHistory();
             updateWinRateStats();
-            console.log("Trade history auto-reset for the new hour.");
         }
     }
 
-    /* --- LIVE CLOCK --- */
     function updateLiveClock() {
         const now = new Date();
         const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -433,7 +428,6 @@
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-    /* --- BACKGROUND ANIMATION --- */
     const canvasBg = document.getElementById('trading-canvas');
     const ctxBg = canvasBg.getContext('2d');
 
@@ -470,7 +464,6 @@
     }
     animateTradingBackground();
 
-    /* --- LIGHTWEIGHT CHARTS & RSI SETUP --- */
     function initChart() {
         if (typeof LightweightCharts === 'undefined') {
             setTimeout(initChart, 200);
@@ -540,7 +533,7 @@
         const techNotes = [
             'Strategy A: RSI 14 Period (>70 Fall / <30 Rise)',
             'Strategy B: Last Digit X2X Pattern Detection',
-            'Strategy C: LDP 0-3 Tracking (3 consecutive digits)'
+            'Strategy C: Over / Under (LDP 3)'
         ];
         document.getElementById('strategy-tech-note').innerText = techNotes[index];
         updateActiveLabels();
@@ -669,7 +662,7 @@
         }
     }
 
-    /* --- LIVE SIGNAL GENERATOR (FOR ALL USERS TO VIEW & MANUAL TRADE) --- */
+    /* --- LIVE SIGNAL GENERATOR (Over / Under changed to OVER / UNDER) --- */
     function generateLiveSignal(price, lastDigit, rsi, decimals) {
         if (recentDigits.length < 3) return;
 
@@ -677,7 +670,6 @@
         let signalDirection = null; 
         let techReason = '';
 
-        // STRATEGY A: RSI 14 Period (>70 Fall, <30 Rise)
         if (activeStrategy === 0) {
             if (rsi < 30) {
                 detectedSignal = 'RISE (CALL)';
@@ -689,7 +681,6 @@
                 techReason = `Strategy A: RSI is ${rsi.toFixed(1)} (> 70 Overbought)`;
             }
         }
-        // STRATEGY B: Even / Odd (X2X Pattern Detection)
         else if (activeStrategy === 1) {
             const d1 = recentDigits[recentDigits.length - 1];
             const d2 = recentDigits[recentDigits.length - 2];
@@ -703,14 +694,13 @@
                 techReason = `Strategy B: Odd X2X pattern detected (${d2}, ${d1})`;
             }
         }
-        // STRATEGY C: Over / Under (LDP 03 Tracking)
         else if (activeStrategy === 2) {
             const d1 = recentDigits[recentDigits.length - 1];
             const d2 = recentDigits[recentDigits.length - 2];
             const d3 = recentDigits[recentDigits.length - 3];
 
             if (d1 <= 3 && d2 <= 3 && d3 <= 3) {
-                detectedSignal = 'OVER 3';
+                detectedSignal = 'OVER';
                 signalDirection = 'OVER';
                 techReason = `Strategy C: 3 consecutive digits in {0,1,2,3} (${d3}, ${d2}, ${d1})`;
             }
@@ -755,13 +745,13 @@
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
             if (voiceEnabled) {
-                const voiceAnnouncement = `${marketNameGlobal}. ${detectedSignal} signal generated.`;
+                // Voice announces: "Signal. [Signal Name] on [Market Name]"
+                const voiceAnnouncement = `Signal. ${detectedSignal} on ${marketNameGlobal}`;
                 speakMessage(voiceAnnouncement);
             }
         }
     }
 
-    /* --- SIGNAL PROGRESS & RESULT VERIFICATION --- */
     function updateActiveSignalProgress(currentPriceVal, currentDigit, decimals) {
         if (!activeSignalTracker) return;
 
@@ -798,7 +788,7 @@
             detailStr = `Result Check | Entry Digit: ${activeSignalTracker.entryDigit} | Exit Digit: ${currentDigit}`;
         } else if (dir === 'OVER') {
             isWin = (currentDigit > 3);
-            detailStr = `Result Check | Barrier: Over 3 | Exit Digit: ${currentDigit}`;
+            detailStr = `Result Check | Barrier: Over | Exit Digit: ${currentDigit}`;
         }
 
         const resultStatus = isWin ? 'WIN' : 'LOSS';
@@ -1010,8 +1000,14 @@
 
     function connectDeriv() {
         const token = document.getElementById('deriv-token').value;
-        if(!token) { alert("Please enter a valid API token!"); return; }
-        document.getElementById('bot-status').innerText = "✅ Account Connected Successfully";
+        const statusEl = document.getElementById('bot-status');
+        if (!token) {
+            statusEl.style.color = "#F87171";
+            statusEl.innerText = "⚠️ Please enter API token.";
+            return;
+        }
+        statusEl.style.color = "#34D399";
+        statusEl.innerText = "✅ Account Connected Successfully";
     }
 </script>
 
