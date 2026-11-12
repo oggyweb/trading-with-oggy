@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Custom Real-Time Terminal</title>
+    <title>TRADING WITH OGGY - Real Live WebSocket Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
@@ -64,7 +64,7 @@
         .tf-btn { background: transparent; border: none; color: #94A3B8; font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .tf-btn.active, .tf-btn:hover { background: #38BDF8; color: #010409; }
 
-        /* CUSTOM CANVAS CHART CARD */
+        /* REAL LIVE CANVAS CHART CARD */
         .chart-box {
             background: #020617; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 14px; padding: 16px; position: relative;
         }
@@ -161,7 +161,7 @@
             <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
-                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Live Deriv WebSocket Terminal Pro</div>
+                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Real Live Deriv WebSocket Terminal</div>
             </div>
         </div>
 
@@ -203,15 +203,15 @@
             </div>
         </div>
 
-        <!-- CENTER CONTENT: Custom Real-Time Canvas Chart -->
+        <!-- CENTER CONTENT: Real Live WebSocket Canvas Chart -->
         <div class="center-content">
             <div class="chart-box">
                 <div class="chart-header">
                     <div>
                         <div class="chart-title-main" id="chart-market-name">Volatility 100 Index <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; color:#38BDF8;" id="chart-market-code">R_100</span></div>
-                        <div class="chart-subtitle">Real-time live WebSocket price action & RSI (14) indicator</div>
+                        <div class="chart-subtitle">100% Real Live Market WebSocket Ticks & RSI (14) Indicator</div>
                     </div>
-                    <div class="price-badge" id="live-chart-price">$0.000</div>
+                    <div class="price-badge" id="live-chart-price">$0.00</div>
                 </div>
 
                 <div class="stats-strip">
@@ -227,18 +227,15 @@
                 </div>
 
                 <div class="timeframe-bar">
-                    <button class="tf-btn" onclick="setTimeframe('1m', 1, this)">1m</button>
-                    <button class="tf-btn" onclick="setTimeframe('3m', 2, this)">3m</button>
-                    <button class="tf-btn active" onclick="setTimeframe('5m', 1, this)">5m</button>
-                    <button class="tf-btn" onclick="setTimeframe('15m', 3, this)">15m</button>
-                    <button class="tf-btn" onclick="setTimeframe('30m', 4, this)">30m</button>
-                    <button class="tf-btn" onclick="setTimeframe('1hr', 5, this)">1hr</button>
+                    <button class="tf-btn active" onclick="setTimeframe('Live Ticks', this)">Live Ticks</button>
+                    <button class="tf-btn" onclick="setTimeframe('1m', this)">1m</button>
+                    <button class="tf-btn" onclick="setTimeframe('5m', this)">5m</button>
                 </div>
             </div>
 
             <!-- Signal Stream & Voice Alert Status Box -->
             <div class="signal-box-prominent" id="signal-main-box">
-                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_100 | Live WebSocket Stream</div>
+                <div style="font-size: 11px; color: #94A3B8; font-weight: bold;" id="active-market-label">Symbol: R_100 | Live WebSocket Stream Active</div>
                 <div id="live-signal-status" class="signal-text">🔊 VOICE ALERT ACTIVE: SCANNING MARKET...</div>
                 
                 <div style="margin-top: 10px; font-size: 10px; color: #64748B; letter-spacing: 1px;">RECENT LAST DIGITS (LDP)</div>
@@ -362,14 +359,12 @@
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
     let derivWS = null;
-    let tickStepInterval = 1;
-    let tickCounter = 0;
 
-    let priceHistory = [1000, 1001, 1002, 1001.5, 1003, 1004]; // Initial default fallback array so it never stays blank
-    let rsiHistory = [50, 52, 55, 53, 56, 58];
-    let recentDigits = [3, 7, 1, 9, 4, 6];
-    let digitCounts = new Array(10).fill(3);
-    let totalTicksCount = 6;
+    let priceHistory = [];
+    let rsiHistory = [];
+    let recentDigits = [];
+    let digitCounts = new Array(10).fill(0);
+    let totalTicksCount = 0;
     let voiceEnabled = true;
 
     const canvasChart = document.getElementById('liveLineChart');
@@ -377,7 +372,7 @@
 
     function resizeChartCanvas() {
         if(canvasChart && canvasChart.parentElement) {
-            canvasChart.width = canvasChart.parentElement.clientWidth;
+            canvasChart.width = canvasChart.parentElement.clientWidth - 32;
             canvasChart.height = 340;
             drawCustomChart();
         }
@@ -390,9 +385,6 @@
             document.getElementById('autotrader-panel').classList.add('locked-overlay');
         }
         initLDPCandles();
-        renderDigitHistory();
-        renderLDPCandles();
-        drawCustomChart();
         initDerivStream();
     });
 
@@ -406,11 +398,9 @@
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-    function setTimeframe(tf, stepSize, el) {
+    function setTimeframe(tf, el) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
-        tickStepInterval = stepSize;
-        initDerivStream();
     }
 
     function selectStrategy(index, el) {
@@ -455,16 +445,27 @@
     }
     animateTradingBackground();
 
-    /* --- REAL-TIME DERIV WEBSOCKET (LIVE TICKS STREAM) --- */
+    /* --- 100% REAL LIVE DERIV WEBSOCKET STREAM --- */
     function initDerivStream() {
         if(derivWS) {
             derivWS.onclose = null;
             derivWS.close();
         }
+        
+        // Connect to official Deriv live websocket feed
         derivWS = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         derivWS.onopen = function() {
-            // Subscribe directly to live ticks stream for instantaneous rendering
+            // Request past 40 ticks history to populate chart instantly
+            derivWS.send(JSON.stringify({
+                ticks_history: currentSymbol,
+                adjust_start_time: 1,
+                count: 40,
+                end: 'latest',
+                style: 'ticks'
+            }));
+
+            // Subscribe to live incoming ticks
             derivWS.send(JSON.stringify({
                 ticks: currentSymbol,
                 subscribe: 1
@@ -474,26 +475,44 @@
         derivWS.onmessage = function(event) {
             const data = JSON.parse(event.data);
 
+            // Handle historical initial data
+            if (data.msg_type === 'history' && data.history && data.history.prices) {
+                priceHistory = [];
+                rsiHistory = [];
+                recentDigits = [];
+                digitCounts.fill(0);
+                totalTicksCount = 0;
+
+                const prices = data.history.prices;
+                prices.forEach(p => {
+                    const price = parseFloat(p);
+                    const priceStr = price.toFixed(2);
+                    const lastDigit = parseInt(priceStr.slice(-1));
+
+                    priceHistory.push(price);
+                    rsiHistory.push(calculateRSI(priceHistory, 14));
+                    recentDigits.push(lastDigit);
+                    if(recentDigits.length > 15) recentDigits.shift();
+                    digitCounts[lastDigit]++;
+                    totalTicksCount++;
+                });
+
+                updateDashboardUI();
+            }
+
+            // Handle real-time incoming live ticks
             if (data.msg_type === 'tick') {
                 const tick = data.tick;
                 const price = parseFloat(tick.quote);
                 const priceStr = price.toFixed(2);
                 const lastDigit = parseInt(priceStr.slice(-1));
 
-                document.getElementById('live-chart-price').innerText = `$${priceStr}`;
-                document.getElementById('ldp-val-pill').innerText = lastDigit;
-
                 priceHistory.push(price);
-                if(priceHistory.length > 60) priceHistory.shift();
+                if(priceHistory.length > 50) priceHistory.shift();
 
                 let rsiVal = calculateRSI(priceHistory, 14);
                 rsiHistory.push(rsiVal);
-                if(rsiHistory.length > 60) rsiHistory.shift();
-
-                document.getElementById('rsi-val-pill').innerText = rsiVal ? rsiVal.toFixed(2) : '-';
-                document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(2);
-                document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(2);
-                document.getElementById('ticks-count-pill').innerText = totalTicksCount + 1;
+                if(rsiHistory.length > 50) rsiHistory.shift();
 
                 recentDigits.push(lastDigit);
                 if(recentDigits.length > 15) recentDigits.shift();
@@ -501,16 +520,33 @@
                 digitCounts[lastDigit]++;
                 totalTicksCount++;
 
-                renderDigitHistory();
-                renderLDPCandles();
-                drawCustomChart();
+                updateDashboardUI();
                 analyzeSignal(priceStr, lastDigit);
             }
         };
 
         derivWS.onclose = function() {
-            setTimeout(initDerivStream, 2000);
+            setTimeout(initDerivStream, 3000); // Auto reconnect if connection drops
         };
+    }
+
+    function updateDashboardUI() {
+        if(priceHistory.length === 0) return;
+        const latestPrice = priceHistory[priceHistory.length - 1];
+        const latestStr = latestPrice.toFixed(2);
+        const lastDigit = parseInt(latestStr.slice(-1));
+        const currentRsi = rsiHistory[rsiHistory.length - 1];
+
+        document.getElementById('live-chart-price').innerText = `$${latestStr}`;
+        document.getElementById('ldp-val-pill').innerText = lastDigit;
+        document.getElementById('rsi-val-pill').innerText = currentRsi ? currentRsi.toFixed(2) : '-';
+        document.getElementById('high-price-pill').innerText = Math.max(...priceHistory).toFixed(2);
+        document.getElementById('low-price-pill').innerText = Math.min(...priceHistory).toFixed(2);
+        document.getElementById('ticks-count-pill').innerText = totalTicksCount;
+
+        renderDigitHistory();
+        renderLDPCandles();
+        drawCustomChart();
     }
 
     function calculateRSI(prices, period = 14) {
@@ -535,7 +571,12 @@
         const h = canvasChart.height;
         ctxChart.clearRect(0, 0, w, h);
 
-        if(priceHistory.length < 2) return;
+        if(priceHistory.length < 2) {
+            ctxChart.fillStyle = '#64748B';
+            ctxChart.font = '12px Montserrat';
+            ctxChart.fillText('Connecting to real live market ticks...', w / 2 - 110, h / 2);
+            return;
+        }
 
         let mainChartHeight = h * 0.65;
         let rsiChartHeight = h * 0.28;
@@ -547,7 +588,7 @@
         let maxPrice = Math.max(...priceHistory);
         let priceRange = (maxPrice - minPrice) || 0.01;
 
-        // Subtle Horizontal Grid & Price Labels
+        // Horizontal Grid & Price Labels
         ctxChart.strokeStyle = 'rgba(255, 255, 255, 0.04)';
         ctxChart.fillStyle = '#64748B';
         ctxChart.font = '10px monospace';
@@ -561,7 +602,7 @@
             ctxChart.fillText(gPrice.toFixed(2), plotWidth + 6, gy + 3);
         }
 
-        // Draw Price Line
+        // Draw Real Live Price Line
         ctxChart.beginPath();
         ctxChart.strokeStyle = '#10B981';
         ctxChart.lineWidth = 2.2;
@@ -589,7 +630,7 @@
         ctxChart.fillStyle = grad;
         ctxChart.fill();
 
-        // Current Live Price Dashed Line & Green Pill
+        // Current Price Indicator & Right Badge
         ctxChart.setLineDash([4, 4]);
         ctxChart.strokeStyle = '#34D399';
         ctxChart.beginPath();
@@ -660,13 +701,13 @@
         marketNameGlobal = marketName;
         document.getElementById('chart-market-name').innerHTML = `${marketNameGlobal} <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; color:#38BDF8;">${symbolCode}</span>`;
         document.getElementById('top-market-badge').innerText = marketNameGlobal;
-        document.getElementById('active-market-label').innerText = `Symbol: ${symbolCode} | Live WebSocket Stream`;
+        document.getElementById('active-market-label').innerText = `Symbol: ${symbolCode} | Live WebSocket Stream Active`;
 
-        priceHistory = [1000, 1001, 1002, 1003];
-        rsiHistory = [50, 52, 54, 56];
-        recentDigits = [3, 7, 1, 9];
-        digitCounts.fill(2);
-        totalTicksCount = 4;
+        priceHistory = [];
+        rsiHistory = [];
+        recentDigits = [];
+        digitCounts.fill(0);
+        totalTicksCount = 0;
         drawCustomChart();
         initDerivStream();
     }
