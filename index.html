@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Live Signal Terminal</title>
+    <title>TRADING WITH OGGY - Smart Risk & Auto Bot Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
     <style>
@@ -85,7 +85,7 @@
         }
         .signal-text { font-size: 13px; font-weight: 900; color: #38BDF8; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SHARED BOT SIGNAL RADAR SCREEN (VISIBLE TO BOTH SILVER & GOLD) */
+        /* SHARED BOT SIGNAL RADAR SCREEN */
         .shared-radar-box {
             background: rgba(10, 14, 26, 0.95);
             border: 2px solid rgba(56, 189, 248, 0.4);
@@ -112,6 +112,22 @@
             border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;
             transition: 0.3s;
         }
+
+        /* RISK WARNING BANNER (NEW) */
+        .risk-warning-banner {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #EF4444;
+            color: #F87171;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+            animation: pulseWarning 1.5s infinite;
+        }
+        @keyframes pulseWarning { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
         /* GOLD VIP AUTO-TRADE BOX */
         .gold-vip-box {
@@ -231,7 +247,7 @@
         .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 12px; }
         .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-        .package-selector-bar { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); padding: 10px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .package-selector-bar { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); padding: 10px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .pkg-btn { background: #070a12; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; padding: 5px 14px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .pkg-btn.active { background: #F59E0B; color: #010409; border-color: #F59E0B; }
 
@@ -253,7 +269,7 @@
             <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
-                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Live Bot Signal Radar & Auto Execution</div>
+                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Smart Risk Loop & Live Signal Terminal</div>
             </div>
         </div>
 
@@ -266,12 +282,21 @@
         </div>
     </div>
 
-    <!-- Package Testing Simulator Bar -->
+    <!-- Package & Account Mode Simulator Bar -->
     <div class="package-selector-bar">
-        <span style="font-size: 11px; font-weight: 800; color: #FDE68A;">⚙️ TEST PACKAGE VIEW:</span>
-        <div style="display:flex; gap:8px;">
-            <button class="pkg-btn" id="btn-silver-mode" onclick="setPackageMode('silver')">Silver Buyer (Manual)</button>
-            <button class="pkg-btn active" id="btn-gold-mode" onclick="setPackageMode('gold')">Gold Buyer (VIP Auto-Bot)</button>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <span style="font-size: 11px; font-weight: 800; color: #FDE68A;">⚙️ TEST PACKAGE:</span>
+            <div style="display:flex; gap:6px;">
+                <button class="pkg-btn" id="btn-silver-mode" onclick="setPackageMode('silver')">Silver Manual</button>
+                <button class="pkg-btn active" id="btn-gold-mode" onclick="setPackageMode('gold')">Gold VIP Bot</button>
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <span style="font-size: 11px; font-weight: 800; color: #38BDF8;">🔀 ACCOUNT MODE:</span>
+            <div style="display:flex; gap:6px;">
+                <button class="pkg-btn active" id="btn-demo-mode" onclick="setAccountMode('demo')">Demo Mode</button>
+                <button class="pkg-btn" id="btn-real-mode" onclick="setAccountMode('real')">Real Mode</button>
+            </div>
         </div>
     </div>
 
@@ -302,7 +327,7 @@
                 <div class="chart-header">
                     <div>
                         <div class="chart-title-main" id="chart-title">Volatility 100 Index (R_100)</div>
-                        <div class="chart-subtitle">Live WebSocket Stream & Signal Radar</div>
+                        <div class="chart-subtitle">Live WebSocket Stream & Risk Protected Radar</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <select id="market-select" onchange="switchMarket(this.value)" class="market-select-box">
@@ -324,7 +349,7 @@
                 <div class="stats-strip">
                     <div class="stat-pill">Last Digit (LDP): <strong id="ldp-val-pill" style="color:#EF4444;">-</strong></div>
                     <div class="stat-pill">RSI (14): <strong id="rsi-val-pill" style="color:#38BDF8;">-</strong></div>
-                    <div class="stat-pill">Package View: <strong id="package-status-pill" style="color:#F59E0B;">GOLD VIP AUTO</strong></div>
+                    <div class="stat-pill">Account: <strong id="acc-mode-pill" style="color:#34D399;">DEMO</strong></div>
                     <div class="stat-pill">Ticks: <strong id="ticks-count-pill">0</strong></div>
                 </div>
 
@@ -397,7 +422,7 @@
                     <span id="winrate-percentage-text" style="color: #34D399; font-weight: 900; font-size: 14px;">100.0% WIN RATE (0W / 0L)</span>
                 </div>
                 <div id="winrate-advice-text" style="font-size: 11px; color: #CBD5E1; line-height: 1.5; margin-bottom: 8px;">
-                    ✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals tracking in real-time.
+                    ✅ <strong>LIVE SIGNAL TRACKER:</strong> Smart Risk Protection Loop Active (&lt;70% Win Rate Triggers 5m Cool-down).
                 </div>
                 <div class="winrate-loading-container">
                     <div class="winrate-loading-bar" id="winrate-bar" style="width: 100%;"></div>
@@ -419,11 +444,11 @@
         <!-- RIGHT SIDEBAR -->
         <div class="right-sidebar">
             
-            <!-- 🌟 NEW ADDED: DEDICATED LIVE BOT SIGNAL RADAR SCREEN (VISIBLE TO BOTH SILVER & GOLD) -->
+            <!-- SHARED LIVE BOT SIGNAL RADAR SCREEN -->
             <div class="shared-radar-box" id="shared-radar-box">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <div style="font-size: 11px; font-weight: 800; color: #F8FAFC;">BOT SIGNAL RADAR SCREEN</div>
-                    <span style="font-size: 9px; color: #34D399; font-weight: bold;">LIVE SCAN</span>
+                    <span style="font-size: 9px; color: #34D399; font-weight: bold;" id="radar-mode-tag">DEMO SCAN</span>
                 </div>
 
                 <div class="radar-circle-container" id="radar-circle-bg">
@@ -433,9 +458,14 @@
                 <span class="radar-status-badge" id="radar-status-badge">WAITING FOR SIGNAL...</span>
                 <div style="font-size: 12px; font-weight: 900; color: #F8FAFC; margin-top: 8px;" id="radar-title-desc">Scanning Market Ticks</div>
                 <div style="font-size: 10px; color: #94A3B8; margin-top: 3px;" id="radar-sub-desc">Waiting for technical criteria to trigger signal.</div>
+                
+                <!-- Cool-down Warning Banner -->
+                <div id="risk-warning-banner" class="risk-warning-banner">
+                    ⚠️ Win Rate &lt; 70%! Cooldown Active: <span id="cooldown-timer">05:00</span>
+                </div>
             </div>
 
-            <!-- GOLD VIP AUTO-TRADE BOX (ONLY FOR GOLD BUYERS) -->
+            <!-- GOLD VIP AUTO-TRADE BOX -->
             <div class="gold-vip-box" id="gold-vip-sidebar-box">
                 <div class="vip-header">
                     <div class="vip-title">👑 GOLD VIP AUTO-BOT</div>
@@ -452,7 +482,7 @@
                 <div id="live-order-feedback" class="live-order-toast"></div>
             </div>
 
-            <!-- SILVER MANUAL BOX (ONLY FOR SILVER BUYERS) -->
+            <!-- SILVER MANUAL BOX -->
             <div class="silver-box" id="silver-sidebar-box" style="display: none;">
                 <div class="card-title" style="margin-bottom:8px;">
                     <span>SILVER MANUAL SIGNAL</span>
@@ -466,13 +496,13 @@
             <!-- API TOKEN CONNECTION CARD -->
             <div class="card">
                 <div class="card-title">
-                    <span>Deriv API Connection</span>
-                    <span class="gold-badge">REQUIRED</span>
+                    <span>Deriv API Connection (<span id="api-card-mode-lbl">Demo</span>)</span>
+                    <span class="gold-badge" id="api-card-badge">DEMO API</span>
                 </div>
                 <div id="autotrader-panel">
-                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Connect API Token for Auto-Bot & Manual execution.</div>
+                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Paste your <span id="token-type-hint">Demo</span> API Token below.</div>
                     <div style="margin-bottom: 8px;">
-                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">Deriv API Token (Read + Trade)</label>
+                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">API Token (Read + Trade)</label>
                         <input type="password" id="deriv-token" placeholder="Paste API Token here">
                     </div>
                     <div style="margin-bottom: 8px;">
@@ -496,7 +526,13 @@
     let voiceEnabled = true;
 
     let userPackageMode = 'gold'; 
+    let accountMode = 'demo';
     let autoTradeActive = false;
+
+    // Smart Risk Management Loop State
+    let isCoolingDown = false;
+    let coolDownSecondsRemaining = 0;
+    let coolDownInterval = null;
 
     let chart, rsiChart, lineSeries, candleSeries, rsiSeries;
     let tickData = [];
@@ -536,6 +572,7 @@
         initChart();
         initMasterWebSocket();
         setPackageMode('gold');
+        setAccountMode('demo');
         setInterval(checkHourlyReset, 60000);
     });
 
@@ -543,25 +580,56 @@
         userPackageMode = mode;
         const goldBox = document.getElementById('gold-vip-sidebar-box');
         const silverBox = document.getElementById('silver-sidebar-box');
-        const statusPill = document.getElementById('package-status-pill');
         const btnGold = document.getElementById('btn-gold-mode');
         const btnSilver = document.getElementById('btn-silver-mode');
 
         if (mode === 'gold') {
             goldBox.style.display = 'block';
             silverBox.style.display = 'none';
-            statusPill.innerText = "GOLD VIP AUTO-BOT";
-            statusPill.style.color = "#F59E0B";
             btnGold.classList.add('active');
             btnSilver.classList.remove('active');
         } else {
             goldBox.style.display = 'none';
             silverBox.style.display = 'block';
-            statusPill.innerText = "SILVER MANUAL";
-            statusPill.style.color = "#38BDF8";
             btnSilver.classList.add('active');
             btnGold.classList.remove('active');
             autoTradeActive = false;
+        }
+    }
+
+    function setAccountMode(mode) {
+        accountMode = mode;
+        const btnDemo = document.getElementById('btn-demo-mode');
+        const btnReal = document.getElementById('btn-real-mode');
+        const accModePill = document.getElementById('acc-mode-pill');
+        const radarModeTag = document.getElementById('radar-mode-tag');
+        const apiCardLbl = document.getElementById('api-card-mode-lbl');
+        const apiCardBadge = document.getElementById('api-card-badge');
+        const tokenHint = document.getElementById('token-type-hint');
+
+        isAuthorized = false;
+        document.getElementById('top-balance-badge').innerText = 'Not Linked';
+        document.getElementById('bot-status').innerText = '';
+        document.getElementById('deriv-token').value = '';
+
+        if (mode === 'demo') {
+            btnDemo.classList.add('active');
+            btnReal.classList.remove('active');
+            accModePill.innerText = "DEMO";
+            accModePill.style.color = "#34D399";
+            radarModeTag.innerText = "DEMO SCAN";
+            apiCardLbl.innerText = "Demo";
+            apiCardBadge.innerText = "DEMO API";
+            tokenHint.innerText = "Demo";
+        } else {
+            btnReal.classList.add('active');
+            btnDemo.classList.remove('active');
+            accModePill.innerText = "REAL";
+            accModePill.style.color = "#EF4444";
+            radarModeTag.innerText = "REAL SCAN";
+            apiCardLbl.innerText = "Real";
+            apiCardBadge.innerText = "REAL API";
+            tokenHint.innerText = "Real";
         }
     }
 
@@ -698,8 +766,10 @@
                     isAuthorized = true;
                     accountCurrency = data.authorize.currency || 'USD';
                     const balance = parseFloat(data.authorize.balance).toFixed(2);
+                    const isDemoAcc = data.authorize.is_virtual === 1;
+                    
                     statusEl.style.color = '#34D399';
-                    statusEl.innerText = `✅ Linked: ${data.authorize.loginid} (${balance} ${accountCurrency})`;
+                    statusEl.innerText = `✅ Connected (${isDemoAcc ? 'DEMO' : 'REAL'}): ${data.authorize.loginid} (${balance} ${accountCurrency})`;
                     balBadge.innerText = `$${balance} ${accountCurrency}`;
                     ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
                 }
@@ -887,6 +957,9 @@
     }
 
     function processNewTick(val, time, decimals) {
+        // **SMART RISK CHECK: If cooling down, skip generating signals**
+        if (isCoolingDown) return;
+
         currentPrice = val;
         tickData.push({ time, value: val });
         if (tickData.length > 250) tickData.shift();
@@ -923,6 +996,7 @@
     }
 
     function generateLiveSignal(price, lastDigit, rsi, decimals) {
+        if (isCoolingDown) return; // double check
         if (recentDigits.length < 3) return;
 
         let detectedSignal = null;
@@ -1065,21 +1139,74 @@
         renderExecutionHistory();
         updateWinRateStats();
 
+        // **SMART RISK EVALUATION LOOP (< 70% Win Rate Check)**
+        checkAndTriggerRiskCoolDown();
+
         activeSignalTracker = null;
         setTimeout(() => {
-            if (!activeSignalTracker) {
+            if (!activeSignalTracker && !isCoolingDown) {
                 resetRadarUI();
                 document.getElementById('signal-eval-status').innerText = '';
             }
         }, 2500);
     }
 
-    // UPDATE BOTH SHARED RADAR SCREEN & MAIN SIGNAL BOX WITH COLOR GLOW
+    // **SMART RISK MANAGEMENT: Check if recent 10 trades have Win Rate < 70%**
+    function checkAndTriggerRiskCoolDown() {
+        const finishedTrades = tradeHistoryLog.filter(t => t.result !== 'PENDING');
+        
+        // Evaluate when at least 10 trades have been taken
+        if (finishedTrades.length >= 10) {
+            const last10Trades = finishedTrades.slice(0, 10);
+            const winsIn10 = last10Trades.filter(t => t.result === 'WIN').length;
+            const winRate10 = (winsIn10 / 10) * 100; // e.g., 60%
+
+            if (winRate10 < 70 && !isCoolingDown) {
+                triggerCoolDownPeriod(`Win Rate dropped to ${winRate10}% (< 70% threshold over last 10 trades).`);
+            }
+        }
+    }
+
+    function triggerCoolDownPeriod(reason) {
+        isCoolingDown = true;
+        coolDownSecondsRemaining = 300; // 5 Minutes (300 seconds)
+
+        const warningBanner = document.getElementById('risk-warning-banner');
+        warningBanner.style.display = 'block';
+
+        const radarBadge = document.getElementById('radar-status-badge');
+        radarBadge.style.background = '#EF4444';
+        radarBadge.style.color = '#FFF';
+        radarBadge.innerText = "🛑 RISK PROTECTION COOLDOWN";
+
+        document.getElementById('radar-title-desc').innerText = "Market Volatility High / Win Rate Low";
+        document.getElementById('radar-sub-desc').innerText = reason;
+
+        if (coolDownInterval) clearInterval(coolDownInterval);
+
+        coolDownInterval = setInterval(() => {
+            coolDownSecondsRemaining--;
+            let mins = Math.floor(coolDownSecondsRemaining / 60);
+            let secs = coolDownSecondsRemaining % 60;
+            let timeStr = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            
+            document.getElementById('cooldown-timer').innerText = timeStr;
+
+            if (coolDownSecondsRemaining <= 0) {
+                clearInterval(coolDownInterval);
+                isCoolingDown = false;
+                warningBanner.style.display = 'none';
+                resetRadarUI();
+            }
+        }, 1000);
+    }
+
     function updateSignalAlertUI(signalName, reason, direction) {
+        if (isCoolingDown) return;
+
         const signalEl = document.getElementById('live-signal-status');
         const mainBox = document.getElementById('signal-main-box');
         
-        // Shared Radar Elements
         const sharedRadarBox = document.getElementById('shared-radar-box');
         const radarCircleBg = document.getElementById('radar-circle-bg');
         const radarIcon = document.getElementById('radar-icon');
@@ -1091,12 +1218,10 @@
         const primaryColor = isBullish ? '#10B981' : '#EF4444';
         const textColor = isBullish ? '#34D399' : '#F87171';
 
-        // Main Box Glow
         mainBox.style.borderColor = primaryColor;
         signalEl.style.color = textColor;
         signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
 
-        // Shared Radar Screen Color Glow
         sharedRadarBox.style.borderColor = primaryColor;
         sharedRadarBox.style.boxShadow = `0 0 35px ${isBullish ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`;
         radarCircleBg.style.background = `radial-gradient(circle, ${isBullish ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'} 0%, rgba(2, 6, 23, 0.9) 70%)`;
@@ -1115,6 +1240,8 @@
     }
 
     function resetRadarUI() {
+        if (isCoolingDown) return;
+
         const signalEl = document.getElementById('live-signal-status');
         const mainBox = document.getElementById('signal-main-box');
         
@@ -1129,7 +1256,6 @@
         signalEl.style.color = '#38BDF8';
         signalEl.innerHTML = `🔊 AWAITING LIVE SIGNAL TRIGGER...`;
 
-        // Reset Shared Radar to Waiting State
         sharedRadarBox.style.borderColor = 'rgba(56, 189, 248, 0.4)';
         sharedRadarBox.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.15)';
         radarCircleBg.style.background = 'radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(2, 6, 23, 0.9) 70%)';
@@ -1214,7 +1340,7 @@
 
         rateText.innerText = `${winRate}% WIN RATE (${wins}W / ${losses}L)`;
         rateBar.style.width = `${winRate}%`;
-        adviceEl.innerHTML = `✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals tracking in real-time.`;
+        adviceEl.innerHTML = `✅ <strong>LIVE SIGNAL TRACKER:</strong> Smart Risk Protection Loop Active (&lt;70% Win Rate Triggers 5m Cool-down).`;
     }
 
     function clearHistory() {
@@ -1275,7 +1401,7 @@
     }
 
     function executeAutoTradeOrder(signal) {
-        if (!isAuthorized || !ws || ws.readyState !== WebSocket.OPEN) return;
+        if (!isAuthorized || !ws || ws.readyState !== WebSocket.OPEN || isCoolingDown) return;
 
         const stakeAmount = parseFloat(document.getElementById('stake').value) || 1.00;
         const dir = signal.direction;
@@ -1286,7 +1412,7 @@
 
         if (dir === 'RISE') contractType = 'CALL';
         else if (dir === 'FALL') contractType = 'PUT';
-        else if (dir === 'EVEN') contractType = 'DIGITEVEN';
+        else if (dir === 'EVEN') contractType, contractType = 'DIGITEVEN';
         else if (dir === 'ODD') contractType = 'DIGITODD';
         else if (dir === 'OVER') {
             contractType = 'DIGITOVER';
@@ -1321,6 +1447,10 @@
     }
 
     function executeManualTrade() {
+        if (isCoolingDown) {
+            alert("⚠️ Bot is in 5-minute Risk Protection Cooldown due to low win rate. Please wait.");
+            return;
+        }
         if (!activeSignalTracker) {
             alert("No active signal right now. Please wait for the next radar trigger.");
             return;
@@ -1343,7 +1473,7 @@
     }
 
     function speakMessage(text) {
-        if ('speechSynthesis' in window) {
+        if ('speechSynthesis' in window && !isCoolingDown) {
             window.speechSynthesis.cancel();
             let utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1.0;
