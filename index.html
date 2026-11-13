@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRADING WITH OGGY - Live Signal Terminal</title>
+    <title>TRADING WITH OGGY - Gold VIP Auto-Trade Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
     <style>
@@ -14,7 +14,7 @@
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2;
             background: radial-gradient(circle at 50% 20%, rgba(14, 116, 144, 0.25) 0%, rgba(1, 4, 9, 0.96) 80%),
-                        radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+                        radial-gradient(circle at 50% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 60%);
         }
 
         #dashboard-wrapper { width: 100%; max-width: 1450px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 50px; }
@@ -85,34 +85,67 @@
         }
         .signal-text { font-size: 13px; font-weight: 900; color: #38BDF8; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .radar-panel-box {
-            background: rgba(10, 14, 26, 0.95);
-            border: 2px solid rgba(56, 189, 248, 0.3);
-            border-radius: 16px;
+        /* GOLD VIP HIGH-LIGHTED AUTO-TRADE BOX */
+        .gold-vip-box {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 27, 75, 0.95));
+            border: 2.5px solid #F59E0B;
+            border-radius: 18px;
             padding: 20px;
             text-align: center;
             position: relative;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);
-            transition: 0.3s;
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.35);
+            animation: goldGlowPulse 3s infinite alternate;
         }
+        @keyframes goldGlowPulse {
+            0% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); border-color: #F59E0B; }
+            100% { box-shadow: 0 0 45px rgba(245, 158, 11, 0.6); border-color: #FDE68A; }
+        }
+
+        .vip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .vip-title { font-size: 13px; font-weight: 900; color: #FDE68A; font-family: 'Cinzel', serif; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        
+        /* Toggle Switch for Auto Trade */
+        .switch-container { display: flex; align-items: center; gap: 8px; background: rgba(2, 6, 23, 0.6); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .switch { position: relative; display: inline-block; width: 38px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .3s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #10B981; box-shadow: 0 0 10px #10B981; }
+        input:checked + .slider:before { transform: translateX(18px); }
+
         .radar-circle-container {
-            width: 120px; height: 120px; margin: 12px auto; border-radius: 50%;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(2, 6, 23, 0.8) 70%);
-            border: 1px dashed rgba(56, 189, 248, 0.4);
+            width: 100px; height: 100px; margin: 10px auto; border-radius: 50%;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(2, 6, 23, 0.9) 70%);
+            border: 1px dashed rgba(245, 158, 11, 0.5);
             display: flex; align-items: center; justify-content: center; position: relative;
         }
         .radar-inner-icon {
-            width: 50px; height: 50px; background: #38BDF8; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #010409; font-size: 20px; font-weight: bold;
-            box-shadow: 0 0 15px #38BDF8; transition: 0.3s;
+            width: 44px; height: 44px; background: #F59E0B; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #010409; font-size: 18px; font-weight: bold;
+            box-shadow: 0 0 15px #F59E0B;
         }
         .radar-status-badge {
-            background: #38BDF8; color: #010409; font-size: 10px; font-weight: 900; padding: 5px 14px;
-            border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;
+            background: #F59E0B; color: #010409; font-size: 9px; font-weight: 900; padding: 4px 12px;
+            border-radius: 20px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
         }
-        .radar-action-btn {
-            width: 100%; background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 11px; border-radius: 10px;
-            font-weight: 800; font-size: 11px; cursor: pointer; margin-top: 12px; text-transform: uppercase; transition: 0.3s;
+        .vip-action-btn {
+            width: 100%; background: linear-gradient(135deg, #F59E0B, #D97706); color: #010409; border: none; padding: 12px; border-radius: 10px;
+            font-weight: 900; font-size: 11px; cursor: pointer; margin-top: 10px; text-transform: uppercase; transition: 0.2s; box-shadow: 0 0 15px rgba(245,158,11,0.4);
+        }
+        .vip-action-btn:hover { background: linear-gradient(135deg, #FDE68A, #F59E0B); }
+
+        /* SILVER MANUAL BOX */
+        .silver-box {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid #38BDF8;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+        }
+        .silver-action-btn {
+            width: 100%; background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 12px; border-radius: 10px;
+            font-weight: 900; font-size: 11px; cursor: pointer; margin-top: 12px; text-transform: uppercase; transition: 0.2s;
         }
 
         .tick-history { display: flex; gap: 6px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
@@ -192,6 +225,16 @@
         input { width: 100%; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 14px; border-radius: 10px; color: #FFF; font-size: 13px; outline: none; }
         .connect-btn { width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 12px; }
         .logout-btn { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
+
+        /* Package Selector (For testing both Silver & Gold views) */
+        .package-selector-bar { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); padding: 10px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .pkg-btn { background: #070a12; border: 1px solid rgba(255,255,255,0.2); color: #94A3B8; padding: 5px 14px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .pkg-btn.active { background: #F59E0B; color: #010409; border-color: #F59E0B; }
+
+        .live-order-toast {
+            background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; color: #34D399;
+            padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-top: 10px; display: none;
+        }
     </style>
 </head>
 <body>
@@ -206,16 +249,25 @@
             <img src="file_0000000006008208af7bbd2728ae3881.png" class="brand-logo" alt="Logo" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
             <div>
                 <div class="brand-title">TRADING WITH OGGY</div>
-                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Stable WebSocket Feed & Hourly Auto-Reset</div>
+                <div style="font-size: 11px; color: #34D399; font-weight: 700;">● Silver Manual & Gold VIP Auto-Trade Terminal</div>
             </div>
         </div>
 
         <div class="top-badges">
             <div class="badge-item" id="live-clock-display" style="color:#FDE68A; font-family: monospace;">⏳ Loading...</div>
+            <div class="badge-item">Balance: <span id="top-balance-badge" style="color:#10B981; font-family:monospace;">Not Linked</span></div>
             <div class="badge-item">Market: <span id="top-market-badge" style="color:#38BDF8;">Volatility 100 Index</span></div>
-            <div class="badge-item">Mode: <span id="top-timeframe-badge" style="color:#34D399;">5T (Ticks)</span></div>
             <button onclick="toggleVoice()" id="voice-toggle-btn" class="badge-item" style="cursor:pointer; color:#34D399; border-color:#10B981;">Voice ON</button>
             <button class="logout-btn" onclick="alert('Session Closed')">Exit</button>
+        </div>
+    </div>
+
+    <!-- Package Testing Simulator Bar (Change between Silver & Gold to test) -->
+    <div class="package-selector-bar">
+        <span style="font-size: 11px; font-weight: 800; color: #FDE68A;">⚙️ TEST PACKAGE VIEW:</span>
+        <div style="display:flex; gap:8px;">
+            <button class="pkg-btn" id="btn-silver-mode" onclick="setPackageMode('silver')">Silver Buyer (Manual)</button>
+            <button class="pkg-btn active" id="btn-gold-mode" onclick="setPackageMode('gold')">Gold Buyer (VIP Auto-Bot)</button>
         </div>
     </div>
 
@@ -238,14 +290,6 @@
                     <div class="market-item" onclick="selectMarketFromSidebar('Volatility 100 (1s)', '1HZ100V', this)"><span>Volatility 100 (1s)</span><span style="font-size:9px; color:#38BDF8">1s</span></div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-title">Signal Terminal Note</div>
-                <div style="font-size: 10px; color: #94A3B8; line-height: 1.6;">
-                    • Single connection pool to prevent resource exhaustion.<br>
-                    • Hourly automatic trade history reset.
-                </div>
-            </div>
         </div>
 
         <!-- CENTER CONTENT -->
@@ -254,7 +298,7 @@
                 <div class="chart-header">
                     <div>
                         <div class="chart-title-main" id="chart-title">Volatility 100 Index (R_100)</div>
-                        <div class="chart-subtitle">Optimized WebSocket Feed & RSI (14) Stream</div>
+                        <div class="chart-subtitle">Live WebSocket Stream & Instant Execution Engine</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:12px;">
                         <select id="market-select" onchange="switchMarket(this.value)" class="market-select-box">
@@ -276,7 +320,7 @@
                 <div class="stats-strip">
                     <div class="stat-pill">Last Digit (LDP): <strong id="ldp-val-pill" style="color:#EF4444;">-</strong></div>
                     <div class="stat-pill">RSI (14): <strong id="rsi-val-pill" style="color:#38BDF8;">-</strong></div>
-                    <div class="stat-pill">Signal Mode: <strong id="auto-trade-status-pill" style="color:#38BDF8;">STABLE FEED</strong></div>
+                    <div class="stat-pill">Package View: <strong id="package-status-pill" style="color:#F59E0B;">GOLD VIP AUTO</strong></div>
                     <div class="stat-pill">Ticks: <strong id="ticks-count-pill">0</strong></div>
                 </div>
 
@@ -349,7 +393,7 @@
                     <span id="winrate-percentage-text" style="color: #34D399; font-weight: 900; font-size: 14px;">100.0% WIN RATE (0W / 0L)</span>
                 </div>
                 <div id="winrate-advice-text" style="font-size: 11px; color: #CBD5E1; line-height: 1.5; margin-bottom: 8px;">
-                    ✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals generated live for manual execution.
+                    ✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals tracking in real-time.
                 </div>
                 <div class="winrate-loading-container">
                     <div class="winrate-loading-bar" id="winrate-bar" style="width: 100%;"></div>
@@ -368,40 +412,62 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR -->
+        <!-- RIGHT SIDEBAR (DYNAMIC: SILVER vs GOLD VIP BOX) -->
         <div class="right-sidebar">
-            <div class="radar-panel-box" id="radar-panel-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <div style="font-size: 11px; font-weight: 800; color: #F8FAFC;">AI SIGNAL RADAR</div>
-                    <button onclick="toggleVoice()" id="radar-voice-btn" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #34D399; font-size: 9px; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;">Voice ON</button>
+            
+            <!-- GOLD VIP AUTO-TRADE BOX (ONLY FOR GOLD BUYERS) -->
+            <div class="gold-vip-box" id="gold-vip-sidebar-box">
+                <div class="vip-header">
+                    <div class="vip-title">👑 GOLD VIP AUTO-BOT</div>
+                    <div class="switch-container">
+                        <span style="font-size: 9px; font-weight: bold; color: #CBD5E1;" id="auto-bot-label">OFF</span>
+                        <label class="switch">
+                            <input type="checkbox" id="auto-trade-toggle" onchange="toggleAutoTradeBot()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="radar-circle-container">
-                    <div class="radar-inner-icon" id="radar-icon">⏳</div>
+                    <div class="radar-inner-icon" id="radar-icon">🤖</div>
                 </div>
 
-                <span class="radar-status-badge" id="radar-status-badge">WAITING FOR SIGNAL...</span>
-                <div style="font-size: 12px; font-weight: 900; color: #F8FAFC; margin-top: 10px;" id="radar-title-desc">Scanning Market Ticks</div>
-                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px;" id="radar-sub-desc">Waiting for technical criteria to trigger signal.</div>
-                <button class="radar-action-btn" id="radar-action-btn" onclick="executeManualTrade()">WAITING FOR SIGNAL...</button>
+                <span class="radar-status-badge" id="radar-status-badge">AUTO BOT STANDBY</span>
+                <div style="font-size: 12px; font-weight: 900; color: #F8FAFC; margin-top: 10px;" id="radar-title-desc">Sub-2s Auto Execution</div>
+                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px;" id="radar-sub-desc">Toggle ON to place orders automatically in &lt; 2s.</div>
+                
+                <button class="vip-action-btn" id="radar-action-btn" onclick="executeManualTrade()">FORCE MANUAL TRADE</button>
+                <div id="live-order-feedback" class="live-order-toast"></div>
             </div>
 
+            <!-- SILVER MANUAL BOX (ONLY FOR SILVER BUYERS) -->
+            <div class="silver-box" id="silver-sidebar-box" style="display: none;">
+                <div class="card-title" style="margin-bottom:8px;">
+                    <span>SILVER MANUAL SIGNAL</span>
+                    <span style="font-size:9px; color:#38BDF8;">MANUAL MODE</span>
+                </div>
+                <div style="font-size: 10px; color: #94A3B8; margin-bottom: 10px;">Click when signal triggers.</div>
+                <button class="silver-action-btn" id="silver-action-btn" onclick="executeManualTrade()">PLACE MANUAL TRADE</button>
+                <div id="silver-order-feedback" class="live-order-toast"></div>
+            </div>
+
+            <!-- API TOKEN CONNECTION CARD -->
             <div class="card">
                 <div class="card-title">
-                    <span>Deriv Account Link</span>
-                    <span class="gold-badge">GOLD BUYER ONLY</span>
+                    <span>Deriv API Connection</span>
+                    <span class="gold-badge">REQUIRED</span>
                 </div>
                 <div id="autotrader-panel">
-                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Optional Gold API token connection.</div>
+                    <div style="font-size: 10px; color: #94A3B8; margin-bottom: 8px;">Connect API Token for Auto-Bot & Manual execution.</div>
                     <div style="margin-bottom: 8px;">
-                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">API Token</label>
-                        <input type="password" id="deriv-token" placeholder="Enter API token">
+                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">Deriv API Token (Read + Trade)</label>
+                        <input type="password" id="deriv-token" placeholder="Paste API Token here">
                     </div>
                     <div style="margin-bottom: 8px;">
-                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">Stake ($)</label>
-                        <input type="number" id="stake" value="1.00">
+                        <label style="font-size:9px; color:#94A3B8; display:block; margin-bottom:3px;">Stake ($ USD)</label>
+                        <input type="number" id="stake" value="1.00" step="0.5" min="0.35">
                     </div>
-                    <button class="connect-btn" onclick="connectDeriv()">Connect Account</button>
+                    <button class="connect-btn" onclick="connectDeriv()">Connect & Authorize API</button>
                     <div id="bot-status" style="font-size: 10px; color: #34D399; margin-top: 6px; text-align: center; font-weight: 600;"></div>
                 </div>
             </div>
@@ -413,15 +479,23 @@
     let currentSymbol = 'R_100';
     let marketNameGlobal = 'Volatility 100 Index';
     let symbolCodeGlobal = 'R_100';
-    let activeStrategy = 2; // Default to Strategy C (Over/Under)
+    let activeStrategy = 2; // Strategy C
     let signalTimeframe = '5T'; 
     let voiceEnabled = true;
+
+    // Package Mode Simulator ('gold' or 'silver')
+    let userPackageMode = 'gold'; 
+    let autoTradeActive = false; // Auto Trade ON/OFF state for Gold VIP
 
     let chart, rsiChart, lineSeries, candleSeries, rsiSeries;
     let tickData = [];
     let ws = null;
     let fallbackInterval = null;
     let currentPrice = 532.87;
+
+    let isAuthorized = false;
+    let userApiToken = '';
+    let accountCurrency = 'USD';
 
     let recentPrices = [];
     let recentDigits = [];
@@ -450,8 +524,57 @@
         updateWinRateStats();
         initChart();
         initMasterWebSocket();
+        setPackageMode('gold'); // Default to Gold VIP view
         setInterval(checkHourlyReset, 60000);
     });
+
+    // Package Selector Switcher for testing
+    function setPackageMode(mode) {
+        userPackageMode = mode;
+        const goldBox = document.getElementById('gold-vip-sidebar-box');
+        const silverBox = document.getElementById('silver-sidebar-box');
+        const statusPill = document.getElementById('package-status-pill');
+        const btnGold = document.getElementById('btn-gold-mode');
+        const btnSilver = document.getElementById('btn-silver-mode');
+
+        if (mode === 'gold') {
+            goldBox.style.display = 'block';
+            silverBox.style.display = 'none';
+            statusPill.innerText = "GOLD VIP AUTO-BOT";
+            statusPill.style.color = "#F59E0B";
+            btnGold.classList.add('active');
+            btnSilver.classList.remove('active');
+        } else {
+            goldBox.style.display = 'none';
+            silverBox.style.display = 'block';
+            statusPill.innerText = "SILVER MANUAL";
+            statusPill.style.color = "#38BDF8";
+            btnSilver.classList.add('active');
+            btnGold.classList.remove('active');
+            autoTradeActive = false; // Disable auto trade for silver
+        }
+    }
+
+    function toggleAutoTradeBot() {
+        const toggle = document.getElementById('auto-trade-toggle');
+        const label = document.getElementById('auto-bot-label');
+        const badge = document.getElementById('radar-status-badge');
+        
+        autoTradeActive = toggle.checked;
+        if (autoTradeActive) {
+            label.innerText = "ON";
+            label.style.color = "#34D399";
+            badge.innerText = "AUTO-BOT ARMED (<2S)";
+            badge.style.background = "#10B981";
+            badge.style.color = "#FFF";
+        } else {
+            label.innerText = "OFF";
+            label.style.color = "#CBD5E1";
+            badge.innerText = "AUTO BOT STANDBY";
+            badge.style.background = "#F59E0B";
+            badge.style.color = "#010409";
+        }
+    }
 
     let lastResetHour = new Date().getHours();
     function checkHourlyReset() {
@@ -492,7 +615,7 @@
             ctxBg.beginPath();
             ctxBg.lineWidth = j === 0 ? 2.5 : 1.2;
             let alpha = j === 0 ? 0.35 : 0.15;
-            ctxBg.strokeStyle = j === 0 ? `rgba(56, 189, 248, ${alpha})` : `rgba(129, 140, 248, ${alpha})`;
+            ctxBg.strokeStyle = j === 0 ? `rgba(56, 189, 248, ${alpha})` : `rgba(245, 158, 11, ${alpha})`;
             let frequency = 0.002 + (j * 0.0006);
             let amplitude = 120 + (j * 30);
             let speed = step * (0.012 + (j * 0.003));
@@ -543,7 +666,6 @@
         });
     }
 
-    // Single Master WebSocket Connection to prevent resource exhaustion / reconnection loops
     function initMasterWebSocket() {
         if (ws && ws.readyState === WebSocket.OPEN) {
             subscribeToSymbol(currentSymbol);
@@ -553,12 +675,55 @@
         ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
         ws.onopen = () => {
+            if (userApiToken) {
+                ws.send(JSON.stringify({ authorize: userApiToken }));
+            }
             subscribeToSymbol(currentSymbol);
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const decimals = MARKETS[currentSymbol] ? MARKETS[currentSymbol].decimals : 2;
+
+            if (data.msg_type === 'authorize') {
+                const statusEl = document.getElementById('bot-status');
+                const balBadge = document.getElementById('top-balance-badge');
+                if (data.error) {
+                    isAuthorized = false;
+                    statusEl.style.color = '#F87171';
+                    statusEl.innerText = `❌ Error: ${data.error.message}`;
+                } else {
+                    isAuthorized = true;
+                    accountCurrency = data.authorize.currency || 'USD';
+                    const balance = parseFloat(data.authorize.balance).toFixed(2);
+                    statusEl.style.color = '#34D399';
+                    statusEl.innerText = `✅ Linked: ${data.authorize.loginid} (${balance} ${accountCurrency})`;
+                    balBadge.innerText = `$${balance} ${accountCurrency}`;
+                    ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
+                }
+            }
+
+            if (data.msg_type === 'balance' && data.balance) {
+                const balance = parseFloat(data.balance.balance).toFixed(2);
+                document.getElementById('top-balance-badge').innerText = `$${balance} ${accountCurrency}`;
+            }
+
+            if (data.msg_type === 'buy') {
+                const feedbackEl = document.getElementById('live-order-feedback');
+                feedbackEl.style.display = 'block';
+                if (data.error) {
+                    feedbackEl.style.borderColor = '#EF4444';
+                    feedbackEl.style.color = '#F87171';
+                    feedbackEl.style.background = 'rgba(239, 68, 68, 0.15)';
+                    feedbackEl.innerText = `❌ Auto-Order Failed: ${data.error.message}`;
+                } else {
+                    feedbackEl.style.borderColor = '#10B981';
+                    feedbackEl.style.color = '#34D399';
+                    feedbackEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                    feedbackEl.innerText = `⚡ VIP AUTO-ORDER PLACED (<2s)! ID: ${data.buy.contract_id}`;
+                }
+                setTimeout(() => { feedbackEl.style.display = 'none'; }, 5000);
+            }
 
             if (data.msg_type === 'history' && data.history) {
                 if (fallbackInterval) clearInterval(fallbackInterval);
@@ -597,11 +762,10 @@
         };
 
         ws.onerror = () => {
-            activateSmartFallback(decimals);
+            activateSmartFallback(MARKETS[currentSymbol] ? MARKETS[currentSymbol].decimals : 2);
         };
 
         ws.onclose = () => {
-            // Controlled single reconnection attempt after 5 seconds to avoid spamming resources
             setTimeout(() => {
                 if (!ws || ws.readyState === WebSocket.CLOSED) {
                     initMasterWebSocket();
@@ -620,7 +784,6 @@
         }
     }
 
-    // Smart fallback simulation to ensure uninterrupted live signals even if network restricts websocket
     function activateSmartFallback(decimals) {
         if (fallbackInterval) clearInterval(fallbackInterval);
         if (MARKETS[currentSymbol] && currentPrice === 532.87) {
@@ -808,6 +971,7 @@
             else if (signalTimeframe === '10 MIN') targetTicks = 50;
 
             activeSignalTracker = {
+                symbol: currentSymbol,
                 marketName: marketNameGlobal,
                 signalName: detectedSignal,
                 direction: signalDirection,
@@ -838,9 +1002,13 @@
             updateSignalAlertUI(detectedSignal, techReason, signalDirection);
 
             if (voiceEnabled) {
-                // Voice announcement format: [Signal Name] [Market Name] (e.g. "RISE Volatility 100 Index")
                 const voiceAnnouncement = `${detectedSignal} ${marketNameGlobal}`;
                 speakMessage(voiceAnnouncement);
+            }
+
+            // **GOLD VIP AUTO-TRADE TRIGGER (SUB-2S EXECUTION)**
+            if (userPackageMode === 'gold' && autoTradeActive) {
+                executeAutoTradeOrder(activeSignalTracker);
             }
         }
     }
@@ -907,61 +1075,51 @@
     function updateSignalAlertUI(signalName, reason, direction) {
         const signalEl = document.getElementById('live-signal-status');
         const mainBox = document.getElementById('signal-main-box');
-        const radarBox = document.getElementById('radar-panel-box');
-        const radarIcon = document.getElementById('radar-icon');
-        const radarBadge = document.getElementById('radar-status-badge');
-        const radarTitle = document.getElementById('radar-title-desc');
-        const radarSub = document.getElementById('radar-sub-desc');
-        const radarBtn = document.getElementById('radar-action-btn');
+        const badge = document.getElementById('radar-status-badge');
+        const titleDesc = document.getElementById('radar-title-desc');
+        const subDesc = document.getElementById('radar-sub-desc');
+        const btn = document.getElementById('radar-action-btn');
 
-        const isBullishColor = (direction === 'RISE' || direction === 'EVEN' || direction === 'OVER');
-        const primaryColor = isBullishColor ? '#10B981' : '#EF4444';
-        const textColor = isBullishColor ? '#34D399' : '#F87171';
+        const isBullish = (direction === 'RISE' || direction === 'EVEN' || direction === 'OVER');
+        const primaryColor = isBullish ? '#10B981' : '#EF4444';
+        const textColor = isBullish ? '#34D399' : '#F87171';
 
         mainBox.style.borderColor = primaryColor;
         signalEl.style.color = textColor;
         signalEl.innerHTML = `🚀 <span style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid ${primaryColor};">${marketNameGlobal} ➔ ${signalName} (${signalTimeframe})</span>`;
 
-        radarBox.style.borderColor = primaryColor;
-        radarIcon.style.background = primaryColor;
-        radarIcon.style.color = '#FFF';
-        radarIcon.innerText = isBullishColor ? '📈' : '📉';
-        radarBadge.style.background = primaryColor;
-        radarBadge.style.color = '#FFF';
-        radarBadge.innerText = `⚡ ${signalName}`;
-        radarTitle.innerText = `${marketNameGlobal}`;
-        radarSub.innerText = reason;
-        radarBtn.style.background = primaryColor;
-        radarBtn.style.color = '#FFF';
-        radarBtn.innerText = `⚡ MANUAL TRADE (${signalTimeframe}) →`;
+        badge.style.background = primaryColor;
+        badge.style.color = '#FFF';
+        badge.innerText = `⚡ ${signalName} DETECTED`;
+        titleDesc.innerText = marketNameGlobal;
+        subDesc.innerText = reason;
+        btn.innerText = userPackageMode === 'gold' && autoTradeActive ? `⚡ AUTO-PLACING ORDER (<2s)...` : `⚡ PLACE MANUAL TRADE`;
     }
 
     function resetRadarUI() {
         const signalEl = document.getElementById('live-signal-status');
         const mainBox = document.getElementById('signal-main-box');
-        const radarBox = document.getElementById('radar-panel-box');
-        const radarIcon = document.getElementById('radar-icon');
-        const radarBadge = document.getElementById('radar-status-badge');
-        const radarTitle = document.getElementById('radar-title-desc');
-        const radarSub = document.getElementById('radar-sub-desc');
-        const radarBtn = document.getElementById('radar-action-btn');
+        const badge = document.getElementById('radar-status-badge');
+        const titleDesc = document.getElementById('radar-title-desc');
+        const subDesc = document.getElementById('radar-sub-desc');
+        const btn = document.getElementById('radar-action-btn');
 
         mainBox.style.borderColor = '#38BDF8';
         signalEl.style.color = '#38BDF8';
         signalEl.innerHTML = `🔊 AWAITING LIVE SIGNAL TRIGGER...`;
 
-        radarBox.style.borderColor = 'rgba(56, 189, 248, 0.3)';
-        radarIcon.style.background = '#38BDF8';
-        radarIcon.style.color = '#010409';
-        radarIcon.innerText = '⏳';
-        radarBadge.style.background = '#38BDF8';
-        radarBadge.style.color = '#010409';
-        radarBadge.innerText = 'WAITING FOR SIGNAL...';
-        radarTitle.innerText = marketNameGlobal;
-        radarSub.innerText = 'Waiting for technical criteria to trigger signal.';
-        radarBtn.style.background = 'rgba(56,189,248,0.15)';
-        radarBtn.style.color = '#38BDF8';
-        radarBtn.innerText = 'WAITING FOR SIGNAL...';
+        if (userPackageMode === 'gold' && autoTradeActive) {
+            badge.style.background = '#10B981';
+            badge.style.color = '#FFF';
+            badge.innerText = "AUTO-BOT ARMED (<2S)";
+        } else {
+            badge.style.background = '#F59E0B';
+            badge.style.color = '#010409';
+            badge.innerText = "AUTO BOT STANDBY";
+        }
+        titleDesc.innerText = marketNameGlobal;
+        subDesc.innerText = 'Waiting for technical criteria to trigger signal.';
+        btn.innerText = 'FORCE MANUAL TRADE';
     }
 
     function renderExecutionHistory() {
@@ -1031,7 +1189,7 @@
 
         rateText.innerText = `${winRate}% WIN RATE (${wins}W / ${losses}L)`;
         rateBar.style.width = `${winRate}%`;
-        adviceEl.innerHTML = `✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals generating in real-time for manual placement.`;
+        adviceEl.innerHTML = `✅ <strong>LIVE SIGNAL TRACKER:</strong> Signals tracking in real-time.`;
     }
 
     function clearHistory() {
@@ -1091,12 +1249,82 @@
         document.getElementById('ldp-ratio-text').innerText = `Even: ${evenPct}% | Odd: ${oddPct}%`;
     }
 
-    function executeManualTrade() {
-        if (activeSignalTracker) {
-            alert(`Signal Action: Place ${activeSignalTracker.signalName} manually on ${marketNameGlobal} (${signalTimeframe})!`);
-        } else {
-            alert("No active signal right now. Please wait for the next radar trigger.");
+    // AUTOMATIC SUB-2S TRADE EXECUTION FOR GOLD VIP BOT
+    function executeAutoTradeOrder(signal) {
+        if (!isAuthorized || !ws || ws.readyState !== WebSocket.OPEN) {
+            console.log("Auto-Trade Skipped: API Not Authorized.");
+            return;
         }
+
+        const stakeAmount = parseFloat(document.getElementById('stake').value) || 1.00;
+        const dir = signal.direction;
+        const symbol = signal.symbol;
+
+        let contractType = 'CALL';
+        let barrier = undefined;
+
+        if (dir === 'RISE') contractType = 'CALL';
+        else if (dir === 'FALL') contractType = 'PUT';
+        else if (dir === 'EVEN') contractType = 'DIGITEVEN';
+        else if (dir === 'ODD') contractType = 'DIGITODD';
+        else if (dir === 'OVER') {
+            contractType = 'DIGITOVER';
+            barrier = '3';
+        }
+
+        let duration = 5;
+        let durationUnit = 't';
+
+        if (signal.mode === '1T') { duration = 1; durationUnit = 't'; }
+        else if (signal.mode === '5T') { duration = 5; durationUnit = 't'; }
+        else if (signal.mode === '10T') { duration = 10; durationUnit = 't'; }
+        else if (signal.mode === '1 MIN') { duration = 1; durationUnit = 'm'; }
+        else if (signal.mode === '5 MIN') { duration = 5; durationUnit = 'm'; }
+        else if (signal.mode === '10 MIN') { duration = 10; durationUnit = 'm'; }
+
+        const parameters = {
+            amount: stakeAmount,
+            basis: 'stake',
+            contract_type: contractType,
+            currency: accountCurrency,
+            duration: duration,
+            duration_unit: durationUnit,
+            symbol: symbol
+        };
+
+        if (barrier !== undefined) {
+            parameters.barrier = barrier;
+        }
+
+        const buyRequest = {
+            buy: 1,
+            price: stakeAmount,
+            parameters: parameters
+        };
+
+        // Send immediately (< 2s)
+        ws.send(JSON.stringify(buyRequest));
+    }
+
+    // MANUAL EXECUTION (FOR SILVER OR FORCE MANUAL)
+    function executeManualTrade() {
+        if (!activeSignalTracker) {
+            alert("No active signal right now. Please wait for the next radar trigger.");
+            return;
+        }
+        if (!isAuthorized || !ws || ws.readyState !== WebSocket.OPEN) {
+            alert("⚠️ Please connect your Deriv API Token first!");
+            return;
+        }
+
+        executeAutoTradeOrder(activeSignalTracker);
+        const feedbackEl = userPackageMode === 'gold' ? document.getElementById('live-order-feedback') : document.getElementById('silver-order-feedback');
+        feedbackEl.style.display = 'block';
+        feedbackEl.style.borderColor = '#38BDF8';
+        feedbackEl.style.color = '#38BDF8';
+        feedbackEl.style.background = 'rgba(56, 189, 248, 0.15)';
+        feedbackEl.innerText = `⚡ Manual Order Sent for ${activeSignalTracker.signalName}!`;
+        setTimeout(() => { feedbackEl.style.display = 'none'; }, 4000);
     }
 
     function speakMessage(text) {
@@ -1113,22 +1341,26 @@
         const btn = document.getElementById('radar-voice-btn');
         const topBtn = document.getElementById('voice-toggle-btn');
         const statusText = voiceEnabled ? "Voice ON" : "Voice OFF";
-        btn.innerText = statusText;
-        topBtn.innerText = statusText;
-        btn.style.borderColor = voiceEnabled ? "#10B981" : "#EF4444";
-        btn.style.color = voiceEnabled ? "#34D399" : "#F87171";
+        if(topBtn) topBtn.innerText = statusText;
     }
 
     function connectDeriv() {
-        const token = document.getElementById('deriv-token').value;
+        const token = document.getElementById('deriv-token').value.trim();
         const statusEl = document.getElementById('bot-status');
         if (!token) {
             statusEl.style.color = "#F87171";
-            statusEl.innerText = "⚠️ Please enter API token.";
+            statusEl.innerText = "⚠️ Please enter your Deriv API token.";
             return;
         }
-        statusEl.style.color = "#34D399";
-        statusEl.innerText = "✅ Account Connected Successfully";
+        userApiToken = token;
+        statusEl.style.color = "#F59E0B";
+        statusEl.innerText = "⏳ Authorizing API Token...";
+
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ authorize: userApiToken }));
+        } else {
+            initMasterWebSocket();
+        }
     }
 </script>
 
